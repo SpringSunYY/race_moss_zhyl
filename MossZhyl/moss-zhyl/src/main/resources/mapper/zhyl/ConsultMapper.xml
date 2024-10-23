@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moss.zhyl.mapper.ConsultMapper">
+    
+    <resultMap type="Consult" id="ConsultResult">
+        <result property="consultId"    column="consult_id"    />
+        <result property="consultTitle"    column="consult_title"    />
+        <result property="consultType"    column="consult_type"    />
+        <result property="consultContent"    column="consult_content"    />
+        <result property="sorted"    column="sorted"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectConsultVo">
+        select consult_id, consult_title, consult_type, consult_content, sorted, remark, create_by, update_by, create_time, del_flag from yl_consult
+    </sql>
+
+    <select id="selectConsultList" parameterType="Consult" resultMap="ConsultResult">
+        <include refid="selectConsultVo"/>
+        <where>  
+            <if test="consultTitle != null  and consultTitle != ''"> and consult_title = #{consultTitle}</if>
+            <if test="consultType != null  and consultType != ''"> and consult_type = #{consultType}</if>
+            <if test="consultContent != null  and consultContent != ''"> and consult_content = #{consultContent}</if>
+            <if test="sorted != null "> and sorted = #{sorted}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+        </where>
+    </select>
+    
+    <select id="selectConsultByConsultId" parameterType="Long" resultMap="ConsultResult">
+        <include refid="selectConsultVo"/>
+        where consult_id = #{consultId}
+    </select>
+
+    <insert id="insertConsult" parameterType="Consult">
+        insert into yl_consult
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="consultId != null">consult_id,</if>
+            <if test="consultTitle != null and consultTitle != ''">consult_title,</if>
+            <if test="consultType != null and consultType != ''">consult_type,</if>
+            <if test="consultContent != null and consultContent != ''">consult_content,</if>
+            <if test="sorted != null">sorted,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="consultId != null">#{consultId},</if>
+            <if test="consultTitle != null and consultTitle != ''">#{consultTitle},</if>
+            <if test="consultType != null and consultType != ''">#{consultType},</if>
+            <if test="consultContent != null and consultContent != ''">#{consultContent},</if>
+            <if test="sorted != null">#{sorted},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateConsult" parameterType="Consult">
+        update yl_consult
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="consultTitle != null and consultTitle != ''">consult_title = #{consultTitle},</if>
+            <if test="consultType != null and consultType != ''">consult_type = #{consultType},</if>
+            <if test="consultContent != null and consultContent != ''">consult_content = #{consultContent},</if>
+            <if test="sorted != null">sorted = #{sorted},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+        </trim>
+        where consult_id = #{consultId}
+    </update>
+
+    <delete id="deleteConsultByConsultId" parameterType="Long">
+        delete from yl_consult where consult_id = #{consultId}
+    </delete>
+
+    <delete id="deleteConsultByConsultIds" parameterType="String">
+        delete from yl_consult where consult_id in 
+        <foreach item="consultId" collection="array" open="(" separator="," close=")">
+            #{consultId}
+        </foreach>
+    </delete>
+</mapper>

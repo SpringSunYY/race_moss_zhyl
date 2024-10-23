@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moss.zhyl.mapper.DeviceCommunicationMapper">
+    
+    <resultMap type="DeviceCommunication" id="DeviceCommunicationResult">
+        <result property="deviceCommunicationId"    column="device_communication_id"    />
+        <result property="deviceImei"    column="device_imei"    />
+        <result property="communicationMode"    column="communication_mode"    />
+        <result property="userInfoId"    column="user_info_id"    />
+        <result property="eventType"    column="event_type"    />
+        <result property="communicationContent"    column="communication_content"    />
+        <result property="importanceLevel"    column="importance_level"    />
+        <result property="communicationResult"    column="communication_result"    />
+        <result property="remark"    column="remark"    />
+        <result property="communicationTime"    column="communication_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectDeviceCommunicationVo">
+        select device_communication_id, device_imei, communication_mode, user_info_id, event_type, communication_content, importance_level, communication_result, remark, communication_time, del_flag from yl_device_communication
+    </sql>
+
+    <select id="selectDeviceCommunicationList" parameterType="DeviceCommunication" resultMap="DeviceCommunicationResult">
+        <include refid="selectDeviceCommunicationVo"/>
+        <where>  
+            <if test="deviceImei != null  and deviceImei != ''"> and device_imei like concat('%', #{deviceImei}, '%')</if>
+            <if test="communicationMode != null "> and communication_mode = #{communicationMode}</if>
+            <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
+            <if test="eventType != null "> and event_type = #{eventType}</if>
+            <if test="communicationContent != null  and communicationContent != ''"> and communication_content = #{communicationContent}</if>
+            <if test="importanceLevel != null "> and importance_level = #{importanceLevel}</if>
+            <if test="communicationResult != null "> and communication_result = #{communicationResult}</if>
+            <if test="params.beginCommunicationTime != null and params.beginCommunicationTime != '' and params.endCommunicationTime != null and params.endCommunicationTime != ''"> and communication_time between #{params.beginCommunicationTime} and #{params.endCommunicationTime}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+        </where>
+    </select>
+    
+    <select id="selectDeviceCommunicationByDeviceCommunicationId" parameterType="Long" resultMap="DeviceCommunicationResult">
+        <include refid="selectDeviceCommunicationVo"/>
+        where device_communication_id = #{deviceCommunicationId}
+    </select>
+
+    <insert id="insertDeviceCommunication" parameterType="DeviceCommunication">
+        insert into yl_device_communication
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceCommunicationId != null">device_communication_id,</if>
+            <if test="deviceImei != null and deviceImei != ''">device_imei,</if>
+            <if test="communicationMode != null">communication_mode,</if>
+            <if test="userInfoId != null">user_info_id,</if>
+            <if test="eventType != null">event_type,</if>
+            <if test="communicationContent != null">communication_content,</if>
+            <if test="importanceLevel != null">importance_level,</if>
+            <if test="communicationResult != null">communication_result,</if>
+            <if test="remark != null">remark,</if>
+            <if test="communicationTime != null">communication_time,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deviceCommunicationId != null">#{deviceCommunicationId},</if>
+            <if test="deviceImei != null and deviceImei != ''">#{deviceImei},</if>
+            <if test="communicationMode != null">#{communicationMode},</if>
+            <if test="userInfoId != null">#{userInfoId},</if>
+            <if test="eventType != null">#{eventType},</if>
+            <if test="communicationContent != null">#{communicationContent},</if>
+            <if test="importanceLevel != null">#{importanceLevel},</if>
+            <if test="communicationResult != null">#{communicationResult},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="communicationTime != null">#{communicationTime},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDeviceCommunication" parameterType="DeviceCommunication">
+        update yl_device_communication
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceImei != null and deviceImei != ''">device_imei = #{deviceImei},</if>
+            <if test="communicationMode != null">communication_mode = #{communicationMode},</if>
+            <if test="userInfoId != null">user_info_id = #{userInfoId},</if>
+            <if test="eventType != null">event_type = #{eventType},</if>
+            <if test="communicationContent != null">communication_content = #{communicationContent},</if>
+            <if test="importanceLevel != null">importance_level = #{importanceLevel},</if>
+            <if test="communicationResult != null">communication_result = #{communicationResult},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="communicationTime != null">communication_time = #{communicationTime},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+        </trim>
+        where device_communication_id = #{deviceCommunicationId}
+    </update>
+
+    <delete id="deleteDeviceCommunicationByDeviceCommunicationId" parameterType="Long">
+        delete from yl_device_communication where device_communication_id = #{deviceCommunicationId}
+    </delete>
+
+    <delete id="deleteDeviceCommunicationByDeviceCommunicationIds" parameterType="String">
+        delete from yl_device_communication where device_communication_id in 
+        <foreach item="deviceCommunicationId" collection="array" open="(" separator="," close=")">
+            #{deviceCommunicationId}
+        </foreach>
+    </delete>
+</mapper>

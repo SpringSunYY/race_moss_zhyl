@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moss.zhyl.mapper.ServiceStationMapper">
+    
+    <resultMap type="ServiceStation" id="ServiceStationResult">
+        <result property="serviceStationId"    column="service_station_id"    />
+        <result property="stationName"    column="station_name"    />
+        <result property="contactPerson"    column="contact_person"    />
+        <result property="contactPhone"    column="contact_phone"    />
+        <result property="serviceTime"    column="service_time"    />
+        <result property="addressId"    column="address_id"    />
+        <result property="areaDetail"    column="area_detail"    />
+        <result property="albumUrl"    column="album_url"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectServiceStationVo">
+        select service_station_id, station_name, contact_person, contact_phone, service_time, address_id, area_detail, album_url, create_by, update_by, remark, create_time, update_time, del_flag, user_id from yl_service_station
+    </sql>
+
+    <select id="selectServiceStationList" parameterType="ServiceStation" resultMap="ServiceStationResult">
+        <include refid="selectServiceStationVo"/>
+        <where>  
+            <if test="stationName != null  and stationName != ''"> and station_name like concat('%', #{stationName}, '%')</if>
+            <if test="contactPerson != null  and contactPerson != ''"> and contact_person = #{contactPerson}</if>
+            <if test="contactPhone != null  and contactPhone != ''"> and contact_phone = #{contactPhone}</if>
+            <if test="addressId != null "> and address_id = #{addressId}</if>
+            <if test="areaDetail != null  and areaDetail != ''"> and area_detail = #{areaDetail}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
+            <if test="updateBy != null  and updateBy != ''"> and update_by like concat('%', #{updateBy}, '%')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectServiceStationByServiceStationId" parameterType="Long" resultMap="ServiceStationResult">
+        <include refid="selectServiceStationVo"/>
+        where service_station_id = #{serviceStationId}
+    </select>
+
+    <insert id="insertServiceStation" parameterType="ServiceStation">
+        insert into yl_service_station
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="serviceStationId != null">service_station_id,</if>
+            <if test="stationName != null and stationName != ''">station_name,</if>
+            <if test="contactPerson != null and contactPerson != ''">contact_person,</if>
+            <if test="contactPhone != null and contactPhone != ''">contact_phone,</if>
+            <if test="serviceTime != null">service_time,</if>
+            <if test="addressId != null">address_id,</if>
+            <if test="areaDetail != null">area_detail,</if>
+            <if test="albumUrl != null">album_url,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+            <if test="userId != null">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="serviceStationId != null">#{serviceStationId},</if>
+            <if test="stationName != null and stationName != ''">#{stationName},</if>
+            <if test="contactPerson != null and contactPerson != ''">#{contactPerson},</if>
+            <if test="contactPhone != null and contactPhone != ''">#{contactPhone},</if>
+            <if test="serviceTime != null">#{serviceTime},</if>
+            <if test="addressId != null">#{addressId},</if>
+            <if test="areaDetail != null">#{areaDetail},</if>
+            <if test="albumUrl != null">#{albumUrl},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+            <if test="userId != null">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateServiceStation" parameterType="ServiceStation">
+        update yl_service_station
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stationName != null and stationName != ''">station_name = #{stationName},</if>
+            <if test="contactPerson != null and contactPerson != ''">contact_person = #{contactPerson},</if>
+            <if test="contactPhone != null and contactPhone != ''">contact_phone = #{contactPhone},</if>
+            <if test="serviceTime != null">service_time = #{serviceTime},</if>
+            <if test="addressId != null">address_id = #{addressId},</if>
+            <if test="areaDetail != null">area_detail = #{areaDetail},</if>
+            <if test="albumUrl != null">album_url = #{albumUrl},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where service_station_id = #{serviceStationId}
+    </update>
+
+    <delete id="deleteServiceStationByServiceStationId" parameterType="Long">
+        delete from yl_service_station where service_station_id = #{serviceStationId}
+    </delete>
+
+    <delete id="deleteServiceStationByServiceStationIds" parameterType="String">
+        delete from yl_service_station where service_station_id in 
+        <foreach item="serviceStationId" collection="array" open="(" separator="," close=")">
+            #{serviceStationId}
+        </foreach>
+    </delete>
+</mapper>

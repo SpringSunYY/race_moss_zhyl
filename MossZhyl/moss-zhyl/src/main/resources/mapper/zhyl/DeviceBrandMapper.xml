@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moss.zhyl.mapper.DeviceBrandMapper">
+    
+    <resultMap type="DeviceBrand" id="DeviceBrandResult">
+        <result property="brandId"    column="brand_id"    />
+        <result property="brandName"    column="brand_name"    />
+        <result property="description"    column="description"    />
+        <result property="contactInfo"    column="contact_info"    />
+        <result property="contractContent"    column="contract_content"    />
+        <result property="contractSignTime"    column="contract_sign_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedTime"    column="updated_time"    />
+    </resultMap>
+
+    <sql id="selectDeviceBrandVo">
+        select brand_id, brand_name, description, contact_info, contract_content, contract_sign_time, create_by, created_time, updated_time from yl_device_brand
+    </sql>
+
+    <select id="selectDeviceBrandList" parameterType="DeviceBrand" resultMap="DeviceBrandResult">
+        <include refid="selectDeviceBrandVo"/>
+        <where>  
+            <if test="brandName != null  and brandName != ''"> and brand_name like concat('%', #{brandName}, '%')</if>
+            <if test="contactInfo != null  and contactInfo != ''"> and contact_info = #{contactInfo}</if>
+            <if test="params.beginContractSignTime != null and params.beginContractSignTime != '' and params.endContractSignTime != null and params.endContractSignTime != ''"> and contract_sign_time between #{params.beginContractSignTime} and #{params.endContractSignTime}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
+            <if test="params.beginCreatedTime != null and params.beginCreatedTime != '' and params.endCreatedTime != null and params.endCreatedTime != ''"> and created_time between #{params.beginCreatedTime} and #{params.endCreatedTime}</if>
+            <if test="params.beginUpdatedTime != null and params.beginUpdatedTime != '' and params.endUpdatedTime != null and params.endUpdatedTime != ''"> and updated_time between #{params.beginUpdatedTime} and #{params.endUpdatedTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectDeviceBrandByBrandId" parameterType="Long" resultMap="DeviceBrandResult">
+        <include refid="selectDeviceBrandVo"/>
+        where brand_id = #{brandId}
+    </select>
+
+    <insert id="insertDeviceBrand" parameterType="DeviceBrand">
+        insert into yl_device_brand
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="brandId != null">brand_id,</if>
+            <if test="brandName != null and brandName != ''">brand_name,</if>
+            <if test="description != null">description,</if>
+            <if test="contactInfo != null">contact_info,</if>
+            <if test="contractContent != null">contract_content,</if>
+            <if test="contractSignTime != null">contract_sign_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createdTime != null">created_time,</if>
+            <if test="updatedTime != null">updated_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="brandId != null">#{brandId},</if>
+            <if test="brandName != null and brandName != ''">#{brandName},</if>
+            <if test="description != null">#{description},</if>
+            <if test="contactInfo != null">#{contactInfo},</if>
+            <if test="contractContent != null">#{contractContent},</if>
+            <if test="contractSignTime != null">#{contractSignTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="updatedTime != null">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDeviceBrand" parameterType="DeviceBrand">
+        update yl_device_brand
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brandName != null and brandName != ''">brand_name = #{brandName},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="contactInfo != null">contact_info = #{contactInfo},</if>
+            <if test="contractContent != null">contract_content = #{contractContent},</if>
+            <if test="contractSignTime != null">contract_sign_time = #{contractSignTime},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="createdTime != null">created_time = #{createdTime},</if>
+            <if test="updatedTime != null">updated_time = #{updatedTime},</if>
+        </trim>
+        where brand_id = #{brandId}
+    </update>
+
+    <delete id="deleteDeviceBrandByBrandId" parameterType="Long">
+        delete from yl_device_brand where brand_id = #{brandId}
+    </delete>
+
+    <delete id="deleteDeviceBrandByBrandIds" parameterType="String">
+        delete from yl_device_brand where brand_id in 
+        <foreach item="brandId" collection="array" open="(" separator="," close=")">
+            #{brandId}
+        </foreach>
+    </delete>
+</mapper>

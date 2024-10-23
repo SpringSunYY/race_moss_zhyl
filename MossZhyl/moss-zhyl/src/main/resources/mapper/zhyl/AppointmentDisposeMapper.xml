@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moss.zhyl.mapper.AppointmentDisposeMapper">
+    
+    <resultMap type="AppointmentDispose" id="AppointmentDisposeResult">
+        <result property="disposeId"    column="dispose_id"    />
+        <result property="userInfoId"    column="user_info_id"    />
+        <result property="appointmentId"    column="appointment_id"    />
+        <result property="disposeVoucher"    column="dispose_voucher"    />
+        <result property="disposeDescribe"    column="dispose_describe"    />
+        <result property="disposeAddress"    column="dispose_address"    />
+        <result property="addressDetail"    column="address_detail"    />
+        <result property="userId"    column="user_id"    />
+        <result property="disposeTime"    column="dispose_time"    />
+        <result property="disposeStatus"    column="dispose_status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectAppointmentDisposeVo">
+        select dispose_id, user_info_id, appointment_id, dispose_voucher, dispose_describe, dispose_address, address_detail, user_id, dispose_time, dispose_status, remark, create_by, create_time, del_flag from yl_appointment_dispose
+    </sql>
+
+    <select id="selectAppointmentDisposeList" parameterType="AppointmentDispose" resultMap="AppointmentDisposeResult">
+        <include refid="selectAppointmentDisposeVo"/>
+        <where>  
+            <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
+            <if test="appointmentId != null "> and appointment_id = #{appointmentId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="params.beginDisposeTime != null and params.beginDisposeTime != '' and params.endDisposeTime != null and params.endDisposeTime != ''"> and dispose_time between #{params.beginDisposeTime} and #{params.endDisposeTime}</if>
+            <if test="disposeStatus != null  and disposeStatus != ''"> and dispose_status = #{disposeStatus}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+        </where>
+    </select>
+    
+    <select id="selectAppointmentDisposeByDisposeId" parameterType="Long" resultMap="AppointmentDisposeResult">
+        <include refid="selectAppointmentDisposeVo"/>
+        where dispose_id = #{disposeId}
+    </select>
+
+    <insert id="insertAppointmentDispose" parameterType="AppointmentDispose">
+        insert into yl_appointment_dispose
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="disposeId != null">dispose_id,</if>
+            <if test="userInfoId != null">user_info_id,</if>
+            <if test="appointmentId != null">appointment_id,</if>
+            <if test="disposeVoucher != null and disposeVoucher != ''">dispose_voucher,</if>
+            <if test="disposeDescribe != null and disposeDescribe != ''">dispose_describe,</if>
+            <if test="disposeAddress != null">dispose_address,</if>
+            <if test="addressDetail != null">address_detail,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="disposeTime != null">dispose_time,</if>
+            <if test="disposeStatus != null and disposeStatus != ''">dispose_status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="disposeId != null">#{disposeId},</if>
+            <if test="userInfoId != null">#{userInfoId},</if>
+            <if test="appointmentId != null">#{appointmentId},</if>
+            <if test="disposeVoucher != null and disposeVoucher != ''">#{disposeVoucher},</if>
+            <if test="disposeDescribe != null and disposeDescribe != ''">#{disposeDescribe},</if>
+            <if test="disposeAddress != null">#{disposeAddress},</if>
+            <if test="addressDetail != null">#{addressDetail},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="disposeTime != null">#{disposeTime},</if>
+            <if test="disposeStatus != null and disposeStatus != ''">#{disposeStatus},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAppointmentDispose" parameterType="AppointmentDispose">
+        update yl_appointment_dispose
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userInfoId != null">user_info_id = #{userInfoId},</if>
+            <if test="appointmentId != null">appointment_id = #{appointmentId},</if>
+            <if test="disposeVoucher != null and disposeVoucher != ''">dispose_voucher = #{disposeVoucher},</if>
+            <if test="disposeDescribe != null and disposeDescribe != ''">dispose_describe = #{disposeDescribe},</if>
+            <if test="disposeAddress != null">dispose_address = #{disposeAddress},</if>
+            <if test="addressDetail != null">address_detail = #{addressDetail},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="disposeTime != null">dispose_time = #{disposeTime},</if>
+            <if test="disposeStatus != null and disposeStatus != ''">dispose_status = #{disposeStatus},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+        </trim>
+        where dispose_id = #{disposeId}
+    </update>
+
+    <delete id="deleteAppointmentDisposeByDisposeId" parameterType="Long">
+        delete from yl_appointment_dispose where dispose_id = #{disposeId}
+    </delete>
+
+    <delete id="deleteAppointmentDisposeByDisposeIds" parameterType="String">
+        delete from yl_appointment_dispose where dispose_id in 
+        <foreach item="disposeId" collection="array" open="(" separator="," close=")">
+            #{disposeId}
+        </foreach>
+    </delete>
+</mapper>

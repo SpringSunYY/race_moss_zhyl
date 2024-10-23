@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moss.zhyl.mapper.UserInfoMapper">
+    
+    <resultMap type="UserInfo" id="UserInfoResult">
+        <result property="userInfoId"    column="user_info_id"    />
+        <result property="userInfoName"    column="user_info_name"    />
+        <result property="contactPhone"    column="contact_phone"    />
+        <result property="userInfoProfile"    column="user_info_profile"    />
+        <result property="userInfoRole"    column="user_info_role"    />
+        <result property="idCard"    column="id_card"    />
+        <result property="education"    column="education"    />
+        <result property="occupation"    column="occupation"    />
+        <result property="addressId"    column="address_id"    />
+        <result property="areaDetail"    column="area_detail"    />
+        <result property="wxOpenid"    column="wx_openid"    />
+        <result property="miniOpenid"    column="mini_openid"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectUserInfoVo">
+        select user_info_id, user_info_name, contact_phone, user_info_profile, user_info_role, id_card, education, occupation, address_id, area_detail, wx_openid, mini_openid, create_by, update_by, create_time, update_time, del_flag from yl_user_info
+    </sql>
+
+    <select id="selectUserInfoList" parameterType="UserInfo" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        <where>  
+            <if test="userInfoName != null  and userInfoName != ''"> and user_info_name like concat('%', #{userInfoName}, '%')</if>
+            <if test="contactPhone != null  and contactPhone != ''"> and contact_phone = #{contactPhone}</if>
+            <if test="userInfoRole != null  and userInfoRole != ''"> and user_info_role = #{userInfoRole}</if>
+            <if test="education != null "> and education = #{education}</if>
+            <if test="occupation != null  and occupation != ''"> and occupation = #{occupation}</if>
+            <if test="addressId != null "> and address_id = #{addressId}</if>
+            <if test="wxOpenid != null  and wxOpenid != ''"> and wx_openid = #{wxOpenid}</if>
+            <if test="miniOpenid != null  and miniOpenid != ''"> and mini_openid = #{miniOpenid}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
+            <if test="updateBy != null  and updateBy != ''"> and update_by like concat('%', #{updateBy}, '%')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserInfoByUserInfoId" parameterType="Long" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        where user_info_id = #{userInfoId}
+    </select>
+
+    <insert id="insertUserInfo" parameterType="UserInfo">
+        insert into yl_user_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userInfoId != null">user_info_id,</if>
+            <if test="userInfoName != null and userInfoName != ''">user_info_name,</if>
+            <if test="contactPhone != null">contact_phone,</if>
+            <if test="userInfoProfile != null">user_info_profile,</if>
+            <if test="userInfoRole != null and userInfoRole != ''">user_info_role,</if>
+            <if test="idCard != null">id_card,</if>
+            <if test="education != null">education,</if>
+            <if test="occupation != null">occupation,</if>
+            <if test="addressId != null">address_id,</if>
+            <if test="areaDetail != null">area_detail,</if>
+            <if test="wxOpenid != null">wx_openid,</if>
+            <if test="miniOpenid != null">mini_openid,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userInfoId != null">#{userInfoId},</if>
+            <if test="userInfoName != null and userInfoName != ''">#{userInfoName},</if>
+            <if test="contactPhone != null">#{contactPhone},</if>
+            <if test="userInfoProfile != null">#{userInfoProfile},</if>
+            <if test="userInfoRole != null and userInfoRole != ''">#{userInfoRole},</if>
+            <if test="idCard != null">#{idCard},</if>
+            <if test="education != null">#{education},</if>
+            <if test="occupation != null">#{occupation},</if>
+            <if test="addressId != null">#{addressId},</if>
+            <if test="areaDetail != null">#{areaDetail},</if>
+            <if test="wxOpenid != null">#{wxOpenid},</if>
+            <if test="miniOpenid != null">#{miniOpenid},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserInfo" parameterType="UserInfo">
+        update yl_user_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userInfoName != null and userInfoName != ''">user_info_name = #{userInfoName},</if>
+            <if test="contactPhone != null">contact_phone = #{contactPhone},</if>
+            <if test="userInfoProfile != null">user_info_profile = #{userInfoProfile},</if>
+            <if test="userInfoRole != null and userInfoRole != ''">user_info_role = #{userInfoRole},</if>
+            <if test="idCard != null">id_card = #{idCard},</if>
+            <if test="education != null">education = #{education},</if>
+            <if test="occupation != null">occupation = #{occupation},</if>
+            <if test="addressId != null">address_id = #{addressId},</if>
+            <if test="areaDetail != null">area_detail = #{areaDetail},</if>
+            <if test="wxOpenid != null">wx_openid = #{wxOpenid},</if>
+            <if test="miniOpenid != null">mini_openid = #{miniOpenid},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+        </trim>
+        where user_info_id = #{userInfoId}
+    </update>
+
+    <delete id="deleteUserInfoByUserInfoId" parameterType="Long">
+        delete from yl_user_info where user_info_id = #{userInfoId}
+    </delete>
+
+    <delete id="deleteUserInfoByUserInfoIds" parameterType="String">
+        delete from yl_user_info where user_info_id in 
+        <foreach item="userInfoId" collection="array" open="(" separator="," close=")">
+            #{userInfoId}
+        </foreach>
+    </delete>
+</mapper>

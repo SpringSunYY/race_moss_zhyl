@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moss.zhyl.mapper.ElderlyMapper">
+    
+    <resultMap type="Elderly" id="ElderlyResult">
+        <result property="elderlyId"    column="elderly_id"    />
+        <result property="userInfoId"    column="user_info_id"    />
+        <result property="disabilityStatus"    column="disability_status"    />
+        <result property="livingCondition"    column="living_condition"    />
+        <result property="registrationTime"    column="registration_time"    />
+        <result property="disabilityCondition"    column="disability_condition"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectElderlyVo">
+        select elderly_id, user_info_id, disability_status, living_condition, registration_time, disability_condition, create_by, create_time, update_time from yl_elderly
+    </sql>
+
+    <select id="selectElderlyList" parameterType="Elderly" resultMap="ElderlyResult">
+        <include refid="selectElderlyVo"/>
+        <where>  
+            <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
+            <if test="disabilityStatus != null  and disabilityStatus != ''"> and disability_status = #{disabilityStatus}</if>
+            <if test="livingCondition != null  and livingCondition != ''"> and living_condition = #{livingCondition}</if>
+            <if test="params.beginRegistrationTime != null and params.beginRegistrationTime != '' and params.endRegistrationTime != null and params.endRegistrationTime != ''"> and registration_time between #{params.beginRegistrationTime} and #{params.endRegistrationTime}</if>
+            <if test="disabilityCondition != null  and disabilityCondition != ''"> and disability_condition = #{disabilityCondition}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectElderlyByElderlyId" parameterType="Long" resultMap="ElderlyResult">
+        <include refid="selectElderlyVo"/>
+        where elderly_id = #{elderlyId}
+    </select>
+
+    <insert id="insertElderly" parameterType="Elderly">
+        insert into yl_elderly
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="elderlyId != null">elderly_id,</if>
+            <if test="userInfoId != null">user_info_id,</if>
+            <if test="disabilityStatus != null">disability_status,</if>
+            <if test="livingCondition != null">living_condition,</if>
+            <if test="registrationTime != null">registration_time,</if>
+            <if test="disabilityCondition != null">disability_condition,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="elderlyId != null">#{elderlyId},</if>
+            <if test="userInfoId != null">#{userInfoId},</if>
+            <if test="disabilityStatus != null">#{disabilityStatus},</if>
+            <if test="livingCondition != null">#{livingCondition},</if>
+            <if test="registrationTime != null">#{registrationTime},</if>
+            <if test="disabilityCondition != null">#{disabilityCondition},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateElderly" parameterType="Elderly">
+        update yl_elderly
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userInfoId != null">user_info_id = #{userInfoId},</if>
+            <if test="disabilityStatus != null">disability_status = #{disabilityStatus},</if>
+            <if test="livingCondition != null">living_condition = #{livingCondition},</if>
+            <if test="registrationTime != null">registration_time = #{registrationTime},</if>
+            <if test="disabilityCondition != null">disability_condition = #{disabilityCondition},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where elderly_id = #{elderlyId}
+    </update>
+
+    <delete id="deleteElderlyByElderlyId" parameterType="Long">
+        delete from yl_elderly where elderly_id = #{elderlyId}
+    </delete>
+
+    <delete id="deleteElderlyByElderlyIds" parameterType="String">
+        delete from yl_elderly where elderly_id in 
+        <foreach item="elderlyId" collection="array" open="(" separator="," close=")">
+            #{elderlyId}
+        </foreach>
+    </delete>
+</mapper>

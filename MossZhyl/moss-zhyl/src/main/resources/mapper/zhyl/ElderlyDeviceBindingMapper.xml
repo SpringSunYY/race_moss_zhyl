@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moss.zhyl.mapper.ElderlyDeviceBindingMapper">
+    
+    <resultMap type="ElderlyDeviceBinding" id="ElderlyDeviceBindingResult">
+        <result property="bindingId"    column="binding_id"    />
+        <result property="userInfoId"    column="user_info_id"    />
+        <result property="deviceId"    column="device_id"    />
+        <result property="deviceImei"    column="device_imei"    />
+        <result property="bindTime"    column="bind_time"    />
+        <result property="unbindTime"    column="unbind_time"    />
+        <result property="bindingStatus"    column="binding_status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectElderlyDeviceBindingVo">
+        select binding_id, user_info_id, device_id, device_imei, bind_time, unbind_time, binding_status, create_by, update_by, create_time, update_time, del_flag from yl_elderly_device_binding
+    </sql>
+
+    <select id="selectElderlyDeviceBindingList" parameterType="ElderlyDeviceBinding" resultMap="ElderlyDeviceBindingResult">
+        <include refid="selectElderlyDeviceBindingVo"/>
+        <where>  
+            <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
+            <if test="deviceId != null "> and device_id = #{deviceId}</if>
+            <if test="deviceImei != null  and deviceImei != ''"> and device_imei = #{deviceImei}</if>
+            <if test="params.beginBindTime != null and params.beginBindTime != '' and params.endBindTime != null and params.endBindTime != ''"> and bind_time between #{params.beginBindTime} and #{params.endBindTime}</if>
+            <if test="params.beginUnbindTime != null and params.beginUnbindTime != '' and params.endUnbindTime != null and params.endUnbindTime != ''"> and unbind_time between #{params.beginUnbindTime} and #{params.endUnbindTime}</if>
+            <if test="bindingStatus != null  and bindingStatus != ''"> and binding_status = #{bindingStatus}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
+            <if test="updateBy != null  and updateBy != ''"> and update_by like concat('%', #{updateBy}, '%')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+        </where>
+    </select>
+    
+    <select id="selectElderlyDeviceBindingByBindingId" parameterType="Long" resultMap="ElderlyDeviceBindingResult">
+        <include refid="selectElderlyDeviceBindingVo"/>
+        where binding_id = #{bindingId}
+    </select>
+
+    <insert id="insertElderlyDeviceBinding" parameterType="ElderlyDeviceBinding">
+        insert into yl_elderly_device_binding
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bindingId != null">binding_id,</if>
+            <if test="userInfoId != null">user_info_id,</if>
+            <if test="deviceId != null">device_id,</if>
+            <if test="deviceImei != null and deviceImei != ''">device_imei,</if>
+            <if test="bindTime != null">bind_time,</if>
+            <if test="unbindTime != null">unbind_time,</if>
+            <if test="bindingStatus != null and bindingStatus != ''">binding_status,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bindingId != null">#{bindingId},</if>
+            <if test="userInfoId != null">#{userInfoId},</if>
+            <if test="deviceId != null">#{deviceId},</if>
+            <if test="deviceImei != null and deviceImei != ''">#{deviceImei},</if>
+            <if test="bindTime != null">#{bindTime},</if>
+            <if test="unbindTime != null">#{unbindTime},</if>
+            <if test="bindingStatus != null and bindingStatus != ''">#{bindingStatus},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateElderlyDeviceBinding" parameterType="ElderlyDeviceBinding">
+        update yl_elderly_device_binding
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userInfoId != null">user_info_id = #{userInfoId},</if>
+            <if test="deviceId != null">device_id = #{deviceId},</if>
+            <if test="deviceImei != null and deviceImei != ''">device_imei = #{deviceImei},</if>
+            <if test="bindTime != null">bind_time = #{bindTime},</if>
+            <if test="unbindTime != null">unbind_time = #{unbindTime},</if>
+            <if test="bindingStatus != null and bindingStatus != ''">binding_status = #{bindingStatus},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+        </trim>
+        where binding_id = #{bindingId}
+    </update>
+
+    <delete id="deleteElderlyDeviceBindingByBindingId" parameterType="Long">
+        delete from yl_elderly_device_binding where binding_id = #{bindingId}
+    </delete>
+
+    <delete id="deleteElderlyDeviceBindingByBindingIds" parameterType="String">
+        delete from yl_elderly_device_binding where binding_id in 
+        <foreach item="bindingId" collection="array" open="(" separator="," close=")">
+            #{bindingId}
+        </foreach>
+    </delete>
+</mapper>

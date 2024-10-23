@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moss.zhyl.mapper.AppointmentMapper">
+    
+    <resultMap type="Appointment" id="AppointmentResult">
+        <result property="appointmentId"    column="appointment_id"    />
+        <result property="reportTitle"    column="report_title"    />
+        <result property="userInfoId"    column="user_info_id"    />
+        <result property="appointmentContent"    column="appointment_content"    />
+        <result property="contactPhone"    column="contact_phone"    />
+        <result property="appointAddress"    column="appoint_address"    />
+        <result property="userId"    column="user_id"    />
+        <result property="appointmentTime"    column="appointment_time"    />
+        <result property="appointmentStatus"    column="appointment_status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectAppointmentVo">
+        select appointment_id, report_title, user_info_id, appointment_content, contact_phone, appoint_address, user_id, appointment_time, appointment_status, create_by, create_time, del_flag from yl_appointment
+    </sql>
+
+    <select id="selectAppointmentList" parameterType="Appointment" resultMap="AppointmentResult">
+        <include refid="selectAppointmentVo"/>
+        <where>  
+            <if test="reportTitle != null  and reportTitle != ''"> and report_title like concat('%', #{reportTitle}, '%')</if>
+            <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
+            <if test="contactPhone != null  and contactPhone != ''"> and contact_phone = #{contactPhone}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="params.beginAppointmentTime != null and params.beginAppointmentTime != '' and params.endAppointmentTime != null and params.endAppointmentTime != ''"> and appointment_time between #{params.beginAppointmentTime} and #{params.endAppointmentTime}</if>
+            <if test="appointmentStatus != null  and appointmentStatus != ''"> and appointment_status = #{appointmentStatus}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+        </where>
+    </select>
+    
+    <select id="selectAppointmentByAppointmentId" parameterType="Long" resultMap="AppointmentResult">
+        <include refid="selectAppointmentVo"/>
+        where appointment_id = #{appointmentId}
+    </select>
+
+    <insert id="insertAppointment" parameterType="Appointment">
+        insert into yl_appointment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="appointmentId != null">appointment_id,</if>
+            <if test="reportTitle != null and reportTitle != ''">report_title,</if>
+            <if test="userInfoId != null">user_info_id,</if>
+            <if test="appointmentContent != null">appointment_content,</if>
+            <if test="contactPhone != null and contactPhone != ''">contact_phone,</if>
+            <if test="appointAddress != null">appoint_address,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="appointmentTime != null">appointment_time,</if>
+            <if test="appointmentStatus != null and appointmentStatus != ''">appointment_status,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="appointmentId != null">#{appointmentId},</if>
+            <if test="reportTitle != null and reportTitle != ''">#{reportTitle},</if>
+            <if test="userInfoId != null">#{userInfoId},</if>
+            <if test="appointmentContent != null">#{appointmentContent},</if>
+            <if test="contactPhone != null and contactPhone != ''">#{contactPhone},</if>
+            <if test="appointAddress != null">#{appointAddress},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="appointmentTime != null">#{appointmentTime},</if>
+            <if test="appointmentStatus != null and appointmentStatus != ''">#{appointmentStatus},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAppointment" parameterType="Appointment">
+        update yl_appointment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="reportTitle != null and reportTitle != ''">report_title = #{reportTitle},</if>
+            <if test="userInfoId != null">user_info_id = #{userInfoId},</if>
+            <if test="appointmentContent != null">appointment_content = #{appointmentContent},</if>
+            <if test="contactPhone != null and contactPhone != ''">contact_phone = #{contactPhone},</if>
+            <if test="appointAddress != null">appoint_address = #{appointAddress},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="appointmentTime != null">appointment_time = #{appointmentTime},</if>
+            <if test="appointmentStatus != null and appointmentStatus != ''">appointment_status = #{appointmentStatus},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+        </trim>
+        where appointment_id = #{appointmentId}
+    </update>
+
+    <delete id="deleteAppointmentByAppointmentId" parameterType="Long">
+        delete from yl_appointment where appointment_id = #{appointmentId}
+    </delete>
+
+    <delete id="deleteAppointmentByAppointmentIds" parameterType="String">
+        delete from yl_appointment where appointment_id in 
+        <foreach item="appointmentId" collection="array" open="(" separator="," close=")">
+            #{appointmentId}
+        </foreach>
+    </delete>
+</mapper>
