@@ -2,6 +2,9 @@ package com.moss.zhyl.service.impl;
 
 import java.util.List;
 import com.moss.common.utils.DateUtils;
+import com.moss.common.utils.SecurityUtils;
+import com.moss.common.utils.uuid.IdUtils;
+import com.moss.zhyl.domain.enums.DelFlagEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.moss.zhyl.mapper.UserInfoMapper;
@@ -53,6 +56,9 @@ public class UserInfoServiceImpl implements IUserInfoService
     @Override
     public int insertUserInfo(UserInfo userInfo)
     {
+        userInfo.setUserInfoId(IdUtils.snowflakeId());
+        userInfo.setDelFlag(DelFlagEnum.DEL_FLAG_0.getValue());
+        userInfo.setCreateBy(SecurityUtils.getUsername());
         userInfo.setCreateTime(DateUtils.getNowDate());
         return userInfoMapper.insertUserInfo(userInfo);
     }
@@ -66,6 +72,7 @@ public class UserInfoServiceImpl implements IUserInfoService
     @Override
     public int updateUserInfo(UserInfo userInfo)
     {
+        userInfo.setUpdateBy(SecurityUtils.getUsername());
         userInfo.setUpdateTime(DateUtils.getNowDate());
         return userInfoMapper.updateUserInfo(userInfo);
     }

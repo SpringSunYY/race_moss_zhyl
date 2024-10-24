@@ -1,257 +1,310 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="家属姓名" prop="userInfoName">
-        <el-input
-          v-model="queryParams.userInfoName"
-          placeholder="请输入家属姓名"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="联系手机" prop="contactPhone">
-        <el-input
-          v-model="queryParams.contactPhone"
-          placeholder="请输入联系手机"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="角色" prop="userInfoRole">
-        <el-select v-model="queryParams.userInfoRole" placeholder="请选择角色" clearable>
-          <el-option
-            v-for="dict in dict.type.yl_user_info_role"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
+    <el-row :gutter="20">
+      <!--地址数据-->
+      <el-col :span="4" :xs="24">
+        <div class="head-container">
+          <el-input
+            v-model="addressName"
+            placeholder="请输入地址名称"
+            clearable
+            size="small"
+            prefix-icon="el-icon-search"
+            style="margin-bottom: 20px"
           />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="学历" prop="education">
-        <el-select v-model="queryParams.education" placeholder="请选择学历" clearable>
-          <el-option
-            v-for="dict in dict.type.yl_education"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="职业" prop="occupation">
-        <el-select v-model="queryParams.occupation" placeholder="请选择职业" clearable>
-          <el-option
-            v-for="dict in dict.type.yl_occupation"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="地址" prop="addressId">
-        <el-input
-          v-model="queryParams.addressId"
-          placeholder="请输入地址"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="微信openid" prop="wxOpenid">
-        <el-input
-          v-model="queryParams.wxOpenid"
-          placeholder="请输入微信openid"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="小程序openid" prop="miniOpenid">
-        <el-input
-          v-model="queryParams.miniOpenid"
-          placeholder="请输入小程序openid"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建人" prop="createBy">
-        <el-input
-          v-model="queryParams.createBy"
-          placeholder="请输入创建人"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="修改人" prop="updateBy">
-        <el-input
-          v-model="queryParams.updateBy"
-          placeholder="请输入修改人"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建时间">
-        <el-date-picker
-          v-model="daterangeCreateTime"
-          style="width: 240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item label="修改时间">
-        <el-date-picker
-          v-model="daterangeUpdateTime"
-          style="width: 240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item label="删除" prop="delFlag">
-        <el-select v-model="queryParams.delFlag" placeholder="请选择删除" clearable>
-          <el-option
-            v-for="dict in dict.type.yl_del_flag"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
+        </div>
+        <div class="head-container"
+             style="position: sticky; top: 0; z-index: 10; background-color: white; overflow-x: auto; white-space: nowrap;"
+        >
+          <div class="infinite-list-wrapper" style="max-height: 75vh; overflow-y: auto;">
+            <div style="min-width: fit-content;"> <!-- 设定最小宽度以便于滑动 -->
+              <el-tree
+                :data="addressOptions"
+                :props="defaultProps"
+                :expand-on-click-node="false"
+                :filter-node-method="filterNode"
+                ref="tree"
+                node-key="id"
+                default-expand-all
+                highlight-current
+                @node-click="handleNodeClick"
+                :render-content="renderContent"
+              />
+            </div>
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="20" :xs="24">
+        <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch"
+                 label-width="68px">
+          <el-form-item label="姓名" prop="userInfoName">
+            <el-input
+              v-model="queryParams.userInfoName"
+              placeholder="请输入家属姓名"
+              clearable
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+          <el-form-item label="联系手机" prop="contactPhone">
+            <el-input
+              v-model="queryParams.contactPhone"
+              placeholder="请输入联系手机"
+              clearable
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+          <el-form-item label="角色" prop="userInfoRole">
+            <el-select v-model="queryParams.userInfoRole" placeholder="请选择角色" clearable>
+              <el-option
+                v-for="dict in dict.type.yl_user_info_role"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="学历" prop="education">
+            <el-select v-model="queryParams.education" placeholder="请选择学历" clearable>
+              <el-option
+                v-for="dict in dict.type.yl_education"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="职业" prop="occupation">
+            <el-select v-model="queryParams.occupation" placeholder="请选择职业" clearable>
+              <el-option
+                v-for="dict in dict.type.yl_occupation"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
+          </el-form-item>
+          <!--          <el-form-item label="地址" prop="addressId">-->
+          <!--            <el-input-->
+          <!--              v-model="queryParams.addressId"-->
+          <!--              placeholder="请输入地址"-->
+          <!--              clearable-->
+          <!--              @keyup.enter.native="handleQuery"-->
+          <!--            />-->
+          <!--          </el-form-item>-->
+          <!--      <el-form-item label="微信openid" prop="wxOpenid">-->
+          <!--        <el-input-->
+          <!--          v-model="queryParams.wxOpenid"-->
+          <!--          placeholder="请输入微信openid"-->
+          <!--          clearable-->
+          <!--          @keyup.enter.native="handleQuery"-->
+          <!--        />-->
+          <!--      </el-form-item>-->
+          <!--      <el-form-item label="小程序openid" prop="miniOpenid">-->
+          <!--        <el-input-->
+          <!--          v-model="queryParams.miniOpenid"-->
+          <!--          placeholder="请输入小程序openid"-->
+          <!--          clearable-->
+          <!--          @keyup.enter.native="handleQuery"-->
+          <!--        />-->
+          <!--      </el-form-item>-->
+          <el-form-item label="创建人" prop="createBy">
+            <el-input
+              v-model="queryParams.createBy"
+              placeholder="请输入创建人"
+              clearable
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+          <el-form-item label="修改人" prop="updateBy">
+            <el-input
+              v-model="queryParams.updateBy"
+              placeholder="请输入修改人"
+              clearable
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+          <el-form-item label="创建时间">
+            <el-date-picker
+              v-model="daterangeCreateTime"
+              style="width: 240px"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item label="修改时间">
+            <el-date-picker
+              v-model="daterangeUpdateTime"
+              style="width: 240px"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            ></el-date-picker>
+          </el-form-item>
+          <!--          <el-form-item label="删除" prop="delFlag">-->
+          <!--            <el-select v-model="queryParams.delFlag" placeholder="请选择删除" clearable>-->
+          <!--              <el-option-->
+          <!--                v-for="dict in dict.type.yl_del_flag"-->
+          <!--                :key="dict.value"-->
+          <!--                :label="dict.label"-->
+          <!--                :value="dict.value"-->
+          <!--              />-->
+          <!--            </el-select>-->
+          <!--          </el-form-item>-->
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['zhyl:userInfo:add']"
-        >新增</el-button>
+        <el-row :gutter="10" class="mb8">
+          <el-col :span="1.5">
+            <el-button
+              type="primary"
+              plain
+              icon="el-icon-plus"
+              size="mini"
+              @click="handleAdd"
+              v-hasPermi="['zhyl:userInfo:add']"
+            >新增
+            </el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button
+              type="success"
+              plain
+              icon="el-icon-edit"
+              size="mini"
+              :disabled="single"
+              @click="handleUpdate"
+              v-hasPermi="['zhyl:userInfo:edit']"
+            >修改
+            </el-button>
+          </el-col>
+          <!--      <el-col :span="1.5">-->
+          <!--        <el-button-->
+          <!--          type="danger"-->
+          <!--          plain-->
+          <!--          icon="el-icon-delete"-->
+          <!--          size="mini"-->
+          <!--          :disabled="multiple"-->
+          <!--          @click="handleDelete"-->
+          <!--          v-hasPermi="['zhyl:userInfo:remove']"-->
+          <!--        >删除-->
+          <!--        </el-button>-->
+          <!--      </el-col>-->
+          <el-col :span="1.5">
+            <el-button
+              type="warning"
+              plain
+              icon="el-icon-download"
+              size="mini"
+              @click="handleExport"
+              v-hasPermi="['zhyl:userInfo:export']"
+            >导出
+            </el-button>
+          </el-col>
+          <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
+        </el-row>
+        <el-table v-loading="loading" :data="userInfoList" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55" align="center"/>
+          <el-table-column label="编号" :show-overflow-tooltip="true" align="center" v-if="columns[0].visible"
+                           prop="userInfoId"/>
+          <el-table-column label="姓名" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible"
+                           prop="userInfoName"/>
+          <el-table-column label="联系手机" :show-overflow-tooltip="true" align="center" v-if="columns[2].visible"
+                           prop="contactPhone"/>
+          <el-table-column label="用户头像" align="center" v-if="columns[3].visible" prop="userInfoProfile" width="100">
+            <template slot-scope="scope">
+              <image-preview :src="scope.row.userInfoProfile" :width="50" :height="50"/>
+            </template>
+          </el-table-column>
+          <el-table-column label="角色" align="center" v-if="columns[4].visible" prop="userInfoRole">
+            <template slot-scope="scope">
+              <dict-tag :options="dict.type.yl_user_info_role" :value="scope.row.userInfoRole"/>
+            </template>
+          </el-table-column>
+          <el-table-column label="身份证" :show-overflow-tooltip="true" align="center" v-if="columns[5].visible"
+                           prop="idCard"/>
+          <el-table-column label="学历" align="center" v-if="columns[6].visible" prop="education">
+            <template slot-scope="scope">
+              <dict-tag :options="dict.type.yl_education" :value="scope.row.education"/>
+            </template>
+          </el-table-column>
+          <el-table-column label="职业" align="center" v-if="columns[7].visible" prop="occupation">
+            <template slot-scope="scope">
+              <dict-tag :options="dict.type.yl_occupation" :value="scope.row.occupation"/>
+            </template>
+          </el-table-column>
+          <el-table-column label="地址" :show-overflow-tooltip="true" align="center" v-if="columns[8].visible"
+                           prop="addressId"/>
+          <el-table-column label="详细地址" :show-overflow-tooltip="true" align="center" v-if="columns[9].visible"
+                           prop="areaDetail"/>
+          <el-table-column label="微信openid" :show-overflow-tooltip="true" align="center" v-if="columns[10].visible"
+                           prop="wxOpenid"/>
+          <el-table-column label="小程序openid" :show-overflow-tooltip="true" align="center" v-if="columns[11].visible"
+                           prop="miniOpenid"/>
+          <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[12].visible"
+                           prop="createBy"/>
+          <el-table-column label="修改人" :show-overflow-tooltip="true" align="center" v-if="columns[13].visible"
+                           prop="updateBy"/>
+          <el-table-column label="创建时间" align="center" v-if="columns[14].visible" prop="createTime" width="180">
+            <template slot-scope="scope">
+              <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="修改时间" align="center" v-if="columns[15].visible" prop="updateTime" width="180">
+            <template slot-scope="scope">
+              <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click="handleUpdate(scope.row)"
+                v-hasPermi="['zhyl:userInfo:edit']"
+              >修改
+              </el-button>
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-delete"
+                @click="handleDelete(scope.row)"
+                v-hasPermi="['zhyl:userInfo:remove']"
+              >删除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="queryParams.pageNum"
+          :limit.sync="queryParams.pageSize"
+          @pagination="getList"
+        />
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['zhyl:userInfo:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['zhyl:userInfo:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['zhyl:userInfo:export']"
-        >导出</el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="userInfoList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="userInfoId" />
-        <el-table-column label="家属姓名" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible" prop="userInfoName" />
-        <el-table-column label="联系手机" :show-overflow-tooltip="true" align="center" v-if="columns[2].visible" prop="contactPhone" />
-        <el-table-column label="用户头像" align="center" v-if="columns[3].visible" prop="userInfoProfile" width="100">
-        <template slot-scope="scope">
-          <image-preview :src="scope.row.userInfoProfile" :width="50" :height="50"/>
-        </template>
-      </el-table-column>
-        <el-table-column label="角色" align="center" v-if="columns[4].visible" prop="userInfoRole">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.yl_user_info_role" :value="scope.row.userInfoRole"/>
-        </template>
-      </el-table-column>
-        <el-table-column label="身份证" :show-overflow-tooltip="true" align="center" v-if="columns[5].visible" prop="idCard" />
-        <el-table-column label="学历" align="center" v-if="columns[6].visible" prop="education">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.yl_education" :value="scope.row.education"/>
-        </template>
-      </el-table-column>
-        <el-table-column label="职业" align="center" v-if="columns[7].visible" prop="occupation">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.yl_occupation" :value="scope.row.occupation"/>
-        </template>
-      </el-table-column>
-        <el-table-column label="地址" :show-overflow-tooltip="true" align="center" v-if="columns[8].visible" prop="addressId" />
-        <el-table-column label="详细地址" :show-overflow-tooltip="true" align="center" v-if="columns[9].visible" prop="areaDetail" />
-        <el-table-column label="微信openid" :show-overflow-tooltip="true" align="center" v-if="columns[10].visible" prop="wxOpenid" />
-        <el-table-column label="小程序openid" :show-overflow-tooltip="true" align="center" v-if="columns[11].visible" prop="miniOpenid" />
-        <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[12].visible" prop="createBy" />
-        <el-table-column label="修改人" :show-overflow-tooltip="true" align="center" v-if="columns[13].visible" prop="updateBy" />
-        <el-table-column label="创建时间" align="center" v-if="columns[14].visible" prop="createTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-        <el-table-column label="修改时间" align="center" v-if="columns[15].visible" prop="updateTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['zhyl:userInfo:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['zhyl:userInfo:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
-
     <!-- 添加或修改用户信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="家属姓名" prop="userInfoName">
-          <el-input v-model="form.userInfoName" placeholder="请输入家属姓名" />
+        <el-form-item label="姓名" prop="userInfoName">
+          <el-input v-model="form.userInfoName" placeholder="请输入家属姓名"/>
         </el-form-item>
         <el-form-item label="联系手机" prop="contactPhone">
-          <el-input v-model="form.contactPhone" placeholder="请输入联系手机" />
+          <el-input v-model="form.contactPhone" placeholder="请输入联系手机"/>
         </el-form-item>
         <el-form-item label="用户头像" prop="userInfoProfile">
-          <image-upload v-model="form.userInfoProfile"/>
+          <image-upload v-model="form.userInfoProfile" :limit="1"/>
         </el-form-item>
         <el-form-item label="角色" prop="userInfoRole">
           <el-select v-model="form.userInfoRole" placeholder="请选择角色">
@@ -264,7 +317,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="身份证" prop="idCard">
-          <el-input v-model="form.idCard" placeholder="请输入身份证" />
+          <el-input v-model="form.idCard" placeholder="请输入身份证"/>
         </el-form-item>
         <el-form-item label="学历" prop="education">
           <el-select v-model="form.education" placeholder="请选择学历">
@@ -272,7 +325,7 @@
               v-for="dict in dict.type.yl_education"
               :key="dict.value"
               :label="dict.label"
-              :value="parseInt(dict.value)"
+              :value="dict.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -287,16 +340,17 @@
           </el-select>
         </el-form-item>
         <el-form-item label="地址" prop="addressId">
-          <el-input v-model="form.addressId" placeholder="请输入地址" />
+          <treeselect v-model="form.addressId" :options="addressOptions" :show-count="true"
+                      placeholder="请选择资产单位"/>
         </el-form-item>
         <el-form-item label="详细地址" prop="areaDetail">
-          <el-input v-model="form.areaDetail" placeholder="请输入详细地址" />
+          <el-input v-model="form.areaDetail" placeholder="请输入详细地址"/>
         </el-form-item>
         <el-form-item label="微信openid" prop="wxOpenid">
-          <el-input v-model="form.wxOpenid" placeholder="请输入微信openid" />
+          <el-input v-model="form.wxOpenid" placeholder="请输入微信openid"/>
         </el-form-item>
         <el-form-item label="小程序openid" prop="miniOpenid">
-          <el-input v-model="form.miniOpenid" placeholder="请输入小程序openid" />
+          <el-input v-model="form.miniOpenid" placeholder="请输入小程序openid"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -308,32 +362,44 @@
 </template>
 
 <script>
-import { listUserInfo, getUserInfo, delUserInfo, addUserInfo, updateUserInfo } from "@/api/zhyl/userInfo";
+import {listUserInfo, getUserInfo, delUserInfo, addUserInfo, updateUserInfo} from "@/api/zhyl/userInfo";
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import {listAddressTreeInfo} from "@/api/zhyl/addressInfo";
 
 export default {
   name: "UserInfo",
+  components: {Treeselect},
   dicts: ['yl_del_flag', 'yl_user_info_role', 'yl_education', 'yl_occupation'],
   data() {
     return {
+      //地址树选项
+      addressOptions: undefined,
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
+      //地址名称
+      addressName: '',
       //表格展示列
       columns: [
-        { key: 0, label: '编号', visible: true },
-          { key: 1, label: '家属姓名', visible: true },
-          { key: 2, label: '联系手机', visible: true },
-          { key: 3, label: '用户头像', visible: true },
-          { key: 4, label: '角色', visible: true },
-          { key: 5, label: '身份证', visible: true },
-          { key: 6, label: '学历', visible: true },
-          { key: 7, label: '职业', visible: true },
-          { key: 8, label: '地址', visible: true },
-          { key: 9, label: '详细地址', visible: true },
-          { key: 10, label: '微信openid', visible: true },
-          { key: 11, label: '小程序openid', visible: true },
-          { key: 12, label: '创建人', visible: true },
-          { key: 13, label: '修改人', visible: true },
-          { key: 14, label: '创建时间', visible: true },
-          { key: 15, label: '修改时间', visible: true },
-        ],
+        {key: 0, label: '编号', visible: false},
+        {key: 1, label: '姓名', visible: true},
+        {key: 2, label: '联系手机', visible: true},
+        {key: 3, label: '用户头像', visible: true},
+        {key: 4, label: '角色', visible: true},
+        {key: 5, label: '身份证', visible: true},
+        {key: 6, label: '学历', visible: true},
+        {key: 7, label: '职业', visible: true},
+        {key: 8, label: '地址', visible: true},
+        {key: 9, label: '详细地址', visible: true},
+        {key: 10, label: '微信openid', visible: false},
+        {key: 11, label: '小程序openid', visible: false},
+        {key: 12, label: '创建人', visible: true},
+        {key: 13, label: '修改人', visible: false},
+        {key: 14, label: '创建时间', visible: true},
+        {key: 15, label: '修改时间', visible: false},
+      ],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -379,27 +445,53 @@ export default {
       // 表单校验
       rules: {
         userInfoName: [
-          { required: true, message: "家属姓名不能为空", trigger: "blur" }
+          {required: true, message: "家属姓名不能为空", trigger: "blur"}
         ],
         userInfoRole: [
-          { required: true, message: "角色不能为空", trigger: "change" }
+          {required: true, message: "角色不能为空", trigger: "change"}
         ],
         createBy: [
-          { required: true, message: "创建人不能为空", trigger: "blur" }
+          {required: true, message: "创建人不能为空", trigger: "blur"}
         ],
         createTime: [
-          { required: true, message: "创建时间不能为空", trigger: "blur" }
+          {required: true, message: "创建时间不能为空", trigger: "blur"}
         ],
         delFlag: [
-          { required: true, message: "删除不能为空", trigger: "change" }
+          {required: true, message: "删除不能为空", trigger: "change"}
         ]
       }
     };
   },
   created() {
     this.getList();
+    this.getAddressTree()
   },
   methods: {
+    /**
+     * 查询地址树
+     */
+    getAddressTree() {
+      listAddressTreeInfo().then(res => {
+        this.addressOptions = res.data
+      })
+    },
+    // 筛选节点
+    filterNode(value, data) {
+      if (!value) return true
+      return data.label.indexOf(value) !== -1
+    },
+    // 节点单击事件
+    handleNodeClick(data) {
+      this.queryParams.addressId = data.id
+      this.handleQuery()
+    },
+    renderContent(h, {node, data}) {
+      return (
+        <el-tooltip content={data.label} placement="top">
+          <span>{data.label}</span>
+        </el-tooltip>
+      )
+    },
     /** 查询用户信息列表 */
     getList() {
       this.loading = true;
@@ -455,13 +547,14 @@ export default {
     resetQuery() {
       this.daterangeCreateTime = [];
       this.daterangeUpdateTime = [];
+      this.queryParams.addressId = null
       this.resetForm("queryForm");
       this.handleQuery();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.userInfoId)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -503,12 +596,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const userInfoIds = row.userInfoId || this.ids;
-      this.$modal.confirm('是否确认删除用户信息编号为"' + userInfoIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除用户信息编号为"' + userInfoIds + '"的数据项？').then(function () {
         return delUserInfo(userInfoIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {

@@ -1,7 +1,7 @@
 package com.moss.zhyl.mapper;
 
 import java.util.List;
-import com.moss.zhyl.domain.AddressInfo;
+import com.moss.common.core.domain.entity.AddressInfo;
 
 /**
  * 地址信息Mapper接口

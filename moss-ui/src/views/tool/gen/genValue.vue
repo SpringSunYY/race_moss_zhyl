@@ -183,7 +183,6 @@ export default {
         }
       }
       this.genInfo.tableColumnValues = this.tableColumnValues
-      console.log(this.genInfo)
       genValue(this.genInfo).then(res => {
         this.$message.success('成功')
       })

@@ -16,7 +16,7 @@ import com.moss.common.annotation.Log;
 import com.moss.common.core.controller.BaseController;
 import com.moss.common.core.domain.AjaxResult;
 import com.moss.common.enums.BusinessType;
-import com.moss.zhyl.domain.AddressInfo;
+import com.moss.common.core.domain.entity.AddressInfo;
 import com.moss.zhyl.service.IAddressInfoService;
 import com.moss.common.utils.poi.ExcelUtil;
 
@@ -42,6 +42,15 @@ public class AddressInfoController extends BaseController
     {
         List<AddressInfo> list = addressInfoService.selectAddressInfoList(addressInfo);
         return success(list);
+    }
+
+    /**
+     * 查询地址信息列表树形结构
+     */
+    @PreAuthorize("@ss.hasPermi('zhyl:addressInfo:list')")
+    @GetMapping("/addressTree")
+    public AjaxResult addressTree(AddressInfo addressInfo) {
+        return success(addressInfoService.addressTree(addressInfo));
     }
 
     /**

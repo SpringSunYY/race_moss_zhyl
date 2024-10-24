@@ -52,7 +52,7 @@
         />
       </el-form-item>
       <el-form-item>
-	    <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
@@ -66,7 +66,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['zhyl:addressInfo:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -75,7 +76,8 @@
           icon="el-icon-sort"
           size="mini"
           @click="toggleExpandAll"
-        >展开/折叠</el-button>
+        >展开/折叠
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
@@ -88,18 +90,21 @@
       :default-expand-all="isExpandAll"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column label="父节点" :show-overflow-tooltip="true" v-if="columns[0].visible" prop="parentId" />
-        <el-table-column label="编码" align="center" :show-overflow-tooltip="true" v-if="columns[1].visible" prop="code" />
-        <el-table-column label="名称" align="center" :show-overflow-tooltip="true" v-if="columns[2].visible" prop="name" />
-        <el-table-column label="级别" align="center" v-if="columns[3].visible" prop="level">
+      <el-table-column label="父节点" :show-overflow-tooltip="true" v-if="columns[0].visible" prop="parentId"/>
+      <el-table-column label="名称" align="center" :show-overflow-tooltip="true" v-if="columns[1].visible" prop="name"/>
+      <el-table-column label="级别" align="center" v-if="columns[2].visible" prop="level">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yl_address_type" :value="scope.row.level"/>
         </template>
       </el-table-column>
-        <el-table-column label="经纬度" align="center" :show-overflow-tooltip="true" v-if="columns[4].visible" prop="center" />
-        <el-table-column label="备注" align="center" :show-overflow-tooltip="true" v-if="columns[5].visible" prop="remark" />
-        <el-table-column label="排序" align="center" :show-overflow-tooltip="true" v-if="columns[6].visible" prop="orderNum" />
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="编码" align="center" :show-overflow-tooltip="true" v-if="columns[3].visible" prop="code"/>
+      <el-table-column label="经纬度" align="center" :show-overflow-tooltip="true" v-if="columns[4].visible"
+                       prop="center"/>
+      <el-table-column label="备注" align="center" :show-overflow-tooltip="true" v-if="columns[5].visible"
+                       prop="remark"/>
+      <el-table-column label="排序" align="center" :show-overflow-tooltip="true" v-if="columns[6].visible"
+                       prop="orderNum"/>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -107,21 +112,24 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['zhyl:addressInfo:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-plus"
             @click="handleAdd(scope.row)"
             v-hasPermi="['zhyl:addressInfo:add']"
-          >新增</el-button>
+          >新增
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['zhyl:addressInfo:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -130,13 +138,14 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="父节点" prop="parentId">
-          <treeselect v-model="form.parentId" :options="addressInfoOptions" :normalizer="normalizer" placeholder="请选择父节点" />
+          <treeselect v-model="form.parentId" :options="addressInfoOptions" :normalizer="normalizer"
+                      placeholder="请选择父节点"/>
         </el-form-item>
         <el-form-item label="编码" prop="code">
-          <el-input v-model="form.code" placeholder="请输入编码" />
+          <el-input v-model="form.code" placeholder="请输入编码"/>
         </el-form-item>
         <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入名称" />
+          <el-input v-model="form.name" placeholder="请输入名称"/>
         </el-form-item>
         <el-form-item label="级别" prop="level">
           <el-select v-model="form.level" placeholder="请选择级别">
@@ -148,14 +157,14 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="排序" prop="orderNum">
+          <el-input-number v-model="form.orderNum" placeholder="请输入排序"/>
+        </el-form-item>
         <el-form-item label="经纬度" prop="center">
-          <el-input v-model="form.center" placeholder="请输入经纬度" />
+          <el-input v-model="form.center" placeholder="请输入经纬度"/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="排序" prop="orderNum">
-          <el-input v-model="form.orderNum" placeholder="请输入排序" />
+          <el-input v-model="form.remark" placeholder="请输入备注"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -167,7 +176,13 @@
 </template>
 
 <script>
-import { listAddressInfo, getAddressInfo, delAddressInfo, addAddressInfo, updateAddressInfo } from "@/api/zhyl/addressInfo";
+import {
+  listAddressInfo,
+  getAddressInfo,
+  delAddressInfo,
+  addAddressInfo,
+  updateAddressInfo
+} from "@/api/zhyl/addressInfo";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
@@ -181,14 +196,14 @@ export default {
     return {
       //表格展示列
       columns: [
-          { key: 0, label: '父节点', visible: true },
-            { key: 1, label: '编码', visible: true },
-            { key: 2, label: '名称', visible: true },
-            { key: 3, label: '级别', visible: true },
-            { key: 4, label: '经纬度', visible: true },
-            { key: 5, label: '备注', visible: true },
-            { key: 6, label: '排序', visible: true },
-        ],
+        {key: 0, label: '父节点', visible: false},
+        {key: 1, label: '名称', visible: true},
+        {key: 2, label: '级别', visible: true},
+        {key: 3, label: '编码', visible: true},
+        {key: 4, label: '经纬度', visible: true},
+        {key: 5, label: '备注', visible: true},
+        {key: 6, label: '排序', visible: false},
+      ],
       // 遮罩层
       loading: true,
       // 显示搜索条件
@@ -219,16 +234,16 @@ export default {
       // 表单校验
       rules: {
         parentId: [
-          { required: true, message: "父节点不能为空", trigger: "blur" }
+          {required: true, message: "父节点不能为空", trigger: "blur"}
         ],
         code: [
-          { required: true, message: "编码不能为空", trigger: "blur" }
+          {required: false, message: "编码不能为空", trigger: "blur"}
         ],
         name: [
-          { required: true, message: "名称不能为空", trigger: "blur" }
+          {required: true, message: "名称不能为空", trigger: "blur"}
         ],
         level: [
-          { required: true, message: "级别不能为空", trigger: "change" }
+          {required: true, message: "级别不能为空", trigger: "change"}
         ],
       }
     };
@@ -256,11 +271,11 @@ export default {
         children: node.children
       };
     },
-	/** 查询地址信息下拉树结构 */
+    /** 查询地址信息下拉树结构 */
     getTreeselect() {
       listAddressInfo().then(response => {
         this.addressInfoOptions = [];
-        const data = { addressId: 0, name: '顶级节点', children: [] };
+        const data = {addressId: 0, name: '顶级节点', children: []};
         data.children = this.handleTree(response.data, "addressId", "parentId");
         this.addressInfoOptions.push(data);
       });
@@ -349,12 +364,13 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.$modal.confirm('是否确认删除地址信息编号为"' + row.addressId + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除地址信息编号为"' + row.addressId + '"的数据项？').then(function () {
         return delAddressInfo(row.addressId);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     }
   }
 };

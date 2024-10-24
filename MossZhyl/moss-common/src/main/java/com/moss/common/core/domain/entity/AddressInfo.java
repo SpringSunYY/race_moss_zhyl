@@ -1,9 +1,13 @@
-package com.moss.zhyl.domain;
+package com.moss.common.core.domain.entity;
 
+import com.moss.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.moss.common.annotation.Excel;
 import com.moss.common.core.domain.TreeEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 地址信息对象 yl_address_info
@@ -11,7 +15,7 @@ import com.moss.common.core.domain.TreeEntity;
  * @author YY
  * @date 2024-10-23
  */
-public class AddressInfo extends TreeEntity
+public class AddressInfo extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
@@ -33,6 +37,18 @@ public class AddressInfo extends TreeEntity
     /** 经纬度 */
     @Excel(name = "经纬度")
     private String center;
+
+    /** 父ID */
+    private Long parentId;
+
+    /** 显示顺序 */
+    private Integer orderNum;
+
+    /** 祖级列表 */
+    private String ancestors;
+
+    /** 子集 */
+    private List<AddressInfo> children = new ArrayList<AddressInfo>();
 
     public void setAddressId(Long addressId) 
     {
@@ -78,6 +94,38 @@ public class AddressInfo extends TreeEntity
     public String getCenter() 
     {
         return center;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public Integer getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
+    }
+
+    public String getAncestors() {
+        return ancestors;
+    }
+
+    public void setAncestors(String ancestors) {
+        this.ancestors = ancestors;
+    }
+
+    public List<AddressInfo> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<AddressInfo> children) {
+        this.children = children;
     }
 
     @Override

@@ -8,6 +8,14 @@ export function listAddressInfo(query) {
     params: query
   })
 }
+// 查询地址信息列表 树形结构
+export function listAddressTreeInfo(query) {
+  return request({
+    url: '/zhyl/addressInfo/addressTree',
+    method: 'get',
+    params: query
+  })
+}
 
 // 查询地址信息详细
 export function getAddressInfo(addressId) {
