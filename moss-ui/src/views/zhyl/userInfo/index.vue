@@ -63,6 +63,16 @@
               />
             </el-select>
           </el-form-item>
+          <el-form-item label="性别" prop="sex">
+            <el-select v-model="queryParams.sex" placeholder="请选择性别" clearable>
+              <el-option
+                v-for="dict in dict.type.sys_user_sex"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item label="学历" prop="education">
             <el-select v-model="queryParams.education" placeholder="请选择学历" clearable>
               <el-option
@@ -212,8 +222,7 @@
         </el-row>
         <el-table v-loading="loading" :data="userInfoList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55" align="center"/>
-          <el-table-column label="编号" :show-overflow-tooltip="true" align="center" v-if="columns[0].visible"
-                           prop="userInfoId"/>
+          <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="userInfoId"/>
           <el-table-column label="姓名" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible"
                            prop="userInfoName"/>
           <el-table-column label="联系手机" :show-overflow-tooltip="true" align="center" v-if="columns[2].visible"
@@ -228,36 +237,41 @@
               <dict-tag :options="dict.type.yl_user_info_role" :value="scope.row.userInfoRole"/>
             </template>
           </el-table-column>
-          <el-table-column label="身份证" :show-overflow-tooltip="true" align="center" v-if="columns[5].visible"
+          <el-table-column label="性别" align="center" v-if="columns[5].visible" prop="sex">
+            <template slot-scope="scope">
+              <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.sex"/>
+            </template>
+          </el-table-column>
+          <el-table-column label="身份证" :show-overflow-tooltip="true" align="center" v-if="columns[6].visible"
                            prop="idCard"/>
-          <el-table-column label="学历" align="center" v-if="columns[6].visible" prop="education">
+          <el-table-column label="学历" align="center" v-if="columns[7].visible" prop="education">
             <template slot-scope="scope">
               <dict-tag :options="dict.type.yl_education" :value="scope.row.education"/>
             </template>
           </el-table-column>
-          <el-table-column label="职业" align="center" v-if="columns[7].visible" prop="occupation">
+          <el-table-column label="职业" align="center" v-if="columns[8].visible" prop="occupation">
             <template slot-scope="scope">
               <dict-tag :options="dict.type.yl_occupation" :value="scope.row.occupation"/>
             </template>
           </el-table-column>
-          <el-table-column label="地址" :show-overflow-tooltip="true" align="center" v-if="columns[8].visible"
+          <el-table-column label="地址" :show-overflow-tooltip="true" align="center" v-if="columns[9].visible"
                            prop="addressId"/>
-          <el-table-column label="详细地址" :show-overflow-tooltip="true" align="center" v-if="columns[9].visible"
+          <el-table-column label="详细地址" :show-overflow-tooltip="true" align="center" v-if="columns[10].visible"
                            prop="areaDetail"/>
-          <el-table-column label="微信openid" :show-overflow-tooltip="true" align="center" v-if="columns[10].visible"
+          <el-table-column label="微信openid" :show-overflow-tooltip="true" align="center" v-if="columns[11].visible"
                            prop="wxOpenid"/>
-          <el-table-column label="小程序openid" :show-overflow-tooltip="true" align="center" v-if="columns[11].visible"
+          <el-table-column label="小程序openid" :show-overflow-tooltip="true" align="center" v-if="columns[12].visible"
                            prop="miniOpenid"/>
-          <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[12].visible"
+          <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[13].visible"
                            prop="createBy"/>
-          <el-table-column label="修改人" :show-overflow-tooltip="true" align="center" v-if="columns[13].visible"
+          <el-table-column label="修改人" :show-overflow-tooltip="true" align="center" v-if="columns[14].visible"
                            prop="updateBy"/>
-          <el-table-column label="创建时间" align="center" v-if="columns[14].visible" prop="createTime" width="180">
+          <el-table-column label="创建时间" align="center" v-if="columns[15].visible" prop="createTime" width="180">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="修改时间" align="center" v-if="columns[15].visible" prop="updateTime" width="180">
+          <el-table-column label="修改时间" align="center" v-if="columns[16].visible" prop="updateTime" width="180">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
             </template>
@@ -280,6 +294,15 @@
                 v-hasPermi="['zhyl:userInfo:remove']"
               >删除
               </el-button>
+              <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)"
+                           v-hasPermi="['zhyl:userInfo:updatePassword']">
+                <el-button size="mini" type="text" icon="el-icon-d-arrow-right">更多</el-button>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item command="handleResetPwd" icon="el-icon-key"
+                                    v-hasPermi="['zhyl:userInfo:updatePassword']">重置密码
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
             </template>
           </el-table-column>
         </el-table>
@@ -295,64 +318,96 @@
     </el-row>
 
     <!-- 添加或修改用户信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="姓名" prop="userInfoName">
-          <el-input v-model="form.userInfoName" placeholder="请输入家属姓名"/>
-        </el-form-item>
-        <el-form-item label="联系手机" prop="contactPhone">
-          <el-input v-model="form.contactPhone" placeholder="请输入联系手机"/>
-        </el-form-item>
-        <el-form-item label="用户头像" prop="userInfoProfile">
-          <image-upload v-model="form.userInfoProfile" :limit="1"/>
-        </el-form-item>
-        <el-form-item label="角色" prop="userInfoRole">
-          <el-select v-model="form.userInfoRole" placeholder="请选择角色">
-            <el-option
-              v-for="dict in dict.type.yl_user_info_role"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="身份证" prop="idCard">
-          <el-input v-model="form.idCard" placeholder="请输入身份证"/>
-        </el-form-item>
-        <el-form-item label="学历" prop="education">
-          <el-select v-model="form.education" placeholder="请选择学历">
-            <el-option
-              v-for="dict in dict.type.yl_education"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="职业" prop="occupation">
-          <el-select v-model="form.occupation" placeholder="请选择职业">
-            <el-option
-              v-for="dict in dict.type.yl_occupation"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="地址" prop="addressId">
-          <treeselect v-model="form.addressId" :options="addressOptions" :show-count="true"
-                      placeholder="请选择资产单位"/>
-        </el-form-item>
-        <el-form-item label="详细地址" prop="areaDetail">
-          <el-input v-model="form.areaDetail" placeholder="请输入详细地址"/>
-        </el-form-item>
-        <el-form-item label="微信openid" prop="wxOpenid">
-          <el-input v-model="form.wxOpenid" placeholder="请输入微信openid"/>
-        </el-form-item>
-        <el-form-item label="小程序openid" prop="miniOpenid">
-          <el-input v-model="form.miniOpenid" placeholder="请输入小程序openid"/>
-        </el-form-item>
-      </el-form>
+    <el-dialog :title="title" :visible.sync="open" width="1200px" append-to-body>
+      <el-row :gutter="20">
+        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+          <el-col :span="6">
+            <el-form-item label="姓名" prop="userInfoName">
+              <el-input v-model="form.userInfoName" placeholder="请输入家属姓名"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="联系手机" prop="contactPhone">
+              <el-input v-model="form.contactPhone" placeholder="请输入联系手机"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="角色" prop="userInfoRole">
+              <el-select v-model="form.userInfoRole" placeholder="请选择角色">
+                <el-option
+                  v-for="dict in dict.type.yl_user_info_role"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="身份证" prop="idCard">
+              <el-input v-model="form.idCard" placeholder="请输入身份证"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="性别" prop="sex">
+              <el-select v-model="form.sex" placeholder="请选择性别">
+                <el-option
+                  v-for="dict in dict.type.sys_user_sex"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="学历" prop="education">
+              <el-select v-model="form.education" placeholder="请选择学历">
+                <el-option
+                  v-for="dict in dict.type.yl_education"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="职业" prop="occupation">
+              <el-select v-model="form.occupation" placeholder="请选择职业">
+                <el-option
+                  v-for="dict in dict.type.yl_occupation"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="地址" prop="addressId">
+              <treeselect v-model="form.addressId" :options="addressOptions" :show-count="true"
+                          placeholder="请选择资产单位"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="详细地址" prop="areaDetail">
+              <el-input v-model="form.areaDetail" placeholder="请输入详细地址"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="用户头像" prop="userInfoProfile">
+              <image-upload v-model="form.userInfoProfile" :limit="1"/>
+            </el-form-item>
+          </el-col>
+          <!--          <el-form-item label="微信openid" prop="wxOpenid">-->
+          <!--            <el-input v-model="form.wxOpenid" placeholder="请输入微信openid"/>-->
+          <!--          </el-form-item>-->
+          <!--          <el-form-item label="小程序openid" prop="miniOpenid">-->
+          <!--            <el-input v-model="form.miniOpenid" placeholder="请输入小程序openid"/>-->
+          <!--          </el-form-item>-->
+        </el-form>
+      </el-row>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -362,7 +417,7 @@
 </template>
 
 <script>
-import {listUserInfo, getUserInfo, delUserInfo, addUserInfo, updateUserInfo} from "@/api/zhyl/userInfo";
+import {listUserInfo, getUserInfo, delUserInfo, addUserInfo, updateUserInfo, resetUserPwd} from "@/api/zhyl/userInfo";
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import {listAddressTreeInfo} from "@/api/zhyl/addressInfo";
@@ -370,7 +425,7 @@ import {listAddressTreeInfo} from "@/api/zhyl/addressInfo";
 export default {
   name: "UserInfo",
   components: {Treeselect},
-  dicts: ['yl_del_flag', 'yl_user_info_role', 'yl_education', 'yl_occupation'],
+  dicts: ['yl_del_flag', 'yl_user_info_role', 'yl_education', 'yl_occupation', 'sys_user_sex'],
   data() {
     return {
       //地址树选项
@@ -382,23 +437,25 @@ export default {
       //地址名称
       addressName: '',
       //表格展示列
+      //表格展示列
       columns: [
         {key: 0, label: '编号', visible: false},
         {key: 1, label: '姓名', visible: true},
         {key: 2, label: '联系手机', visible: true},
         {key: 3, label: '用户头像', visible: true},
         {key: 4, label: '角色', visible: true},
-        {key: 5, label: '身份证', visible: true},
-        {key: 6, label: '学历', visible: true},
-        {key: 7, label: '职业', visible: true},
-        {key: 8, label: '地址', visible: true},
-        {key: 9, label: '详细地址', visible: true},
-        {key: 10, label: '微信openid', visible: false},
-        {key: 11, label: '小程序openid', visible: false},
-        {key: 12, label: '创建人', visible: true},
-        {key: 13, label: '修改人', visible: false},
-        {key: 14, label: '创建时间', visible: true},
-        {key: 15, label: '修改时间', visible: false},
+        {key: 5, label: '性别', visible: true},
+        {key: 6, label: '身份证', visible: true},
+        {key: 7, label: '学历', visible: true},
+        {key: 8, label: '职业', visible: true},
+        {key: 9, label: '地址', visible: false},
+        {key: 10, label: '详细地址', visible: false},
+        {key: 11, label: '微信openid', visible: false},
+        {key: 12, label: '小程序openid', visible: false},
+        {key: 13, label: '创建人', visible: false},
+        {key: 14, label: '修改人', visible: false},
+        {key: 15, label: '创建时间', visible: true},
+        {key: 16, label: '修改时间', visible: false},
       ],
       // 遮罩层
       loading: true,
@@ -428,17 +485,17 @@ export default {
         pageSize: 10,
         userInfoName: null,
         contactPhone: null,
+        userInfoProfile: null,
         userInfoRole: null,
+        sex: null,
+        idCard: null,
         education: null,
         occupation: null,
         addressId: null,
-        wxOpenid: null,
-        miniOpenid: null,
         createBy: null,
         updateBy: null,
         createTime: null,
         updateTime: null,
-        delFlag: null
       },
       // 表单参数
       form: {},
@@ -467,6 +524,36 @@ export default {
     this.getAddressTree()
   },
   methods: {
+    // 更多操作触发
+    handleCommand(command, row) {
+      switch (command) {
+        case "handleResetPwd":
+          this.handleResetPwd(row);
+          break;
+        default:
+          break;
+      }
+    },
+    /** 重置密码按钮操作 */
+    handleResetPwd(row) {
+      this.$prompt('请输入"' + row.userInfoName + '"的新密码', "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnClickModal: false,
+        inputPattern: /^.{5,20}$/,
+        inputErrorMessage: "用户密码长度必须介于 5 和 20 之间",
+        inputValidator: (value) => {
+          if (/<|>|"|'|\||\\/.test(value)) {
+            return "不能包含非法字符：< > \" ' \\\ |"
+          }
+        },
+      }).then(({value}) => {
+        resetUserPwd(row.userInfoId, value).then(response => {
+          this.$modal.msgSuccess("修改成功，新密码是：" + value);
+        });
+      }).catch(() => {
+      });
+    },
     /**
      * 查询地址树
      */
@@ -523,6 +610,8 @@ export default {
         contactPhone: null,
         userInfoProfile: null,
         userInfoRole: null,
+        sex: null,
+        password: null,
         idCard: null,
         education: null,
         occupation: null,

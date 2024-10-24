@@ -2,6 +2,9 @@ package com.moss.zhyl.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.moss.common.core.domain.entity.SysUser;
+import com.moss.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -100,5 +103,16 @@ public class UserInfoController extends BaseController
     public AjaxResult remove(@PathVariable Long[] userInfoIds)
     {
         return toAjax(userInfoService.deleteUserInfoByUserInfoIds(userInfoIds));
+    }
+
+    /**
+     * 重置密码
+     */
+    @PreAuthorize("@ss.hasPermi('zhyl:userInfo:updatePassword')")
+    @Log(title = "用户信息管理", businessType = BusinessType.UPDATE)
+    @PutMapping("/resetPwd")
+    public AjaxResult resetPwd(@RequestBody UserInfo user)
+    {
+        return toAjax(userInfoService.resetPwd(user));
     }
 }

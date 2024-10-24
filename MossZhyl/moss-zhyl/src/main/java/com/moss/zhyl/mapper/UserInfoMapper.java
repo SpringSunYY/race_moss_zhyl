@@ -2,6 +2,7 @@ package com.moss.zhyl.mapper;
 
 import java.util.List;
 import com.moss.zhyl.domain.UserInfo;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 用户信息Mapper接口
@@ -58,4 +59,8 @@ public interface UserInfoMapper
      * @return 结果
      */
     public int deleteUserInfoByUserInfoIds(Long[] userInfoIds);
+
+    UserInfo selectUserInfoByPhone(@Param("contactPhone") String contactPhone);
+
+    UserInfo selectUserInfoByIdCard(@Param("idCard") String idCard);
 }

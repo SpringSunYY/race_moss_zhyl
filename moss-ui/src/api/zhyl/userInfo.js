@@ -26,6 +26,19 @@ export function addUserInfo(data) {
   })
 }
 
+// 用户密码重置
+export function resetUserPwd(userInfoId, password) {
+  const data = {
+    userInfoId,
+    password
+  }
+  return request({
+    url: '/zhyl/userInfo/resetPwd',
+    method: 'put',
+    data: data
+  })
+}
+
 // 修改用户信息
 export function updateUserInfo(data) {
   return request({

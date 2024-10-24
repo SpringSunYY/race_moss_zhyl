@@ -22,10 +22,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
         <result property="delFlag"    column="del_flag"    />
+        <result property="sex"    column="sex"    />
+        <result property="password"    column="password"    />
     </resultMap>
 
     <sql id="selectUserInfoVo">
-        select user_info_id, user_info_name, contact_phone, user_info_profile, user_info_role, id_card, education, occupation, address_id, area_detail, wx_openid, mini_openid, create_by, update_by, create_time, update_time, del_flag from yl_user_info
+        select user_info_id, user_info_name, contact_phone, user_info_profile, user_info_role, sex, password, id_card, education, occupation, address_id, area_detail, wx_openid, mini_openid, create_by, update_by, create_time, update_time, del_flag from yl_user_info
     </sql>
 
     <select id="selectUserInfoList" parameterType="UserInfo" resultMap="UserInfoResult">
@@ -36,6 +38,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </if>
             <if test="contactPhone != null  and contactPhone != ''">and contact_phone = #{contactPhone}</if>
             <if test="userInfoRole != null  and userInfoRole != ''">and user_info_role = #{userInfoRole}</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
             <if test="education != null ">and education = #{education}</if>
             <if test="occupation != null  and occupation != ''">and occupation = #{occupation}</if>
             <if test="addressId != null ">and
@@ -65,6 +69,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectUserInfoVo"/>
         where user_info_id = #{userInfoId}
     </select>
+    <select id="selectUserInfoByPhone" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        where contact_phone=#{contactPhone}
+    </select>
+    <select id="selectUserInfoByIdCard" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        where id_card=#{idCard}
+    </select>
 
     <insert id="insertUserInfo" parameterType="UserInfo">
         insert into yl_user_info
@@ -74,6 +86,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contactPhone != null">contact_phone,</if>
             <if test="userInfoProfile != null">user_info_profile,</if>
             <if test="userInfoRole != null and userInfoRole != ''">user_info_role,</if>
+            <if test="sex != null">sex,</if>
+            <if test="password != null and password != ''">password,</if>
             <if test="idCard != null">id_card,</if>
             <if test="education != null">education,</if>
             <if test="occupation != null">occupation,</if>
@@ -86,13 +100,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="delFlag != null and delFlag != ''">del_flag,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userInfoId != null">#{userInfoId},</if>
             <if test="userInfoName != null and userInfoName != ''">#{userInfoName},</if>
             <if test="contactPhone != null">#{contactPhone},</if>
             <if test="userInfoProfile != null">#{userInfoProfile},</if>
             <if test="userInfoRole != null and userInfoRole != ''">#{userInfoRole},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="password != null and password != ''">#{password},</if>
             <if test="idCard != null">#{idCard},</if>
             <if test="education != null">#{education},</if>
             <if test="occupation != null">#{occupation},</if>
@@ -105,7 +121,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateUserInfo" parameterType="UserInfo">
@@ -115,6 +131,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contactPhone != null">contact_phone = #{contactPhone},</if>
             <if test="userInfoProfile != null">user_info_profile = #{userInfoProfile},</if>
             <if test="userInfoRole != null and userInfoRole != ''">user_info_role = #{userInfoRole},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
             <if test="idCard != null">id_card = #{idCard},</if>
             <if test="education != null">education = #{education},</if>
             <if test="occupation != null">occupation = #{occupation},</if>
@@ -130,6 +148,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where user_info_id = #{userInfoId}
     </update>
+
 
     <delete id="deleteUserInfoByUserInfoId" parameterType="Long">
         update yl_user_info set del_flag='1' where user_info_id = #{userInfoId}
