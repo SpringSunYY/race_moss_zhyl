@@ -1,19 +1,20 @@
 package com.moss.zhyl.service;
 
 import java.util.List;
+
 import com.moss.zhyl.domain.ElderlyFamily;
+import com.moss.zhyl.domain.dto.UserInfoElderlyDto;
 
 /**
  * 家属信息Service接口
- * 
+ *
  * @author YY
  * @date 2024-10-23
  */
-public interface IElderlyFamilyService 
-{
+public interface IElderlyFamilyService {
     /**
      * 查询家属信息
-     * 
+     *
      * @param elderlyFamilyId 家属信息主键
      * @return 家属信息
      */
@@ -21,7 +22,7 @@ public interface IElderlyFamilyService
 
     /**
      * 查询家属信息列表
-     * 
+     *
      * @param elderlyFamily 家属信息
      * @return 家属信息集合
      */
@@ -29,7 +30,7 @@ public interface IElderlyFamilyService
 
     /**
      * 新增家属信息
-     * 
+     *
      * @param elderlyFamily 家属信息
      * @return 结果
      */
@@ -37,7 +38,7 @@ public interface IElderlyFamilyService
 
     /**
      * 修改家属信息
-     * 
+     *
      * @param elderlyFamily 家属信息
      * @return 结果
      */
@@ -45,7 +46,7 @@ public interface IElderlyFamilyService
 
     /**
      * 批量删除家属信息
-     * 
+     *
      * @param elderlyFamilyIds 需要删除的家属信息主键集合
      * @return 结果
      */
@@ -53,9 +54,20 @@ public interface IElderlyFamilyService
 
     /**
      * 删除家属信息信息
-     * 
+     *
      * @param elderlyFamilyId 家属信息主键
      * @return 结果
      */
     public int deleteElderlyFamilyByElderlyFamilyId(Long elderlyFamilyId);
+
+    /**
+     * @description: 插入家属信息
+     * @author: YY
+     * @method: insertElderlyFamilyByUserInfoElderlyDto
+     * @date: 2024/10/25 17:25
+     * @param:
+     * @param: userInfoElderlyDto
+     * @return: int
+     **/
+    public int insertElderlyFamilyByUserInfoElderlyDto(UserInfoElderlyDto userInfoElderlyDto);
 }

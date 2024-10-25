@@ -2,12 +2,22 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="长者" prop="userInfoId">
-        <el-input
+        <el-select
           v-model="queryParams.userInfoId"
-          placeholder="请输入长者"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+          filterable
+          remote
+          reserve-keyword
+          :disabled="this.form.elderlyId!=null"
+          placeholder="请输入手机号码"
+          :remote-method="remoteElderlyUserInfoMethod"
+          :loading="elderlyUserInfoLoading">
+          <el-option
+            v-for="item in elderlyUserInfoList"
+            :key="item.userInfoId"
+            :label="item.userInfoName"
+            :value="item.userInfoId">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="失能情况" prop="disabilityStatus">
         <el-select v-model="queryParams.disabilityStatus" placeholder="请选择失能情况" clearable>
@@ -210,7 +220,7 @@
             :disabled="this.form.elderlyId!=null"
             placeholder="请输入手机号码"
             :remote-method="remoteElderlyUserInfoMethod"
-            :loading="loading">
+            :loading="elderlyUserInfoLoading">
             <el-option
               v-for="item in elderlyUserInfoList"
               :key="item.userInfoId"
@@ -278,7 +288,7 @@ export default {
       },
       // 长者信息表格数据
       elderlyUserInfoList: [],
-      elderlyUserInfoLoading: [],
+      elderlyUserInfoLoading: true,
       //表格展示列
       columns: [
         {key: 0, label: '编号', visible: false},
@@ -362,14 +372,12 @@ export default {
     },
 
     getElderlyUserInfoList() {
-      console.log(this.form)
       if (this.form.userInfoId !== null && this.form.userInfoId !== '') {
         this.queryParamsElderly.userInfoId = this.form.userInfoId
       }
       if (this.queryParamsElderly.contactPhone !== '') {
         this.queryParamsElderly.userInfoId = null
       }
-      console.log(this.queryParamsElderly)
       listUserInfo(this.queryParamsElderly).then(response => {
         this.elderlyUserInfoList = response.rows
         this.elderlyUserInfoLoading = false

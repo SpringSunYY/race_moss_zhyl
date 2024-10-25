@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moss.zhyl.mapper.ElderlyFamilyMapper">
-    
+
     <resultMap type="ElderlyFamily" id="ElderlyFamilyResult">
-        <result property="elderlyFamilyId"    column="elderly_family_id"    />
-        <result property="userInfoId"    column="user_info_id"    />
-        <result property="userInfoElderlyId"    column="user_info_elderly_id"    />
-        <result property="remark"    column="remark"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
+        <result property="elderlyFamilyId" column="elderly_family_id"/>
+        <result property="userInfoId" column="user_info_id"/>
+        <result property="userInfoElderlyId" column="user_info_elderly_id"/>
+        <result property="relationshipType" column="relationship_type"/>
+        <result property="remark" column="remark"/>
     </resultMap>
 
     <sql id="selectElderlyFamilyVo">
-        select elderly_family_id, user_info_id, user_info_elderly_id, remark, create_by, create_time, update_time from yl_elderly_family
+        select elderly_family_id, user_info_id, user_info_elderly_id, relationship_type, remark
+        from yl_elderly_family
     </sql>
 
     <select id="selectElderlyFamilyList" parameterType="ElderlyFamily" resultMap="ElderlyFamilyResult">
         <include refid="selectElderlyFamilyVo"/>
-        <where>  
-            <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
-            <if test="userInfoElderlyId != null "> and user_info_elderly_id = #{userInfoElderlyId}</if>
-            <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
-            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
-            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+        <where>
+            <if test="elderlyFamilyId != null ">and elderly_family_id = #{elderlyFamilyId}</if>
+            <if test="userInfoId != null ">and user_info_id = #{userInfoId}</if>
+            <if test="userInfoElderlyId != null ">and user_info_elderly_id = #{userInfoElderlyId}</if>
+            <if test="relationshipType != null  and relationshipType != ''">and relationship_type =
+                #{relationshipType}
+            </if>
         </where>
     </select>
-    
+
     <select id="selectElderlyFamilyByElderlyFamilyId" parameterType="Long" resultMap="ElderlyFamilyResult">
         <include refid="selectElderlyFamilyVo"/>
         where elderly_family_id = #{elderlyFamilyId}
@@ -40,20 +40,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="elderlyFamilyId != null">elderly_family_id,</if>
             <if test="userInfoId != null">user_info_id,</if>
             <if test="userInfoElderlyId != null">user_info_elderly_id,</if>
+            <if test="relationshipType != null and relationshipType != ''">relationship_type,</if>
             <if test="remark != null">remark,</if>
-            <if test="createBy != null and createBy != ''">create_by,</if>
-            <if test="createTime != null">create_time,</if>
-            <if test="updateTime != null">update_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="elderlyFamilyId != null">#{elderlyFamilyId},</if>
             <if test="userInfoId != null">#{userInfoId},</if>
             <if test="userInfoElderlyId != null">#{userInfoElderlyId},</if>
+            <if test="relationshipType != null and relationshipType != ''">#{relationshipType},</if>
             <if test="remark != null">#{remark},</if>
-            <if test="createBy != null and createBy != ''">#{createBy},</if>
-            <if test="createTime != null">#{createTime},</if>
-            <if test="updateTime != null">#{updateTime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateElderlyFamily" parameterType="ElderlyFamily">
@@ -61,22 +57,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="userInfoId != null">user_info_id = #{userInfoId},</if>
             <if test="userInfoElderlyId != null">user_info_elderly_id = #{userInfoElderlyId},</if>
+            <if test="relationshipType != null and relationshipType != ''">relationship_type = #{relationshipType},</if>
             <if test="remark != null">remark = #{remark},</if>
-            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
-            <if test="createTime != null">create_time = #{createTime},</if>
-            <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
         where elderly_family_id = #{elderlyFamilyId}
     </update>
 
     <delete id="deleteElderlyFamilyByElderlyFamilyId" parameterType="Long">
-        delete from yl_elderly_family where elderly_family_id = #{elderlyFamilyId}
+        delete
+        from yl_elderly_family
+        where elderly_family_id = #{elderlyFamilyId}
     </delete>
 
     <delete id="deleteElderlyFamilyByElderlyFamilyIds" parameterType="String">
-        delete from yl_elderly_family where elderly_family_id in 
+        delete from yl_elderly_family where elderly_family_id in
         <foreach item="elderlyFamilyId" collection="array" open="(" separator="," close=")">
             #{elderlyFamilyId}
         </foreach>
+    </delete>
+
+    <delete id="deleteElderlyFamilyByUserInfoId" parameterType="Long">
+        delete
+        from yl_elderly_family
+        where user_info_id = #{userInfoId}
+    </delete>
+    <delete id="deleteElderlyFamilyByUserInfoElderlyId" parameterType="Long">
+        delete
+        from yl_elderly_family
+        where user_info_elderly_id = #{userInfoElderlyId}
     </delete>
 </mapper>

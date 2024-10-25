@@ -3,8 +3,10 @@ package com.moss.zhyl.domain.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.moss.common.annotation.Excel;
 import com.moss.common.core.domain.BaseEntity;
+import com.moss.zhyl.domain.ElderlyFamily;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Project: MossZhyl
@@ -134,6 +136,16 @@ public class UserInfoElderlyDto extends BaseEntity {
      */
     @Excel(name = "残疾情况")
     private String disabilityCondition;
+
+    private List<ElderlyFamily> elderlyFamilyList;
+
+    public List<ElderlyFamily> getElderlyFamilyList() {
+        return elderlyFamilyList;
+    }
+
+    public void setElderlyFamilyList(List<ElderlyFamily> elderlyFamilyList) {
+        this.elderlyFamilyList = elderlyFamilyList;
+    }
 
     public Long getUserInfoId() {
         return userInfoId;

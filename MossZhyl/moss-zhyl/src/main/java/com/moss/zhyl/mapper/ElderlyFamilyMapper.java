@@ -2,6 +2,7 @@ package com.moss.zhyl.mapper;
 
 import java.util.List;
 import com.moss.zhyl.domain.ElderlyFamily;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 家属信息Mapper接口
@@ -58,4 +59,26 @@ public interface ElderlyFamilyMapper
      * @return 结果
      */
     public int deleteElderlyFamilyByElderlyFamilyIds(Long[] elderlyFamilyIds);
+
+    /**
+     * @description: 根据所有的家属信息删除家属与长者的关联
+     * @author: YY
+     * @method: deleteElderlyFamilyByUserInfoId
+     * @date: 2024/10/25 17:45
+     * @param:
+     * @param: userInfoId 家属id
+     * @return: void
+     **/
+    void deleteElderlyFamilyByUserInfoId(@Param("userInfoId") Long userInfoId);
+
+    /**
+     * @description: 根据长者信息删除所有的
+     * @author: YY
+     * @method: deleteElderlyFamilyByUserInfoElderlyId
+     * @date: 2024/10/25 17:47
+     * @param:
+     * @param: userInfoElderlyId
+     * @return: void
+     **/
+    void deleteElderlyFamilyByUserInfoElderlyId(@Param("userInfoElderlyId") Long userInfoElderlyId);
 }

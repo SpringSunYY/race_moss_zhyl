@@ -104,6 +104,16 @@ public class UserInfo extends BaseEntity {
      */
     private String delFlag;
 
+    private Long[] userInfoIds;
+
+    public Long[] getUserInfoIds() {
+        return userInfoIds;
+    }
+
+    public void setUserInfoIds(Long[] userInfoIds) {
+        this.userInfoIds = userInfoIds;
+    }
+
     public String getSex() {
         return sex;
     }

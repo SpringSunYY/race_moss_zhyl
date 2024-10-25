@@ -1,51 +1,57 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <!--      <el-form-item label="编号" prop="elderlyFamilyId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.elderlyFamilyId"-->
+      <!--          placeholder="请输入编号"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item label="家属" prop="userInfoId">
-        <el-input
+        <el-select
           v-model="queryParams.userInfoId"
-          placeholder="请输入家属"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+          filterable
+          remote
+          reserve-keyword
+          placeholder="请输入手机号码"
+          :remote-method="remoteElderlyFamilyUserInfoMethod"
+          :loading="elderlyFamilyUserInfoLoading">
+          <el-option
+            v-for="item in elderlyFamilyUserInfoList"
+            :key="item.userInfoId"
+            :label="item.userInfoName"
+            :value="item.userInfoId">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="长者" prop="userInfoElderlyId">
-        <el-input
+        <el-select
           v-model="queryParams.userInfoElderlyId"
-          placeholder="请输入长者"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+          filterable
+          remote
+          reserve-keyword
+          placeholder="请输入手机号码"
+          :remote-method="remoteElderlyUserInfoMethod"
+          :loading="elderlyUserInfoLoading">
+          <el-option
+            v-for="item in elderlyUserInfoList"
+            :key="item.userInfoId"
+            :label="item.userInfoName"
+            :value="item.userInfoId">
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="创建人" prop="createBy">
-        <el-input
-          v-model="queryParams.createBy"
-          placeholder="请输入创建人"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建时间">
-        <el-date-picker
-          v-model="daterangeCreateTime"
-          style="width: 240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item label="修改时间">
-        <el-date-picker
-          v-model="daterangeUpdateTime"
-          style="width: 240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
+      <el-form-item label="关系" prop="relationshipType">
+        <el-select v-model="queryParams.relationshipType" placeholder="请选择关系" clearable>
+          <el-option
+            v-for="dict in dict.type.yl_relationship_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -62,7 +68,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['zhyl:elderlyFamily:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -73,7 +80,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['zhyl:elderlyFamily:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -84,7 +92,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['zhyl:elderlyFamily:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -94,28 +103,27 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['zhyl:elderlyFamily:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="elderlyFamilyList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="elderlyFamilyId" />
-        <el-table-column label="家属" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible" prop="userInfoId" />
-        <el-table-column label="长者" :show-overflow-tooltip="true" align="center" v-if="columns[2].visible" prop="userInfoElderlyId" />
-        <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[3].visible" prop="createBy" />
-        <el-table-column label="创建时间" align="center" v-if="columns[4].visible" prop="createTime" width="180">
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="elderlyFamilyId"/>
+      <el-table-column label="长者" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible"
+                       prop="userInfoElderlyName"/>
+      <el-table-column label="家属" :show-overflow-tooltip="true" align="center" v-if="columns[2].visible"
+                       prop="userInfoName"/>
+      <el-table-column label="关系" align="center" v-if="columns[3].visible" prop="relationshipType">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+          <dict-tag :options="dict.type.yl_relationship_type" :value="scope.row.relationshipType"/>
         </template>
       </el-table-column>
-        <el-table-column label="修改时间" align="center" v-if="columns[5].visible" prop="updateTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="备注" :show-overflow-tooltip="true" align="center" v-if="columns[4].visible"
+                       prop="remark"/>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -123,14 +131,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['zhyl:elderlyFamily:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['zhyl:elderlyFamily:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -146,14 +156,52 @@
     <!-- 添加或修改家属信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="家属" prop="userInfoId">
-          <el-input v-model="form.userInfoId" placeholder="请输入家属" />
-        </el-form-item>
         <el-form-item label="长者" prop="userInfoElderlyId">
-          <el-input v-model="form.userInfoElderlyId" placeholder="请输入长者" />
+          <el-select
+            v-model="form.userInfoElderlyId"
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入手机号码"
+            :remote-method="remoteElderlyUserInfoMethod"
+            :loading="elderlyUserInfoLoading">
+            <el-option
+              v-for="item in elderlyUserInfoList"
+              :key="item.userInfoId"
+              :label="item.userInfoName"
+              :value="item.userInfoId">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="家属" prop="userInfoId">
+          <el-select
+            v-model="form.userInfoId"
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入手机号码"
+            :remote-method="remoteElderlyFamilyUserInfoMethod"
+            :loading="elderlyFamilyUserInfoLoading">
+            <el-option
+              v-for="item in elderlyFamilyUserInfoList"
+              :key="item.userInfoId"
+              :label="item.userInfoName"
+              :value="item.userInfoId">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="关系" prop="relationshipType">
+          <el-select v-model="form.relationshipType" placeholder="请选择关系">
+            <el-option
+              v-for="dict in dict.type.yl_relationship_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" placeholder="请输入备注" />
+          <el-input v-model="form.remark" placeholder="请输入备注"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -165,21 +213,50 @@
 </template>
 
 <script>
-import { listElderlyFamily, getElderlyFamily, delElderlyFamily, addElderlyFamily, updateElderlyFamily } from "@/api/zhyl/elderlyFamily";
+import {
+  listElderlyFamily,
+  getElderlyFamily,
+  delElderlyFamily,
+  addElderlyFamily,
+  updateElderlyFamily
+} from "@/api/zhyl/elderlyFamily";
+import {listUserInfo} from "@/api/zhyl/userInfo";
 
 export default {
   name: "ElderlyFamily",
+  dicts: ['yl_relationship_type'],
   data() {
     return {
+      // 长者家属查询参数
+      queryParamsElderlyFamily: {
+        pageNum: 1,
+        pageSize: 10,
+        contactPhone: '',
+        userInfoId: '',
+        userInfoRole: 'elderly_family',
+      },
+      // 长者家属信息表格数据
+      elderlyFamilyUserInfoList: [],
+      elderlyFamilyUserInfoLoading: true,
+      // 长者查询参数
+      queryParamsElderly: {
+        pageNum: 1,
+        pageSize: 10,
+        contactPhone: '',
+        userInfoId: '',
+        userInfoRole: 'elderly',
+      },
+      // 长者信息表格数据
+      elderlyUserInfoList: [],
+      elderlyUserInfoLoading: true,
       //表格展示列
       columns: [
-        { key: 0, label: '编号', visible: true },
-          { key: 1, label: '家属', visible: true },
-          { key: 2, label: '长者', visible: true },
-          { key: 3, label: '创建人', visible: true },
-          { key: 4, label: '创建时间', visible: true },
-          { key: 5, label: '修改时间', visible: true },
-        ],
+        {key: 0, label: '编号', visible: false},
+        {key: 1, label: '长者', visible: true},
+        {key: 2, label: '家属', visible: true},
+        {key: 3, label: '关系', visible: true},
+        {key: 4, label: '备注', visible: true},
+      ],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -198,55 +275,87 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      // 修改时间时间范围
-      daterangeCreateTime: [],
-      // 修改时间时间范围
-      daterangeUpdateTime: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        elderlyFamilyId: null,
         userInfoId: null,
         userInfoElderlyId: null,
-        createBy: null,
-        createTime: null,
-        updateTime: null
+        relationshipType: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         userInfoId: [
-          { required: true, message: "家属不能为空", trigger: "blur" }
+          {required: true, message: "家属不能为空", trigger: "blur"}
         ],
         userInfoElderlyId: [
-          { required: true, message: "长者不能为空", trigger: "blur" }
+          {required: true, message: "长者不能为空", trigger: "blur"}
         ],
-        createBy: [
-          { required: true, message: "创建人不能为空", trigger: "blur" }
-        ],
-        createTime: [
-          { required: true, message: "创建时间不能为空", trigger: "blur" }
+        relationshipType: [
+          {required: true, message: "关系不能为空", trigger: "change"}
         ],
       }
     };
   },
   created() {
     this.getList();
+    this.getElderlyUserInfoList()
+    this.getElderlyFamilyUserInfoList()
   },
   methods: {
+    remoteElderlyFamilyUserInfoMethod(query) {
+      if (query !== '') {
+        this.elderlyFamilyUserInfoLoading = true
+        this.queryParamsElderlyFamily.contactPhone = query
+        setTimeout(() => {
+          this.getElderlyFamilyUserInfoList()
+        }, 200)
+      } else {
+        this.elderlyFamilyUserInfoList = []
+      }
+    },
+    getElderlyFamilyUserInfoList() {
+      if (this.form.userInfoId !== null && this.form.userInfoId !== '') {
+        this.queryParamsElderlyFamily.userInfoId = this.form.userInfoId
+      }
+      if (this.queryParamsElderlyFamily.contactPhone !== '') {
+        this.queryParamsElderlyFamily.userInfoId = null
+      }
+      listUserInfo(this.queryParamsElderlyFamily).then(response => {
+        this.elderlyFamilyUserInfoList = response.rows
+        this.elderlyFamilyUserInfoLoading = false
+      })
+    },
+    remoteElderlyUserInfoMethod(query) {
+      if (query !== '') {
+        this.elderlyUserInfoLoading = true
+        this.queryParamsElderly.contactPhone = query
+        setTimeout(() => {
+          this.getElderlyUserInfoList()
+        }, 200)
+      } else {
+        this.elderlyUserInfoList = []
+      }
+    },
+
+    getElderlyUserInfoList() {
+      if (this.form.userInfoId !== null && this.form.userInfoId !== '') {
+        this.queryParamsElderly.userInfoId = this.form.userInfoId
+      }
+      if (this.queryParamsElderly.contactPhone !== '') {
+        this.queryParamsElderly.userInfoId = null
+      }
+      listUserInfo(this.queryParamsElderly).then(response => {
+        this.elderlyUserInfoList = response.rows
+        this.elderlyUserInfoLoading = false
+      })
+    },
     /** 查询家属信息列表 */
     getList() {
       this.loading = true;
-      this.queryParams.params = {};
-      if (null != this.daterangeCreateTime && '' != this.daterangeCreateTime) {
-        this.queryParams.params["beginCreateTime"] = this.daterangeCreateTime[0];
-        this.queryParams.params["endCreateTime"] = this.daterangeCreateTime[1];
-      }
-      if (null != this.daterangeUpdateTime && '' != this.daterangeUpdateTime) {
-        this.queryParams.params["beginUpdateTime"] = this.daterangeUpdateTime[0];
-        this.queryParams.params["endUpdateTime"] = this.daterangeUpdateTime[1];
-      }
       listElderlyFamily(this.queryParams).then(response => {
         this.elderlyFamilyList = response.rows;
         this.total = response.total;
@@ -264,10 +373,8 @@ export default {
         elderlyFamilyId: null,
         userInfoId: null,
         userInfoElderlyId: null,
-        remark: null,
-        createBy: null,
-        createTime: null,
-        updateTime: null
+        relationshipType: null,
+        remark: null
       };
       this.resetForm("form");
     },
@@ -278,15 +385,13 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.daterangeCreateTime = [];
-      this.daterangeUpdateTime = [];
       this.resetForm("queryForm");
       this.handleQuery();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.elderlyFamilyId)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -328,12 +433,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const elderlyFamilyIds = row.elderlyFamilyId || this.ids;
-      this.$modal.confirm('是否确认删除家属信息编号为"' + elderlyFamilyIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除家属信息编号为"' + elderlyFamilyIds + '"的数据项？').then(function () {
         return delElderlyFamily(elderlyFamilyIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {

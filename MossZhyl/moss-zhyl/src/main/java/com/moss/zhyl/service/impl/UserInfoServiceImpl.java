@@ -7,9 +7,11 @@ import com.moss.common.utils.StringUtils;
 import com.moss.common.utils.uuid.IdUtils;
 import com.moss.system.service.ISysConfigService;
 import com.moss.zhyl.domain.Elderly;
+import com.moss.zhyl.domain.ElderlyFamily;
 import com.moss.zhyl.domain.UserInfo;
 import com.moss.zhyl.domain.dto.UserInfoElderlyDto;
 import com.moss.zhyl.mapper.UserInfoMapper;
+import com.moss.zhyl.service.IElderlyFamilyService;
 import com.moss.zhyl.service.IElderlyService;
 import com.moss.zhyl.service.IUserInfoService;
 import org.springframework.beans.BeanUtils;
@@ -41,6 +43,9 @@ public class UserInfoServiceImpl implements IUserInfoService {
     @Autowired
     private IElderlyService elderlyService;
 
+    @Autowired
+    private IElderlyFamilyService elderlyFamilyService;
+
     /**
      * 查询用户信息
      *
@@ -54,10 +59,28 @@ public class UserInfoServiceImpl implements IUserInfoService {
         userInfo.setPassword(null);
         UserInfoElderlyDto userInfoElderlyDto = new UserInfoElderlyDto();
         BeanUtils.copyProperties(userInfo, userInfoElderlyDto);
-        //如果是家属
+
+        //构建查询长者和家属关系条件
+        ElderlyFamily family = new ElderlyFamily();
         if (userInfoElderlyDto.getUserInfoRole().equals(ELDERLY_FAMILY.getValue())) {
+            //如果是家属
+            family.setUserInfoId(userInfoId);
+            List<ElderlyFamily> elderlyFamilies = elderlyFamilyService.selectElderlyFamilyList(family);
+            userInfoElderlyDto.setElderlyFamilyList(elderlyFamilies);
             return userInfoElderlyDto;
         }
+
+        //如果是老人需要转换一下
+        family.setUserInfoElderlyId(userInfoId);
+        List<ElderlyFamily> elderlyFamilies = elderlyFamilyService.selectElderlyFamilyList(family);
+        for (ElderlyFamily elderlyFamily : elderlyFamilies) {
+            Long userInfoElderlyId = elderlyFamily.getUserInfoElderlyId();
+            Long userInfoId1 = elderlyFamily.getUserInfoId();
+            elderlyFamily.setUserInfoElderlyId(userInfoElderlyId);
+            elderlyFamily.setUserInfoElderlyId(userInfoId1);
+        }
+        userInfoElderlyDto.setElderlyFamilyList(elderlyFamilies);
+
         Elderly elderly = elderlyService.selectElderlyByElderlyUserInfoId(userInfoId);
         //如果没有长者信息也直接返回
         if (StringUtils.isNull(elderly)) {
@@ -116,7 +139,9 @@ public class UserInfoServiceImpl implements IUserInfoService {
         BeanUtils.copyProperties(userInfoElderlyDto, userInfo);
         //如果是家属直接添加
         if (userInfo.getUserInfoRole().equals(ELDERLY_FAMILY.getValue())) {
-            return userInfoMapper.insertUserInfo(userInfo);
+             userInfoMapper.insertUserInfo(userInfo);
+            //插入家属关联信息
+            return elderlyFamilyService.insertElderlyFamilyByUserInfoElderlyDto(userInfoElderlyDto);
         }
         //是老人，先插入
         userInfoMapper.insertUserInfo(userInfo);
@@ -150,6 +175,8 @@ public class UserInfoServiceImpl implements IUserInfoService {
         }
         UserInfo userInfo = new UserInfo();
         BeanUtils.copyProperties(userInfoElderlyDto, userInfo);
+        //插入关联家属信息
+        elderlyFamilyService.insertElderlyFamilyByUserInfoElderlyDto(userInfoElderlyDto);
         //如果是家属直接更新
         if (userInfo.getUserInfoRole().equals(ELDERLY_FAMILY.getValue())) {
             return userInfoMapper.updateUserInfo(userInfo);

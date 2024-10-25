@@ -278,7 +278,7 @@
               <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -437,6 +437,62 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
+            <el-form-item
+              v-for="(domain, index) in form.elderlyFamilyList"
+              :label="'家属' + (index + 1)"
+              :key="index"
+              :prop="'elderlyFamilyList.' + index + '.value'"
+            >
+              <el-col :span="7">
+                <el-form-item label="用户"
+                              :prop="'elderlyFamilyList.' + index + '.userInfoId'"
+                              :rules="[
+                                      { required: true, message: '请选择用户', trigger: 'blur' }
+                              ]">
+                  <el-select
+                    v-model="form.elderlyFamilyList[index].userInfoElderlyId"
+                    filterable
+                    remote
+                    reserve-keyword
+                    placeholder="请输入手机号码"
+                    :remote-method="remoteUserInfoFamilyMethod"
+                    :loading="userInfoFamilyLoading">
+                    <el-option
+                      v-for="item in userInfoFamilyList"
+                      :key="item.userInfoId"
+                      :label="item.userInfoName"
+                      :value="item.userInfoId">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="7">
+                <el-form-item label="关系"
+                              :prop="'elderlyFamilyList.' + index + '.relationshipType'"
+                              :rules="[
+                                      { required: true, message: '请选择关系', trigger: 'blur' }
+                              ]">
+                  <el-select v-model="form.elderlyFamilyList[index].relationshipType" placeholder="请选择关系">
+                    <el-option
+                      v-for="dict in dict.type.yl_relationship_type"
+                      :key="dict.value"
+                      :label="dict.label"
+                      :value="dict.value"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="7">
+                <el-form-item label="备注" :prop="'elderlyFamilyList.' + index + '.areaDetail'">
+                  <el-input v-model="form.elderlyFamilyList[index].remark" placeholder="请输入备注"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="3">
+                <el-button @click.prevent="removeElderlyFamily(domain)">删除</el-button>
+              </el-col>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
             <el-form-item label="用户头像" prop="userInfoProfile">
               <image-upload v-model="form.userInfoProfile" :limit="1"/>
             </el-form-item>
@@ -456,6 +512,7 @@
       </el-row>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="addElderlyFamilyList">新增家属</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -471,9 +528,19 @@ import {listAddressTreeInfo} from "@/api/zhyl/addressInfo";
 export default {
   name: "UserInfo",
   components: {Treeselect},
-  dicts: ['yl_del_flag', 'yl_user_info_role', 'yl_education', 'yl_occupation', 'sys_user_sex', 'yl_disability_status', 'yl_living_condition'],
+  dicts: ['yl_del_flag', 'yl_user_info_role', 'yl_education', 'yl_occupation', 'sys_user_sex', 'yl_disability_status', 'yl_living_condition', 'yl_relationship_type'],
   data() {
     return {
+      //用户新增显示数组 是长者查询家属 是家属查询长者
+      userInfoFamilyList: [],
+      userInfoFamilyLoading: false,
+      queryUserInfoFamilyParams: {
+        pageNum: 1,
+        pageSize: 10,
+        contactPhone: '',
+        userInfoId: '',
+        userInfoRole: 'elderly',  //长者
+      },
       //地址树选项
       addressOptions: undefined,
       defaultProps: {
@@ -482,7 +549,6 @@ export default {
       },
       //地址名称
       addressName: '',
-      //表格展示列
       //表格展示列
       columns: [
         {key: 0, label: '编号', visible: false},
@@ -545,7 +611,9 @@ export default {
         updateTime: null,
       },
       // 表单参数
-      form: {},
+      form: {
+        elderlyFamilyList: []
+      },
       // 表单校验
       rules: {
         userInfoName: [
@@ -579,6 +647,67 @@ export default {
     this.getAddressTree()
   },
   methods: {
+    remoteUserInfoFamilyMethod(query) {
+      console.log(query)
+      if (query !== '') {
+        this.userInfoFamilyLoading = true
+        this.queryUserInfoFamilyParams.contactPhone = query
+        setTimeout(() => {
+          // 使用箭头函数，确保 this 仍然指向 Vue 实例
+          this.getUserInfoFamilyList()
+        }, 200)
+      } else {
+        this.userInfoFamilyList = []
+      }
+    },
+    getUserInfoFamilyList() {
+      if (this.form.userInfoRole === 'elderly') {
+        this.queryUserInfoFamilyParams.userInfoRole = 'elderly_family'
+        //如果是第一次查询，并且是没有使用搜索
+        if (this.queryUserInfoFamilyParams.contactPhone === '') {
+          this.queryUserInfoFamilyParams.userInfoIds = this.form.elderlyFamilyList.map(item => item.userInfoElderlyId)
+        }
+      } else {
+        this.queryUserInfoFamilyParams.userInfoRole = 'elderly'
+        //如果是第一次查询，并且是没有使用搜索
+        if (this.queryUserInfoFamilyParams.contactPhone === '') {
+          this.queryUserInfoFamilyParams.userInfoIds = this.form.elderlyFamilyList.map(item => item.userInfo)
+        }
+      }
+      listUserInfo(this.queryUserInfoFamilyParams).then(response => {
+        this.userInfoFamilyList = response.rows
+        this.userInfoFamilyLoading = false
+      })
+    },
+    //添加家属
+    addElderlyFamilyList() {
+      try {
+        console.log('当前 form:', this.form);
+        if (!this.form.elderlyFamilyList) {
+          this.$set(this.form, 'elderlyFamilyList', []);
+        }
+        this.form.elderlyFamilyList.push({
+          value: '',
+          key: Date.now(),
+          relationshipType: '',
+          remark: '',
+          userInfoId: this.form.userInfoId,
+          userInfoElderlyId: null,
+        });
+        console.log(this.form.elderlyFamilyList);
+      } catch (error) {
+        console.error('添加家属时发生错误:', error);
+      }
+    },
+
+    //删除家属
+    removeElderlyFamily(item) {
+      var index = this.form.elderlyFamilyList.indexOf(item)
+      if (index !== -1) {
+        this.form.elderlyFamilyList.splice(index, 1)
+      }
+    },
+
     // 更多操作触发
     handleCommand(command, row) {
       switch (command) {
@@ -684,6 +813,7 @@ export default {
         livingCondition: null,
         registrationTime: null,
         disabilityCondition: null,
+        elderlyFamilyList: []
       };
       this.resetForm("form");
     },
@@ -720,6 +850,7 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改用户信息";
+        this.getUserInfoFamilyList()
       });
     },
     /** 提交按钮 */

@@ -34,6 +34,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectUserInfoList" parameterType="UserInfo" resultMap="UserInfoResult">
         <include refid="selectUserInfoVo"/>
         <where>
+            <if test="userInfoIds !=null and userInfoIds.length>0">
+                and user_info_id in
+                <foreach item="id" collection="userInfoIds" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
             <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
             <if test="userInfoName != null  and userInfoName != ''">
                 and user_info_name like concat('%',#{userInfoName},'%')
@@ -41,6 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contactPhone != null  and contactPhone != ''"> and contact_phone like concat('%', #{contactPhone}, '%')</if>
             <if test="userInfoProfile != null  and userInfoProfile != ''"> and user_info_profile like concat('%', #{userInfoProfile}, '%')</if>
             <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="userInfoRole != null  and userInfoRole != ''"> and user_info_role = #{userInfoRole}</if>
             <if test="password != null  and password != ''"> and password = #{password}</if>
             <if test="education != null ">and education = #{education}</if>
             <if test="occupation != null  and occupation != ''">and occupation = #{occupation}</if>
