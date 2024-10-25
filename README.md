@@ -26,6 +26,16 @@
 >
 > 页面优化，查询优化
 
+#### 设备管理
+
+> 设备协议
+>
+> 设备品牌
+>
+> 设备绑定，一个设备只可以绑定一个用户
+>
+> 设备管理
+
 #### 其他
 
 > 所有枚举
@@ -243,8 +253,8 @@ CREATE TABLE `yl_elderly_family` (
 | `contract_content`   | text     |      | 是       |      | 内容     |
 | `contract_sign_time` | datetime |      | 是       |      | 签订时间 |
 | `create_by`          | varchar  | 50   | 否       |      | 创建人   |
-| `created_time`       | datetime |      | 是       |      | 创建时间 |
-| `updated_time`       | datetime |      | 是       |      | 更新时间 |
+| `create_time`        | datetime |      | 是       |      | 创建时间 |
+| `update_time`        | datetime |      | 是       |      | 更新时间 |
 
 ```sql
 DROP TABLE IF EXISTS `yl_device_brand`;
@@ -256,8 +266,8 @@ CREATE TABLE `yl_device_brand` (
     `contract_content` TEXT DEFAULT NULL COMMENT '内容',
     `contract_sign_time` DATETIME DEFAULT NULL COMMENT '签订时间',
     `create_by` VARCHAR(50) NOT NULL COMMENT '创建人',
-    `created_time` DATETIME DEFAULT NULL COMMENT '创建时间',
-    `updated_time` DATETIME DEFAULT NULL COMMENT '更新时间',
+    `create_time` DATETIME DEFAULT NULL COMMENT '创建时间',
+    `update_time` DATETIME DEFAULT NULL COMMENT '更新时间',
     PRIMARY KEY (`brand_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='设备品牌表';
 
@@ -267,16 +277,16 @@ CREATE TABLE `yl_device_brand` (
 
 #### 设备协议表：yl_device_agreement
 
-| 字段名                      | 数据类型 | 长度 | 是否为空 | 外键 | 备注     |
-| --------------------------- | -------- | ---- | -------- | ---- | -------- |
-| `agreement_id`              | bigint   |      | 否       |      | 编号     |
-| `report_name`               | varchar  | 255  | 否       |      | 协议名称 |
-| `report_content`            | text     |      | 否       |      | 协议内容 |
-| `agreement_status`          | char     | 1    | 否       |      | 协议状态 |
-| `remark`                    | varchar  | 255  | 是       |      | 备注     |
-| `create_by`                 | varchar  | 50   | 否       |      | 创建人   |
-| `created_time`              | datetime |      | 是       |      | 创建时间 |
-| `updated_time``create_time` | datetime |      | 是       |      | 更新时间 |
+| 字段名             | 数据类型 | 长度 | 是否为空 | 外键 | 备注     |
+| ------------------ | -------- | ---- | -------- | ---- | -------- |
+| `agreement_id`     | bigint   |      | 否       |      | 编号     |
+| `report_name`      | varchar  | 255  | 否       |      | 协议名称 |
+| `report_content`   | text     |      | 否       |      | 协议内容 |
+| `agreement_status` | char     | 1    | 否       |      | 协议状态 |
+| `remark`           | varchar  | 255  | 是       |      | 备注     |
+| `create_by`        | varchar  | 50   | 否       |      | 创建人   |
+| `create_time`      | datetime |      | 是       |      | 创建时间 |
+| `update_time`      | datetime |      | 是       |      | 更新时间 |
 
 协议状态：0启用，1关闭
 
@@ -289,8 +299,8 @@ CREATE TABLE `yl_device_agreement` (
     `agreement_status` CHAR(1) NOT NULL COMMENT '协议状态',
     `remark` VARCHAR(255) DEFAULT NULL COMMENT '备注',
     `create_by` VARCHAR(50) NOT NULL COMMENT '创建人',
-    `created_time` DATETIME DEFAULT NULL COMMENT '创建时间',
-    `updated_time` DATETIME DEFAULT NULL COMMENT '更新时间',
+    `create_time` DATETIME DEFAULT NULL COMMENT '创建时间',
+    `update_time` DATETIME DEFAULT NULL COMMENT '更新时间',
     PRIMARY KEY (`agreement_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='设备协议表';
 
@@ -304,6 +314,7 @@ CREATE TABLE `yl_device_agreement` (
 | ------------------------ | -------- | ---- | -------- | ---------- | ------------------------------ |
 | `device_id`              | bigint   |      | 否       |            | 设备ID                         |
 | `brand_id`               | bigint   |      | 否       | `brand_id` | 设备品牌（设备品牌表brand_id） |
+| `device_imei`            | varchar  | 255  | 否       |            | 设备IMEI号                     |
 | `device_type`            | char     | 1    | 否       |            | 设备类型                       |
 | `device_model`           | varchar  | 100  | 否       |            | 设备型号                       |
 | `communication_protocol` | tinyint  |      | 是       |            | 通信协议                       |
@@ -312,10 +323,11 @@ CREATE TABLE `yl_device_agreement` (
 | `installation_mode`      | tinyint  |      | 是       |            | 安装方式                       |
 | `device_price`           | float    |      | 是       |            | 设备价格                       |
 | `device_status`          | char     | 1    | 否       |            | 设备状态                       |
-| `warranty_period`        | tinyint  |      | 是       |            | 质保时间                       |
+| `is_banding`             | char     | 1    | 否       |            | 绑定状态                       |
+| `warranty_period`        | int      |      | 是       |            | 质保时间                       |
 | `device_function`        | text     |      | 是       |            | 设备功能                       |
 | `device_parameters`      | text     |      | 是       |            | 设备参数                       |
-| `device_image_url`       | varchar  | 255  | 是       |            | 设备图片                       |
+| `device_image_url`       | varchar  | 1024 | 是       |            | 设备图片                       |
 | `create_by`              | varchar  | 50   | 否       |            | 创建人                         |
 | `update_by`              | varchar  | 50   | 是       |            | 修改人                         |
 | `create_time`            | datetime |      | 是       |            | 创建时间                       |
@@ -330,6 +342,8 @@ CREATE TABLE `yl_device_agreement` (
 
 安装方式：其他0，挂脖1，手腕佩戴2，吸顶3，挂壁4
 
+绑定状态：0未绑定、1绑定
+
 删除：0正常1删除
 
 ```sql
@@ -337,6 +351,7 @@ DROP TABLE IF EXISTS `yl_device`;
 CREATE TABLE `yl_device` (
     `device_id` BIGINT NOT NULL COMMENT '设备ID',
     `brand_id` BIGINT NOT NULL COMMENT '设备品牌',
+    `device_imei` VARCHAR(255) NOT NULL COMMENT '设备IMEI号',
     `device_type` CHAR(1) NOT NULL COMMENT '设备类型',
     `device_model` VARCHAR(100) NOT NULL COMMENT '设备型号',
     `communication_protocol` TINYINT DEFAULT NULL COMMENT '通信协议',
@@ -345,10 +360,11 @@ CREATE TABLE `yl_device` (
     `installation_mode` TINYINT DEFAULT NULL COMMENT '安装方式',
     `device_price` FLOAT DEFAULT NULL COMMENT '设备价格',
     `device_status` CHAR(1) NOT NULL COMMENT '设备状态',
-    `warranty_period` TINYINT DEFAULT NULL COMMENT '质保时间',
+    `is_binding` CHAR(1) NOT NULL COMMENT '绑定状态',
+    `warranty_period` int DEFAULT NULL COMMENT '质保时间',
     `device_function` TEXT DEFAULT NULL COMMENT '设备功能',
     `device_parameters` TEXT DEFAULT NULL COMMENT '设备参数',
-    `device_image_url` VARCHAR(255) DEFAULT NULL COMMENT '设备图片',
+    `device_image_url` VARCHAR(1024) DEFAULT NULL COMMENT '设备图片',
     `create_by` VARCHAR(50) NOT NULL COMMENT '创建人',
     `update_by` VARCHAR(50) DEFAULT NULL COMMENT '修改人',
     `create_time` DATETIME DEFAULT NULL COMMENT '创建时间',
@@ -604,13 +620,13 @@ CREATE TABLE `yl_service_station` (
 
 #### 标签表：yl_tag_management
 
-| 字段名         | 数据类型 | 长度 | 是否为空 | 外键 | 备注              |
-| -------------- | -------- | ---- | -------- | ---- | ----------------- |
-| `tag_id`       | bigint   |      | 否       |      | 标签 ID，自增主键 |
-| `tag_name`     | varchar  | 255  | 否       |      | 标签名称          |
-| `remark`       | varchar  | 255  | 是       |      | 备注              |
-| `created_time` | datetime |      | 否       |      | 创建时间          |
-| `updated_time` | datetime |      | 是       |      | 更新时间          |
+| 字段名        | 数据类型 | 长度 | 是否为空 | 外键 | 备注              |
+| ------------- | -------- | ---- | -------- | ---- | ----------------- |
+| `tag_id`      | bigint   |      | 否       |      | 标签 ID，自增主键 |
+| `tag_name`    | varchar  | 255  | 否       |      | 标签名称          |
+| `remark`      | varchar  | 255  | 是       |      | 备注              |
+| `create_time` | datetime |      | 否       |      | 创建时间          |
+| `update_time` | datetime |      | 是       |      | 更新时间          |
 
 ```sql
 DROP TABLE IF EXISTS `yl_tag_management`;
@@ -618,8 +634,8 @@ CREATE TABLE `yl_tag_management` (
     `tag_id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '标签 ID，自增主键',
     `tag_name` VARCHAR(255) NOT NULL COMMENT '标签名称',
     `remark` VARCHAR(255) DEFAULT NULL COMMENT '备注',
-    `created_time` DATETIME NOT NULL COMMENT '创建时间',
-    `updated_time` DATETIME DEFAULT NULL COMMENT '更新时间',
+    `create_time` DATETIME NOT NULL COMMENT '创建时间',
+    `update_time` DATETIME DEFAULT NULL COMMENT '更新时间',
     PRIMARY KEY (`tag_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='标签表';
 

@@ -34,8 +34,8 @@ public class Elderly extends BaseEntity
     private String livingCondition;
 
     /** 登记时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "登记时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss HH:mm:ss")
+    @Excel(name = "登记时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss HH:mm:ss")
     private Date registrationTime;
 
     /** 残疾情况 */

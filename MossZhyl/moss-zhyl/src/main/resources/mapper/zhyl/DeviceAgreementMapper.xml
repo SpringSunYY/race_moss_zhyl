@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moss.zhyl.mapper.DeviceAgreementMapper">
-    
+
     <resultMap type="DeviceAgreement" id="DeviceAgreementResult">
         <result property="agreementId"    column="agreement_id"    />
         <result property="reportName"    column="report_name"    />
@@ -11,25 +11,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="agreementStatus"    column="agreement_status"    />
         <result property="remark"    column="remark"    />
         <result property="createBy"    column="create_by"    />
-        <result property="createdTime"    column="created_time"    />
-        <result property="updatedTime"    column="updated_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
     </resultMap>
 
     <sql id="selectDeviceAgreementVo">
-        select agreement_id, report_name, report_content, agreement_status, remark, create_by, created_time, updated_time from yl_device_agreement
+        select agreement_id, report_name, report_content, agreement_status, remark, create_by, create_time, update_time from yl_device_agreement
     </sql>
 
     <select id="selectDeviceAgreementList" parameterType="DeviceAgreement" resultMap="DeviceAgreementResult">
         <include refid="selectDeviceAgreementVo"/>
-        <where>  
+        <where>
             <if test="reportName != null  and reportName != ''"> and report_name like concat('%', #{reportName}, '%')</if>
+            <if test="reportContent != null  and reportContent != ''"> and report_content = #{reportContent}</if>
             <if test="agreementStatus != null  and agreementStatus != ''"> and agreement_status = #{agreementStatus}</if>
             <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
-            <if test="params.beginCreatedTime != null and params.beginCreatedTime != '' and params.endCreatedTime != null and params.endCreatedTime != ''"> and created_time between #{params.beginCreatedTime} and #{params.endCreatedTime}</if>
-            <if test="params.beginUpdatedTime != null and params.beginUpdatedTime != '' and params.endUpdatedTime != null and params.endUpdatedTime != ''"> and updated_time between #{params.beginUpdatedTime} and #{params.endUpdatedTime}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
         </where>
     </select>
-    
+
     <select id="selectDeviceAgreementByAgreementId" parameterType="Long" resultMap="DeviceAgreementResult">
         <include refid="selectDeviceAgreementVo"/>
         where agreement_id = #{agreementId}
@@ -44,9 +45,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="agreementStatus != null and agreementStatus != ''">agreement_status,</if>
             <if test="remark != null">remark,</if>
             <if test="createBy != null and createBy != ''">create_by,</if>
-            <if test="createdTime != null">created_time,</if>
-            <if test="updatedTime != null">updated_time,</if>
-         </trim>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="agreementId != null">#{agreementId},</if>
             <if test="reportName != null and reportName != ''">#{reportName},</if>
@@ -54,9 +55,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="agreementStatus != null and agreementStatus != ''">#{agreementStatus},</if>
             <if test="remark != null">#{remark},</if>
             <if test="createBy != null and createBy != ''">#{createBy},</if>
-            <if test="createdTime != null">#{createdTime},</if>
-            <if test="updatedTime != null">#{updatedTime},</if>
-         </trim>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
     </insert>
 
     <update id="updateDeviceAgreement" parameterType="DeviceAgreement">
@@ -67,8 +68,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="agreementStatus != null and agreementStatus != ''">agreement_status = #{agreementStatus},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
-            <if test="createdTime != null">created_time = #{createdTime},</if>
-            <if test="updatedTime != null">updated_time = #{updatedTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
         where agreement_id = #{agreementId}
     </update>
@@ -78,7 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteDeviceAgreementByAgreementIds" parameterType="String">
-        delete from yl_device_agreement where agreement_id in 
+        delete from yl_device_agreement where agreement_id in
         <foreach item="agreementId" collection="array" open="(" separator="," close=")">
             #{agreementId}
         </foreach>

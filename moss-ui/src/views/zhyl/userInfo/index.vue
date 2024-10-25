@@ -648,7 +648,6 @@ export default {
   },
   methods: {
     remoteUserInfoFamilyMethod(query) {
-      console.log(query)
       if (query !== '') {
         this.userInfoFamilyLoading = true
         this.queryUserInfoFamilyParams.contactPhone = query

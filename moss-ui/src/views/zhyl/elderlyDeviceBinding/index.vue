@@ -2,29 +2,50 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="长者" prop="userInfoId">
-        <el-input
+        <el-select
           v-model="queryParams.userInfoId"
-          placeholder="请输入长者"
-          clearable
+          filterable
+          remote
+          reserve-keyword
+          :disabled="this.form.elderlyId!=null"
+          placeholder="请输入手机号码"
+          :remote-method="remoteElderlyUserInfoMethod"
           @keyup.enter.native="handleQuery"
-        />
+          :loading="elderlyUserInfoLoading">
+          <el-option
+            v-for="item in elderlyUserInfoList"
+            :key="item.userInfoId"
+            :label="item.userInfoName"
+            :value="item.userInfoId">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="设备" prop="deviceId">
-        <el-input
+        <el-select
           v-model="queryParams.deviceId"
-          placeholder="请输入设备"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="设备IMEI号" prop="deviceImei">
-        <el-input
-          v-model="queryParams.deviceImei"
+          filterable
+          remote
+          reserve-keyword
+          :disabled="this.form.bindingId!=null"
           placeholder="请输入设备IMEI号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+          :remote-method="remoteDeviceBrandMethod"
+          :loading="deviceLoading">
+          <el-option
+            v-for="item in deviceList"
+            :key="item.deviceId"
+            :label="item.deviceModel"
+            :value="item.deviceId">
+          </el-option>
+        </el-select>
       </el-form-item>
+<!--      <el-form-item label="IMEI号" prop="deviceImei">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.deviceImei"-->
+<!--          placeholder="请输入设备IMEI号"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item label="绑定时间">
         <el-date-picker
           v-model="daterangeBindTime"
@@ -120,7 +141,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['zhyl:elderlyDeviceBinding:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -131,7 +153,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['zhyl:elderlyDeviceBinding:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -142,7 +165,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['zhyl:elderlyDeviceBinding:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -152,45 +176,51 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['zhyl:elderlyDeviceBinding:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="elderlyDeviceBindingList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="bindingId" />
-        <el-table-column label="长者" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible" prop="userInfoId" />
-        <el-table-column label="设备" :show-overflow-tooltip="true" align="center" v-if="columns[2].visible" prop="deviceId" />
-        <el-table-column label="设备IMEI号" :show-overflow-tooltip="true" align="center" v-if="columns[3].visible" prop="deviceImei" />
-        <el-table-column label="绑定时间" align="center" v-if="columns[4].visible" prop="bindTime" width="180">
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="bindingId"/>
+      <el-table-column label="长者" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible"
+                       prop="userInfoName"/>
+      <el-table-column label="设备" :show-overflow-tooltip="true" align="center" v-if="columns[2].visible"
+                       prop="deviceName"/>
+      <el-table-column label="设备IMEI号" :show-overflow-tooltip="true" align="center" v-if="columns[3].visible"
+                       prop="deviceImei"/>
+      <el-table-column label="绑定时间" align="center" v-if="columns[4].visible" prop="bindTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.bindTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.bindTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-        <el-table-column label="解绑时间" align="center" v-if="columns[5].visible" prop="unbindTime" width="180">
+      <el-table-column label="解绑时间" align="center" v-if="columns[5].visible" prop="unbindTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.unbindTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.unbindTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-        <el-table-column label="绑定状态" align="center" v-if="columns[6].visible" prop="bindingStatus">
+      <el-table-column label="绑定状态" align="center" v-if="columns[6].visible" prop="bindingStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yl_binding_status" :value="scope.row.bindingStatus"/>
         </template>
       </el-table-column>
-        <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[7].visible" prop="createBy" />
-        <el-table-column label="修改人" :show-overflow-tooltip="true" align="center" v-if="columns[8].visible" prop="updateBy" />
-        <el-table-column label="创建时间" align="center" v-if="columns[9].visible" prop="createTime" width="180">
+      <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[7].visible"
+                       prop="createBy"/>
+      <el-table-column label="修改人" :show-overflow-tooltip="true" align="center" v-if="columns[8].visible"
+                       prop="updateBy"/>
+      <el-table-column label="创建时间" align="center" v-if="columns[9].visible" prop="createTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-        <el-table-column label="修改时间" align="center" v-if="columns[10].visible" prop="updateTime" width="180">
+      <el-table-column label="修改时间" align="center" v-if="columns[10].visible" prop="updateTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -198,14 +228,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['zhyl:elderlyDeviceBinding:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['zhyl:elderlyDeviceBinding:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -222,28 +254,58 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="长者" prop="userInfoId">
-          <el-input v-model="form.userInfoId" placeholder="请输入长者" />
+          <el-select
+            v-model="form.userInfoId"
+            filterable
+            remote
+            reserve-keyword
+            :disabled="this.form.bindingId!=null"
+            placeholder="请输入手机号码"
+            :remote-method="remoteElderlyUserInfoMethod"
+            :loading="elderlyUserInfoLoading">
+            <el-option
+              v-for="item in elderlyUserInfoList"
+              :key="item.userInfoId"
+              :label="item.userInfoName"
+              :value="item.userInfoId">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="设备" prop="deviceId">
-          <el-input v-model="form.deviceId" placeholder="请输入设备" />
+          <el-select
+            v-model="form.deviceId"
+            filterable
+            remote
+            reserve-keyword
+            :disabled="this.form.bindingId!=null"
+            placeholder="请输入设备IMEI号"
+            :remote-method="remoteDeviceBrandMethod"
+            :loading="deviceLoading">
+            <el-option
+              v-for="item in deviceList"
+              :key="item.deviceId"
+              :label="item.deviceImei"
+              :value="item.deviceId">
+            </el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="设备IMEI号" prop="deviceImei">
-          <el-input v-model="form.deviceImei" placeholder="请输入设备IMEI号" />
-        </el-form-item>
+        <!--        <el-form-item label="IMEI号" prop="deviceImei">-->
+        <!--          <el-input v-model="form.deviceImei" placeholder="请输入设备IMEI号" />-->
+        <!--        </el-form-item>-->
         <el-form-item label="绑定时间" prop="bindTime">
           <el-date-picker clearable
-            v-model="form.bindTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择绑定时间">
+                          v-model="form.bindTime"
+                          type="datetime"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+                          placeholder="请选择绑定时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="解绑时间" prop="unbindTime">
           <el-date-picker clearable
-            v-model="form.unbindTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择解绑时间">
+                          v-model="form.unbindTime"
+                          type="datetime"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+                          placeholder="请选择解绑时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="绑定状态" prop="bindingStatus">
@@ -266,27 +328,56 @@
 </template>
 
 <script>
-import { listElderlyDeviceBinding, getElderlyDeviceBinding, delElderlyDeviceBinding, addElderlyDeviceBinding, updateElderlyDeviceBinding } from "@/api/zhyl/elderlyDeviceBinding";
+import {
+  listElderlyDeviceBinding,
+  getElderlyDeviceBinding,
+  delElderlyDeviceBinding,
+  addElderlyDeviceBinding,
+  updateElderlyDeviceBinding
+} from "@/api/zhyl/elderlyDeviceBinding";
+import {listUserInfo} from "@/api/zhyl/userInfo";
+import {listDevice} from "@/api/zhyl/device";
 
 export default {
   name: "ElderlyDeviceBinding",
   dicts: ['yl_del_flag', 'yl_binding_status'],
   data() {
     return {
+      // 长者查询参数
+      queryParamsElderly: {
+        pageNum: 1,
+        pageSize: 10,
+        contactPhone: '',
+        userInfoId: '',
+        userInfoRole: 'elderly',
+      },
+      // 长者信息表格数据
+      elderlyUserInfoList: [],
+      elderlyUserInfoLoading: true,
+      // 长者查询参数
+      queryParamsDevice: {
+        pageNum: 1,
+        pageSize: 10,
+        deviceImei: '',
+        deviceId: null
+      },
+      // 长者信息表格数据
+      deviceList: [],
+      deviceLoading: true,
       //表格展示列
       columns: [
-        { key: 0, label: '编号', visible: true },
-          { key: 1, label: '长者', visible: true },
-          { key: 2, label: '设备', visible: true },
-          { key: 3, label: '设备IMEI号', visible: true },
-          { key: 4, label: '绑定时间', visible: true },
-          { key: 5, label: '解绑时间', visible: true },
-          { key: 6, label: '绑定状态', visible: true },
-          { key: 7, label: '创建人', visible: true },
-          { key: 8, label: '修改人', visible: true },
-          { key: 9, label: '创建时间', visible: true },
-          { key: 10, label: '修改时间', visible: true },
-        ],
+        {key: 0, label: '编号', visible: false},
+        {key: 1, label: '长者', visible: true},
+        {key: 2, label: '设备', visible: true},
+        {key: 3, label: '设备IMEI号', visible: true},
+        {key: 4, label: '绑定时间', visible: true},
+        {key: 5, label: '解绑时间', visible: true},
+        {key: 6, label: '绑定状态', visible: true},
+        {key: 7, label: '创建人', visible: true},
+        {key: 8, label: '修改人', visible: false},
+        {key: 9, label: '创建时间', visible: true},
+        {key: 10, label: '修改时间', visible: false},
+      ],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -334,36 +425,87 @@ export default {
       // 表单校验
       rules: {
         userInfoId: [
-          { required: true, message: "长者不能为空", trigger: "blur" }
+          {required: true, message: "长者不能为空", trigger: "blur"}
         ],
         deviceId: [
-          { required: true, message: "设备不能为空", trigger: "blur" }
+          {required: true, message: "设备不能为空", trigger: "blur"}
         ],
         deviceImei: [
-          { required: true, message: "设备IMEI号不能为空", trigger: "blur" }
+          {required: true, message: "设备IMEI号不能为空", trigger: "blur"}
         ],
         bindTime: [
-          { required: true, message: "绑定时间不能为空", trigger: "blur" }
+          {required: true, message: "绑定时间不能为空", trigger: "blur"}
         ],
         bindingStatus: [
-          { required: true, message: "绑定状态不能为空", trigger: "change" }
+          {required: true, message: "绑定状态不能为空", trigger: "change"}
         ],
         createBy: [
-          { required: true, message: "创建人不能为空", trigger: "blur" }
+          {required: true, message: "创建人不能为空", trigger: "blur"}
         ],
         createTime: [
-          { required: true, message: "创建时间不能为空", trigger: "blur" }
+          {required: true, message: "创建时间不能为空", trigger: "blur"}
         ],
         delFlag: [
-          { required: true, message: "删除不能为空", trigger: "change" }
+          {required: true, message: "删除不能为空", trigger: "change"}
         ]
       }
     };
   },
   created() {
     this.getList();
+    this.getElderlyUserInfoList()
+    this.getDeviceList()
   },
   methods: {
+    //远程调用搜索
+    remoteDeviceBrandMethod(query) {
+      if (query !== '') {
+        this.deviceLoading = true
+        this.queryParamsDevice.deviceImei = query
+        setTimeout(() => {
+          this.getDeviceList()
+        }, 200)
+      } else {
+        this.deviceList = []
+      }
+    },
+    getDeviceList() {
+      if (this.form.deviceId !== null && this.form.deviceId !== '') {
+        this.queryParamsDevice.deviceId = this.form.deviceId
+      }
+      if (this.queryParamsDevice.deviceImei !== '') {
+        this.queryParamsDevice.deviceId = null
+      }
+      listDevice(this.queryParamsDevice).then(response => {
+        this.deviceList = response.rows
+        this.deviceLoading = false
+      })
+    },
+
+    remoteElderlyUserInfoMethod(query) {
+      if (query !== '') {
+        this.elderlyUserInfoLoading = true
+        this.queryParamsElderly.contactPhone = query
+        setTimeout(() => {
+          this.getElderlyUserInfoList()
+        }, 200)
+      } else {
+        this.elderlyUserInfoList = []
+      }
+    },
+
+    getElderlyUserInfoList() {
+      if (this.form.userInfoId !== null && this.form.userInfoId !== '') {
+        this.queryParamsElderly.userInfoId = this.form.userInfoId
+      }
+      if (this.queryParamsElderly.contactPhone !== '') {
+        this.queryParamsElderly.userInfoId = null
+      }
+      listUserInfo(this.queryParamsElderly).then(response => {
+        this.elderlyUserInfoList = response.rows
+        this.elderlyUserInfoLoading = false
+      })
+    },
     /** 查询长者设备绑定列表 */
     getList() {
       this.loading = true;
@@ -430,7 +572,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.bindingId)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -472,12 +614,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const bindingIds = row.bindingId || this.ids;
-      this.$modal.confirm('是否确认删除长者设备绑定编号为"' + bindingIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除长者设备绑定编号为"' + bindingIds + '"的数据项？').then(function () {
         return delElderlyDeviceBinding(bindingIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {

@@ -157,7 +157,7 @@
         <el-table-column label="备注" :show-overflow-tooltip="true" align="center" v-if="columns[8].visible" prop="remark" />
         <el-table-column label="通信时间" align="center" v-if="columns[9].visible" prop="communicationTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.communicationTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.communicationTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">

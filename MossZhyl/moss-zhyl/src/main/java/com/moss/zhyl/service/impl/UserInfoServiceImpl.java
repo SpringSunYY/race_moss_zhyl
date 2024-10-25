@@ -10,6 +10,7 @@ import com.moss.zhyl.domain.Elderly;
 import com.moss.zhyl.domain.ElderlyFamily;
 import com.moss.zhyl.domain.UserInfo;
 import com.moss.zhyl.domain.dto.UserInfoElderlyDto;
+import com.moss.zhyl.domain.enums.DelFlagEnum;
 import com.moss.zhyl.mapper.UserInfoMapper;
 import com.moss.zhyl.service.IElderlyFamilyService;
 import com.moss.zhyl.service.IElderlyService;
@@ -23,6 +24,7 @@ import java.util.List;
 
 import static com.moss.common.constant.ConfigConstants.YL_USER_INFO_INIT_PASSWORD;
 import static com.moss.common.constant.PermissionsConstants.ZHYL_USERINFO_UPDATE_PASSWORD;
+import static com.moss.common.constant.PermissionsConstants.ZHYL_USER_INFO_LOOK_DELETE;
 import static com.moss.zhyl.domain.enums.DelFlagEnum.DEL_FLAG_0;
 import static com.moss.zhyl.domain.enums.UserInfoRoleEnum.ELDERLY_FAMILY;
 
@@ -99,6 +101,9 @@ public class UserInfoServiceImpl implements IUserInfoService {
      */
     @Override
     public List<UserInfo> selectUserInfoList(UserInfo userInfo) {
+        if (!SecurityUtils.hasPermi(ZHYL_USER_INFO_LOOK_DELETE)) {
+            userInfo.setDelFlag(DEL_FLAG_0.getValue());
+        }
         List<UserInfo> userInfos = userInfoMapper.selectUserInfoList(userInfo);
         for (UserInfo info : userInfos) {
             info.setPassword(null);

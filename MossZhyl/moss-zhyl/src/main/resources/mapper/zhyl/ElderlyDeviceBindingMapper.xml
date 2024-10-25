@@ -96,11 +96,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteElderlyDeviceBindingByBindingId" parameterType="Long">
-        delete from yl_elderly_device_binding where binding_id = #{bindingId}
+        update yl_elderly_device_binding set del_flag='1' where binding_id = #{bindingId}
     </delete>
 
     <delete id="deleteElderlyDeviceBindingByBindingIds" parameterType="String">
-        delete from yl_elderly_device_binding where binding_id in 
+        update yl_elderly_device_binding set del_flag='1' where binding_id in
         <foreach item="bindingId" collection="array" open="(" separator="," close=")">
             #{bindingId}
         </foreach>

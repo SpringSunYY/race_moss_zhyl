@@ -1,6 +1,14 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="编号" prop="tagId">
+        <el-input
+          v-model="queryParams.tagId"
+          placeholder="请输入编号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="标签名称" prop="tagName">
         <el-input
           v-model="queryParams.tagName"
@@ -11,7 +19,7 @@
       </el-form-item>
       <el-form-item label="创建时间">
         <el-date-picker
-          v-model="daterangeCreatedTime"
+          v-model="daterangeCreateTime"
           style="width: 240px"
           value-format="yyyy-MM-dd"
           type="daterange"
@@ -22,7 +30,7 @@
       </el-form-item>
       <el-form-item label="更新时间">
         <el-date-picker
-          v-model="daterangeUpdatedTime"
+          v-model="daterangeUpdateTime"
           style="width: 240px"
           value-format="yyyy-MM-dd"
           type="daterange"
@@ -46,7 +54,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['zhyl:tagManagement:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -57,7 +66,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['zhyl:tagManagement:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -68,7 +78,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['zhyl:tagManagement:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -78,27 +89,30 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['zhyl:tagManagement:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="tagManagementList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="tagId" />
-        <el-table-column label="标签名称" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible" prop="tagName" />
-        <el-table-column label="备注" :show-overflow-tooltip="true" align="center" v-if="columns[2].visible" prop="remark" />
-        <el-table-column label="创建时间" align="center" v-if="columns[3].visible" prop="createdTime" width="180">
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="tagId"/>
+      <el-table-column label="标签名称" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible"
+                       prop="tagName"/>
+      <el-table-column label="备注" :show-overflow-tooltip="true" align="center" v-if="columns[2].visible"
+                       prop="remark"/>
+      <el-table-column label="创建时间" align="center" v-if="columns[3].visible" prop="createTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createdTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-        <el-table-column label="更新时间" align="center" v-if="columns[4].visible" prop="updatedTime" width="180">
+      <el-table-column label="更新时间" align="center" v-if="columns[4].visible" prop="updateTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updatedTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -106,14 +120,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['zhyl:tagManagement:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['zhyl:tagManagement:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -130,26 +146,10 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="标签名称" prop="tagName">
-          <el-input v-model="form.tagName" placeholder="请输入标签名称" />
+          <el-input v-model="form.tagName" placeholder="请输入标签名称"/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="创建时间" prop="createdTime">
-          <el-date-picker clearable
-            v-model="form.createdTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择创建时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="更新时间" prop="updatedTime">
-          <el-date-picker clearable
-            v-model="form.updatedTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择更新时间">
-          </el-date-picker>
+          <el-input v-model="form.remark" placeholder="请输入备注"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -161,7 +161,13 @@
 </template>
 
 <script>
-import { listTagManagement, getTagManagement, delTagManagement, addTagManagement, updateTagManagement } from "@/api/zhyl/tagManagement";
+import {
+  listTagManagement,
+  getTagManagement,
+  delTagManagement,
+  addTagManagement,
+  updateTagManagement
+} from "@/api/zhyl/tagManagement";
 
 export default {
   name: "TagManagement",
@@ -169,12 +175,12 @@ export default {
     return {
       //表格展示列
       columns: [
-        { key: 0, label: '编号', visible: true },
-          { key: 1, label: '标签名称', visible: true },
-          { key: 2, label: '备注', visible: true },
-          { key: 3, label: '创建时间', visible: true },
-          { key: 4, label: '更新时间', visible: true },
-        ],
+        {key: 0, label: '编号', visible: true},
+        {key: 1, label: '标签名称', visible: true},
+        {key: 2, label: '备注', visible: true},
+        {key: 3, label: '创建时间', visible: true},
+        {key: 4, label: '更新时间', visible: true},
+      ],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -194,26 +200,27 @@ export default {
       // 是否显示弹出层
       open: false,
       // 更新时间时间范围
-      daterangeCreatedTime: [],
+      daterangeCreateTime: [],
       // 更新时间时间范围
-      daterangeUpdatedTime: [],
+      daterangeUpdateTime: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        tagId: null,
         tagName: null,
-        createdTime: null,
-        updatedTime: null
+        createTime: null,
+        updateTime: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         tagName: [
-          { required: true, message: "标签名称不能为空", trigger: "blur" }
+          {required: true, message: "标签名称不能为空", trigger: "blur"}
         ],
-        createdTime: [
-          { required: true, message: "创建时间不能为空", trigger: "blur" }
+        createTime: [
+          {required: true, message: "创建时间不能为空", trigger: "blur"}
         ],
       }
     };
@@ -226,13 +233,13 @@ export default {
     getList() {
       this.loading = true;
       this.queryParams.params = {};
-      if (null != this.daterangeCreatedTime && '' != this.daterangeCreatedTime) {
-        this.queryParams.params["beginCreatedTime"] = this.daterangeCreatedTime[0];
-        this.queryParams.params["endCreatedTime"] = this.daterangeCreatedTime[1];
+      if (null != this.daterangeCreateTime && '' != this.daterangeCreateTime) {
+        this.queryParams.params["beginCreateTime"] = this.daterangeCreateTime[0];
+        this.queryParams.params["endCreateTime"] = this.daterangeCreateTime[1];
       }
-      if (null != this.daterangeUpdatedTime && '' != this.daterangeUpdatedTime) {
-        this.queryParams.params["beginUpdatedTime"] = this.daterangeUpdatedTime[0];
-        this.queryParams.params["endUpdatedTime"] = this.daterangeUpdatedTime[1];
+      if (null != this.daterangeUpdateTime && '' != this.daterangeUpdateTime) {
+        this.queryParams.params["beginUpdateTime"] = this.daterangeUpdateTime[0];
+        this.queryParams.params["endUpdateTime"] = this.daterangeUpdateTime[1];
       }
       listTagManagement(this.queryParams).then(response => {
         this.tagManagementList = response.rows;
@@ -251,8 +258,8 @@ export default {
         tagId: null,
         tagName: null,
         remark: null,
-        createdTime: null,
-        updatedTime: null
+        createTime: null,
+        updateTime: null
       };
       this.resetForm("form");
     },
@@ -263,15 +270,15 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.daterangeCreatedTime = [];
-      this.daterangeUpdatedTime = [];
+      this.daterangeCreateTime = [];
+      this.daterangeUpdateTime = [];
       this.resetForm("queryForm");
       this.handleQuery();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.tagId)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -313,12 +320,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const tagIds = row.tagId || this.ids;
-      this.$modal.confirm('是否确认删除标签编号为"' + tagIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除标签编号为"' + tagIds + '"的数据项？').then(function () {
         return delTagManagement(tagIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {

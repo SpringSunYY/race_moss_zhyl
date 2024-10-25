@@ -45,8 +45,8 @@ public class Appointment extends BaseEntity
     private Long userId;
 
     /** 预约时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "预约时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "预约时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date appointmentTime;
 
     /** 处理状态 */

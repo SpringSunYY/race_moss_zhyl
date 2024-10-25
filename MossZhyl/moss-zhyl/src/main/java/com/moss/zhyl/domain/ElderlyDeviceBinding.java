@@ -22,10 +22,12 @@ public class ElderlyDeviceBinding extends BaseEntity
 
     /** 长者 */
     @Excel(name = "长者")
+    private String userInfoName;
     private Long userInfoId;
 
     /** 设备 */
     @Excel(name = "设备")
+    private String deviceName;
     private Long deviceId;
 
     /** 设备IMEI号 */
@@ -33,13 +35,13 @@ public class ElderlyDeviceBinding extends BaseEntity
     private String deviceImei;
 
     /** 绑定时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "绑定时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "绑定时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date bindTime;
 
     /** 解绑时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "解绑时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "解绑时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date unbindTime;
 
     /** 绑定状态 */
@@ -49,7 +51,23 @@ public class ElderlyDeviceBinding extends BaseEntity
     /** 删除 */
     private String delFlag;
 
-    public void setBindingId(Long bindingId) 
+    public String getUserInfoName() {
+        return userInfoName;
+    }
+
+    public void setUserInfoName(String userInfoName) {
+        this.userInfoName = userInfoName;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
+    }
+
+    public void setBindingId(Long bindingId)
     {
         this.bindingId = bindingId;
     }

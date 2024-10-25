@@ -140,7 +140,7 @@
         <el-table-column label="联系电话" :show-overflow-tooltip="true" align="center" v-if="columns[3].visible" prop="contactNumber" />
         <el-table-column label="警报时间" align="center" v-if="columns[4].visible" prop="alarmTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.alarmTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.alarmTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
         <el-table-column label="设备型号" :show-overflow-tooltip="true" align="center" v-if="columns[5].visible" prop="deviceModel" />

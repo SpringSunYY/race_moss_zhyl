@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moss.zhyl.mapper.DeviceMapper">
-    
+
     <resultMap type="Device" id="DeviceResult">
         <result property="deviceId"    column="device_id"    />
         <result property="brandId"    column="brand_id"    />
+        <result property="deviceImei"    column="device_imei"    />
         <result property="deviceType"    column="device_type"    />
         <result property="deviceModel"    column="device_model"    />
         <result property="communicationProtocol"    column="communication_protocol"    />
@@ -15,6 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="installationMode"    column="installation_mode"    />
         <result property="devicePrice"    column="device_price"    />
         <result property="deviceStatus"    column="device_status"    />
+        <result property="isBinding"    column="is_binding"    />
         <result property="warrantyPeriod"    column="warranty_period"    />
         <result property="deviceFunction"    column="device_function"    />
         <result property="deviceParameters"    column="device_parameters"    />
@@ -27,27 +29,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDeviceVo">
-        select device_id, brand_id, device_type, device_model, communication_protocol, network_mode, power_supply_mode, installation_mode, device_price, device_status, warranty_period, device_function, device_parameters, device_image_url, create_by, update_by, create_time, update_time, del_flag from yl_device
+        select device_id, brand_id, device_imei, device_type, device_model, communication_protocol, network_mode, power_supply_mode, installation_mode, device_price, device_status, is_binding, warranty_period, device_function, device_parameters, device_image_url, create_by, update_by, create_time, update_time, del_flag from yl_device
     </sql>
 
     <select id="selectDeviceList" parameterType="Device" resultMap="DeviceResult">
         <include refid="selectDeviceVo"/>
-        <where>  
+        <where>
+            <if test="deviceId != null "> and device_id = #{deviceId}</if>
             <if test="brandId != null "> and brand_id = #{brandId}</if>
+            <if test="deviceImei != null  and deviceImei != ''"> and device_imei like concat('%', #{deviceImei}, '%')</if>
             <if test="deviceType != null  and deviceType != ''"> and device_type = #{deviceType}</if>
             <if test="deviceModel != null  and deviceModel != ''"> and device_model like concat('%', #{deviceModel}, '%')</if>
+            <if test="communicationProtocol != null "> and communication_protocol = #{communicationProtocol}</if>
+            <if test="networkMode != null "> and network_mode = #{networkMode}</if>
             <if test="powerSupplyMode != null "> and power_supply_mode = #{powerSupplyMode}</if>
             <if test="installationMode != null "> and installation_mode = #{installationMode}</if>
             <if test="deviceStatus != null  and deviceStatus != ''"> and device_status = #{deviceStatus}</if>
-            <if test="deviceFunction != null  and deviceFunction != ''"> and device_function = #{deviceFunction}</if>
-            <if test="deviceParameters != null  and deviceParameters != ''"> and device_parameters = #{deviceParameters}</if>
+            <if test="isBinding != null  and isBinding != ''"> and is_binding = #{isBinding}</if>
+            <if test="warrantyPeriod != null "> and warranty_period = #{warrantyPeriod}</if>
             <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
             <if test="updateBy != null  and updateBy != ''"> and update_by like concat('%', #{updateBy}, '%')</if>
             <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
             <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
         </where>
     </select>
-    
+
     <select id="selectDeviceByDeviceId" parameterType="Long" resultMap="DeviceResult">
         <include refid="selectDeviceVo"/>
         where device_id = #{deviceId}
@@ -58,6 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="deviceId != null">device_id,</if>
             <if test="brandId != null">brand_id,</if>
+            <if test="deviceImei != null and deviceImei != ''">device_imei,</if>
             <if test="deviceType != null and deviceType != ''">device_type,</if>
             <if test="deviceModel != null and deviceModel != ''">device_model,</if>
             <if test="communicationProtocol != null">communication_protocol,</if>
@@ -66,6 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="installationMode != null">installation_mode,</if>
             <if test="devicePrice != null">device_price,</if>
             <if test="deviceStatus != null and deviceStatus != ''">device_status,</if>
+            <if test="isBinding != null and isBinding != ''">is_binding,</if>
             <if test="warrantyPeriod != null">warranty_period,</if>
             <if test="deviceFunction != null">device_function,</if>
             <if test="deviceParameters != null">device_parameters,</if>
@@ -75,10 +84,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="delFlag != null">del_flag,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="deviceId != null">#{deviceId},</if>
             <if test="brandId != null">#{brandId},</if>
+            <if test="deviceImei != null and deviceImei != ''">#{deviceImei},</if>
             <if test="deviceType != null and deviceType != ''">#{deviceType},</if>
             <if test="deviceModel != null and deviceModel != ''">#{deviceModel},</if>
             <if test="communicationProtocol != null">#{communicationProtocol},</if>
@@ -87,6 +97,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="installationMode != null">#{installationMode},</if>
             <if test="devicePrice != null">#{devicePrice},</if>
             <if test="deviceStatus != null and deviceStatus != ''">#{deviceStatus},</if>
+            <if test="isBinding != null and isBinding != ''">#{isBinding},</if>
             <if test="warrantyPeriod != null">#{warrantyPeriod},</if>
             <if test="deviceFunction != null">#{deviceFunction},</if>
             <if test="deviceParameters != null">#{deviceParameters},</if>
@@ -96,13 +107,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateDevice" parameterType="Device">
         update yl_device
         <trim prefix="SET" suffixOverrides=",">
             <if test="brandId != null">brand_id = #{brandId},</if>
+            <if test="deviceImei != null and deviceImei != ''">device_imei = #{deviceImei},</if>
             <if test="deviceType != null and deviceType != ''">device_type = #{deviceType},</if>
             <if test="deviceModel != null and deviceModel != ''">device_model = #{deviceModel},</if>
             <if test="communicationProtocol != null">communication_protocol = #{communicationProtocol},</if>
@@ -111,6 +123,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="installationMode != null">installation_mode = #{installationMode},</if>
             <if test="devicePrice != null">device_price = #{devicePrice},</if>
             <if test="deviceStatus != null and deviceStatus != ''">device_status = #{deviceStatus},</if>
+            <if test="isBinding != null and isBinding != ''">is_binding = #{isBinding},</if>
             <if test="warrantyPeriod != null">warranty_period = #{warrantyPeriod},</if>
             <if test="deviceFunction != null">device_function = #{deviceFunction},</if>
             <if test="deviceParameters != null">device_parameters = #{deviceParameters},</if>
@@ -125,11 +138,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteDeviceByDeviceId" parameterType="Long">
-        delete from yl_device where device_id = #{deviceId}
+        update yl_device set del_flag = '1' where device_id = #{deviceId}
     </delete>
 
     <delete id="deleteDeviceByDeviceIds" parameterType="String">
-        delete from yl_device where device_id in 
+        update yl_device set del_flag = '1' where device_id in
         <foreach item="deviceId" collection="array" open="(" separator="," close=")">
             #{deviceId}
         </foreach>

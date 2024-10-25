@@ -14,4 +14,17 @@ public class PermissionsConstants {
      * 修改用户密码权限
      */
     public static final String ZHYL_USERINFO_UPDATE_PASSWORD="zhyl:userInfo:updatePassword";
+
+    /**
+     * 查看用户删除
+     */
+    public static final String ZHYL_USER_INFO_LOOK_DELETE="zhyl:userInfo:lookDelete";
+    /**
+     * 查看设备删除
+     */
+    public static final String ZHYL_DEVICE_LOOK_DELETE = "zhyl:device:lookDelete";
+    /**
+     * 查看绑定设备删除
+     */
+    public static final String ZHYL_ELDERLY_DEVICE_BINDING_LOOK_DELETE = "zhyl:device:lookDelete";
 }

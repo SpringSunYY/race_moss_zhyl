@@ -10,6 +10,7 @@
           :disabled="this.form.elderlyId!=null"
           placeholder="请输入手机号码"
           :remote-method="remoteElderlyUserInfoMethod"
+          @keyup.enter.native="handleQuery"
           :loading="elderlyUserInfoLoading">
           <el-option
             v-for="item in elderlyUserInfoList"
