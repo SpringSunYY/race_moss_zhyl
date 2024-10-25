@@ -3,6 +3,7 @@ package com.moss.zhyl.service;
 import java.util.List;
 
 import com.moss.zhyl.domain.UserInfo;
+import com.moss.zhyl.domain.dto.UserInfoElderlyDto;
 
 /**
  * 用户信息Service接口
@@ -17,7 +18,7 @@ public interface IUserInfoService {
      * @param userInfoId 用户信息主键
      * @return 用户信息
      */
-    public UserInfo selectUserInfoByUserInfoId(Long userInfoId);
+    public UserInfoElderlyDto selectUserInfoByUserInfoId(Long userInfoId);
 
     /**
      * 查询用户信息列表
@@ -33,15 +34,15 @@ public interface IUserInfoService {
      * @param userInfo 用户信息
      * @return 结果
      */
-    public int insertUserInfo(UserInfo userInfo);
+    public int insertUserInfo(UserInfoElderlyDto userInfo);
 
     /**
      * 修改用户信息
      *
-     * @param userInfo 用户信息
+     * @param userInfoElderlyDto 用户信息
      * @return 结果
      */
-    public int updateUserInfo(UserInfo userInfo);
+    public int updateUserInfo(UserInfoElderlyDto userInfoElderlyDto);
 
     /**
      * 批量删除用户信息

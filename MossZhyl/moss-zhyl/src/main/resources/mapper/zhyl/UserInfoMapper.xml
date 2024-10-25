@@ -17,6 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="areaDetail"    column="area_detail"    />
         <result property="wxOpenid"    column="wx_openid"    />
         <result property="miniOpenid"    column="mini_openid"    />
+        <result property="remark"    column="remark"    />
         <result property="createBy"    column="create_by"    />
         <result property="updateBy"    column="update_by"    />
         <result property="createTime"    column="create_time"    />
@@ -27,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectUserInfoVo">
-        select user_info_id, user_info_name, contact_phone, user_info_profile, user_info_role, sex, password, id_card, education, occupation, address_id, area_detail, wx_openid, mini_openid, create_by, update_by, create_time, update_time, del_flag from yl_user_info
+        select user_info_id, user_info_name, contact_phone, user_info_profile, user_info_role, sex, password, id_card, education, occupation, address_id, area_detail, wx_openid, mini_openid,remark, create_by, update_by, create_time, update_time, del_flag from yl_user_info
     </sql>
 
     <select id="selectUserInfoList" parameterType="UserInfo" resultMap="UserInfoResult">
@@ -71,11 +72,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <select id="selectUserInfoByPhone" resultMap="UserInfoResult">
         <include refid="selectUserInfoVo"/>
-        where contact_phone=#{contactPhone}
+        where contact_phone = #{contactPhone} and del_flag = #{delFlag}
     </select>
     <select id="selectUserInfoByIdCard" resultMap="UserInfoResult">
         <include refid="selectUserInfoVo"/>
-        where id_card=#{idCard}
+        where id_card=#{idCard} and del_flag = #{delFlag}
     </select>
 
     <insert id="insertUserInfo" parameterType="UserInfo">
@@ -100,6 +101,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="delFlag != null and delFlag != ''">del_flag,</if>
+            <if test="remark != null">remark,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userInfoId != null">#{userInfoId},</if>
@@ -121,6 +123,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+            <if test="remark != null">#{remark},</if>
         </trim>
     </insert>
 
@@ -145,6 +148,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="remark != null">remark = #{remark},</if>
         </trim>
         where user_info_id = #{userInfoId}
     </update>

@@ -2,6 +2,7 @@ package com.moss.zhyl.mapper;
 
 import java.util.List;
 import com.moss.zhyl.domain.Elderly;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 长者信息Mapper接口
@@ -58,4 +59,26 @@ public interface ElderlyMapper
      * @return 结果
      */
     public int deleteElderlyByElderlyIds(Long[] elderlyIds);
+
+    /**
+     * @description: 根据用户id更新长者信息
+     * @author: YY
+     * @method: updateElderlyByUserInfoId
+     * @date: 2024/10/25 9:40
+     * @param:
+     * @param: elderly
+     * @return: int
+     **/
+    int updateElderlyByUserInfoId(Elderly elderly);
+
+    /**
+     * @description: 根据用户id查询长者信息
+     * @author: YY
+     * @method: selectElderlyByElderlyUserInfoId
+     * @date: 2024/10/25 9:45
+     * @param:
+     * @param: userInfoId
+     * @return: com.moss.zhyl.domain.Elderly
+     **/
+    Elderly selectElderlyByElderlyUserInfoId(@Param("userInfoId") Long userInfoId);
 }

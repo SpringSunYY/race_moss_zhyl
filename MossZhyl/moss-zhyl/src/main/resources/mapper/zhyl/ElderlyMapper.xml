@@ -38,6 +38,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectElderlyVo"/>
         where elderly_id = #{elderlyId}
     </select>
+    <select id="selectElderlyByElderlyUserInfoId" parameterType="Long" resultMap="ElderlyResult">
+        <include refid="selectElderlyVo"/>
+        where user_info_id = #{userInfoId}
+    </select>
 
     <insert id="insertElderly" parameterType="Elderly">
         insert into yl_elderly
@@ -78,6 +82,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
         where elderly_id = #{elderlyId}
+    </update>
+    <update id="updateElderlyByUserInfoId" parameterType="Elderly">
+        update yl_elderly
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="disabilityStatus != null">disability_status = #{disabilityStatus},</if>
+            <if test="livingCondition != null">living_condition = #{livingCondition},</if>
+            <if test="registrationTime != null">registration_time = #{registrationTime},</if>
+            <if test="disabilityCondition != null">disability_condition = #{disabilityCondition},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where user_info_id = #{userInfoId}
     </update>
 
     <delete id="deleteElderlyByElderlyId" parameterType="Long">

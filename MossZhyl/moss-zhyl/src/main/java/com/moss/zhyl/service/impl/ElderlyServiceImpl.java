@@ -2,6 +2,7 @@ package com.moss.zhyl.service.impl;
 
 import java.util.List;
 import com.moss.common.utils.DateUtils;
+import com.moss.common.utils.uuid.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.moss.zhyl.mapper.ElderlyMapper;
@@ -53,6 +54,7 @@ public class ElderlyServiceImpl implements IElderlyService
     @Override
     public int insertElderly(Elderly elderly)
     {
+        elderly.setElderlyId(IdUtils.snowflakeId());
         elderly.setCreateTime(DateUtils.getNowDate());
         return elderlyMapper.insertElderly(elderly);
     }
@@ -92,5 +94,16 @@ public class ElderlyServiceImpl implements IElderlyService
     public int deleteElderlyByElderlyId(Long elderlyId)
     {
         return elderlyMapper.deleteElderlyByElderlyId(elderlyId);
+    }
+
+    @Override
+    public int updateElderlyByUserInfoId(Elderly elderly) {
+        elderly.setUpdateTime(DateUtils.getNowDate());
+        return elderlyMapper.updateElderlyByUserInfoId(elderly);
+    }
+
+    @Override
+    public Elderly selectElderlyByElderlyUserInfoId(Long userInfoId) {
+        return elderlyMapper.selectElderlyByElderlyUserInfoId(userInfoId);
     }
 }

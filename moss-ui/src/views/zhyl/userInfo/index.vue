@@ -223,7 +223,7 @@
         <el-table v-loading="loading" :data="userInfoList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55" align="center"/>
           <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="userInfoId"/>
-          <el-table-column label="姓名" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible"
+          <el-table-column label="家属姓名" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible"
                            prop="userInfoName"/>
           <el-table-column label="联系手机" :show-overflow-tooltip="true" align="center" v-if="columns[2].visible"
                            prop="contactPhone"/>
@@ -262,16 +262,18 @@
                            prop="wxOpenid"/>
           <el-table-column label="小程序openid" :show-overflow-tooltip="true" align="center" v-if="columns[12].visible"
                            prop="miniOpenid"/>
-          <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[13].visible"
+          <el-table-column label="备注" :show-overflow-tooltip="true" align="center" v-if="columns[13].visible"
+                           prop="remark"/>
+          <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[14].visible"
                            prop="createBy"/>
-          <el-table-column label="修改人" :show-overflow-tooltip="true" align="center" v-if="columns[14].visible"
+          <el-table-column label="修改人" :show-overflow-tooltip="true" align="center" v-if="columns[15].visible"
                            prop="updateBy"/>
-          <el-table-column label="创建时间" align="center" v-if="columns[15].visible" prop="createTime" width="180">
+          <el-table-column label="创建时间" align="center" v-if="columns[16].visible" prop="createTime" width="180">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="修改时间" align="center" v-if="columns[16].visible" prop="updateTime" width="180">
+          <el-table-column label="修改时间" align="center" v-if="columns[17].visible" prop="updateTime" width="180">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
             </template>
@@ -384,13 +386,52 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="6">
+            <el-form-item v-if="this.form.userInfoRole==='elderly'" label="失能情况" prop="disabilityStatus">
+              <el-select v-model="form.disabilityStatus" placeholder="请选择失能情况">
+                <el-option
+                  v-for="dict in dict.type.yl_disability_status"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item v-if="this.form.userInfoRole==='elderly'" label="居住情况" prop="livingCondition">
+              <el-select v-model="form.livingCondition" placeholder="请选择居住情况">
+                <el-option
+                  v-for="dict in dict.type.yl_living_condition"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item v-if="this.form.userInfoRole==='elderly'" label="登记时间" prop="registrationTime">
+              <el-date-picker clearable
+                              v-model="form.registrationTime"
+                              type="datetime"
+                              value-format="yyyy-MM-dd HH:mm:ss"
+                              placeholder="请选择登记时间">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item v-if="this.form.userInfoRole==='elderly'" label="残疾情况" prop="disabilityCondition">
+              <el-input v-model="form.disabilityCondition" placeholder="请输入残疾情况"/>
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
             <el-form-item label="地址" prop="addressId">
               <treeselect v-model="form.addressId" :options="addressOptions" :show-count="true"
                           placeholder="请选择资产单位"/>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="12">
             <el-form-item label="详细地址" prop="areaDetail">
               <el-input v-model="form.areaDetail" placeholder="请输入详细地址"/>
             </el-form-item>
@@ -398,6 +439,11 @@
           <el-col :span="24">
             <el-form-item label="用户头像" prop="userInfoProfile">
               <image-upload v-model="form.userInfoProfile" :limit="1"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark" type="textarea" placeholder="请输入备注"/>
             </el-form-item>
           </el-col>
           <!--          <el-form-item label="微信openid" prop="wxOpenid">-->
@@ -425,7 +471,7 @@ import {listAddressTreeInfo} from "@/api/zhyl/addressInfo";
 export default {
   name: "UserInfo",
   components: {Treeselect},
-  dicts: ['yl_del_flag', 'yl_user_info_role', 'yl_education', 'yl_occupation', 'sys_user_sex'],
+  dicts: ['yl_del_flag', 'yl_user_info_role', 'yl_education', 'yl_occupation', 'sys_user_sex', 'yl_disability_status', 'yl_living_condition'],
   data() {
     return {
       //地址树选项
@@ -452,10 +498,11 @@ export default {
         {key: 10, label: '详细地址', visible: false},
         {key: 11, label: '微信openid', visible: false},
         {key: 12, label: '小程序openid', visible: false},
-        {key: 13, label: '创建人', visible: false},
-        {key: 14, label: '修改人', visible: false},
-        {key: 15, label: '创建时间', visible: true},
-        {key: 16, label: '修改时间', visible: false},
+        {key: 13, label: '备注', visible: false},
+        {key: 14, label: '创建人', visible: false},
+        {key: 15, label: '修改人', visible: false},
+        {key: 16, label: '创建时间', visible: false},
+        {key: 17, label: '修改时间', visible: false},
       ],
       // 遮罩层
       loading: true,
@@ -623,7 +670,12 @@ export default {
         updateBy: null,
         createTime: null,
         updateTime: null,
-        delFlag: null
+        delFlag: null,
+        remark: null,
+        disabilityStatus: null,
+        livingCondition: null,
+        registrationTime: null,
+        disabilityCondition: null,
       };
       this.resetForm("form");
     },
