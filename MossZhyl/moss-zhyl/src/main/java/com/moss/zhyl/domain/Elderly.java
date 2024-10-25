@@ -22,6 +22,7 @@ public class Elderly extends BaseEntity
 
     /** 长者 */
     @Excel(name = "长者")
+    private String userInfoName;
     private Long userInfoId;
 
     /** 失能情况 */
@@ -33,15 +34,23 @@ public class Elderly extends BaseEntity
     private String livingCondition;
 
     /** 登记时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "登记时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "登记时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date registrationTime;
 
     /** 残疾情况 */
     @Excel(name = "残疾情况")
     private String disabilityCondition;
 
-    public void setElderlyId(Long elderlyId) 
+    public String getUserInfoName() {
+        return userInfoName;
+    }
+
+    public void setUserInfoName(String userInfoName) {
+        this.userInfoName = userInfoName;
+    }
+
+    public void setElderlyId(Long elderlyId)
     {
         this.elderlyId = elderlyId;
     }

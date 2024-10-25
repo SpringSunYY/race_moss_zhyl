@@ -270,12 +270,12 @@
                            prop="updateBy"/>
           <el-table-column label="创建时间" align="center" v-if="columns[16].visible" prop="createTime" width="180">
             <template slot-scope="scope">
-              <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+              <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
             </template>
           </el-table-column>
           <el-table-column label="修改时间" align="center" v-if="columns[17].visible" prop="updateTime" width="180">
             <template slot-scope="scope">
-              <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
+              <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -549,7 +549,8 @@ export default {
       // 表单校验
       rules: {
         userInfoName: [
-          {required: true, message: "家属姓名不能为空", trigger: "blur"}
+          {required: true, message: "家属姓名不能为空", trigger: "blur"},
+          {min: 2, max: 20, message: '用户名称长度必须介于 2 和 20 之间', trigger: 'blur'}
         ],
         userInfoRole: [
           {required: true, message: "角色不能为空", trigger: "change"}
@@ -562,6 +563,13 @@ export default {
         ],
         delFlag: [
           {required: true, message: "删除不能为空", trigger: "change"}
+        ],
+        contactPhone: [
+          {
+            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+            message: "请输入正确的手机号码",
+            trigger: "blur"
+          }
         ]
       }
     };

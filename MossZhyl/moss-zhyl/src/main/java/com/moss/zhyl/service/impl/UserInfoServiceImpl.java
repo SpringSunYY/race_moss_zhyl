@@ -48,13 +48,12 @@ public class UserInfoServiceImpl implements IUserInfoService {
      * @return 用户信息
      */
     @Override
-    public UserInfoElderlyDto selectUserInfoByUserInfoId(Long userInfoId) {
+    public UserInfoElderlyDto selectUserInfoByUserInfoIdResultDto(Long userInfoId) {
         UserInfo userInfo = userInfoMapper.selectUserInfoByUserInfoId(userInfoId);
         //清除密码信息
         userInfo.setPassword(null);
         UserInfoElderlyDto userInfoElderlyDto = new UserInfoElderlyDto();
         BeanUtils.copyProperties(userInfo, userInfoElderlyDto);
-
         //如果是家属
         if (userInfoElderlyDto.getUserInfoRole().equals(ELDERLY_FAMILY.getValue())) {
             return userInfoElderlyDto;
@@ -65,6 +64,7 @@ public class UserInfoServiceImpl implements IUserInfoService {
             return userInfoElderlyDto;
         }
         BeanUtils.copyProperties(elderly, userInfoElderlyDto);
+        userInfoElderlyDto.setUserInfoName(userInfo.getUserInfoName());
         return userInfoElderlyDto;
     }
 
@@ -158,13 +158,8 @@ public class UserInfoServiceImpl implements IUserInfoService {
         userInfoMapper.updateUserInfo(userInfo);
         Elderly elderly = new Elderly();
         BeanUtils.copyProperties(userInfoElderlyDto, elderly);
-        //先根据用户信息查询到是否有长者信息
-        Elderly isElderly = elderlyService.selectElderlyByElderlyUserInfoId(userInfo.getUserInfoId());
-        //如果不存在长者信息直接插入，如果存在则更新
-        if (StringUtils.isNull(isElderly)) {
-            return elderlyService.insertElderly(elderly);
-        }
-        return elderlyService.updateElderlyByUserInfoId(elderly);
+        //如果不存在长者信息直接插入，如果存在则更新 具体插入方法已经实现是否判断长者信息存在，如果存在直接更新
+        return elderlyService.insertElderly(elderly);
     }
 
     /**
@@ -219,5 +214,13 @@ public class UserInfoServiceImpl implements IUserInfoService {
     public UserInfo selectUserInfoByIdCard(String idCard) {
         //先初始化为0
         return userInfoMapper.selectUserInfoByIdCard(idCard, DEL_FLAG_0.getValue());
+    }
+
+    @Override
+    public UserInfo selectUserInfoByUserInfoIdResultUserInfo(Long userInfoId) {
+        UserInfo userInfo = userInfoMapper.selectUserInfoByUserInfoId(userInfoId);
+        //清除密码信息
+        userInfo.setPassword(null);
+        return userInfo;
     }
 }

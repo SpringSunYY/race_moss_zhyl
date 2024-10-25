@@ -18,7 +18,7 @@ public interface IUserInfoService {
      * @param userInfoId 用户信息主键
      * @return 用户信息
      */
-    public UserInfoElderlyDto selectUserInfoByUserInfoId(Long userInfoId);
+    public UserInfoElderlyDto selectUserInfoByUserInfoIdResultDto(Long userInfoId);
 
     /**
      * 查询用户信息列表
@@ -92,4 +92,15 @@ public interface IUserInfoService {
      * @return: com.moss.zhyl.domain.UserInfo
      **/
     public UserInfo selectUserInfoByIdCard(String idCard);
+
+    /**
+     * @description: 返回用户信息
+     * @author: YY
+     * @method: selectUserInfoByUserInfoIdResultUserInfo
+     * @date: 2024/10/25 11:15
+     * @param:
+     * @param: userInfoId
+     * @return: com.moss.zhyl.domain.UserInfo
+     **/
+    UserInfo selectUserInfoByUserInfoIdResultUserInfo(Long userInfoId);
 }
