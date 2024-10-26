@@ -35,6 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="params.beginCommunicationTime != null and params.beginCommunicationTime != '' and params.endCommunicationTime != null and params.endCommunicationTime != ''"> and communication_time between #{params.beginCommunicationTime} and #{params.endCommunicationTime}</if>
             <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
         </where>
+        order by create_time desc
     </select>
     
     <select id="selectDeviceCommunicationByDeviceCommunicationId" parameterType="Long" resultMap="DeviceCommunicationResult">

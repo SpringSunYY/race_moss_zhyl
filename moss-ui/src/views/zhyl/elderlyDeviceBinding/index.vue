@@ -26,9 +26,10 @@
           filterable
           remote
           reserve-keyword
-          :disabled="this.form.bindingId!=null"
-          placeholder="请输入设备IMEI号"
+          placeholder="请输入设备型号"
           :remote-method="remoteDeviceBrandMethod"
+          clearable
+          @keyup.enter.native="handleQuery"
           :loading="deviceLoading">
           <el-option
             v-for="item in deviceList"
@@ -38,14 +39,32 @@
           </el-option>
         </el-select>
       </el-form-item>
-<!--      <el-form-item label="IMEI号" prop="deviceImei">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.deviceImei"-->
-<!--          placeholder="请输入设备IMEI号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <el-form-item label="设备类型" prop="deviceType">
+        <el-input
+          v-model="queryParams.deviceType"
+          placeholder="请输入设备类型"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="IMEI号" prop="deviceImei">
+        <el-input
+          v-model="queryParams.deviceImei"
+          placeholder="请输入设备IMEI号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="设备状态" prop="deviceStatus">
+        <el-select v-model="queryParams.deviceStatus" placeholder="请选择设备状态" clearable>
+          <el-option
+            v-for="dict in dict.type.yl_device_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="绑定时间">
         <el-date-picker
           v-model="daterangeBindTime"
@@ -77,6 +96,14 @@
             :value="dict.value"
           />
         </el-select>
+      </el-form-item>
+      <el-form-item label="服务人员" prop="userId">
+        <el-input
+          v-model="queryParams.userId"
+          placeholder="请输入服务人员"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item label="创建人" prop="createBy">
         <el-input
@@ -116,16 +143,16 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="删除" prop="delFlag">
-        <el-select v-model="queryParams.delFlag" placeholder="请选择删除" clearable>
-          <el-option
-            v-for="dict in dict.type.yl_del_flag"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
+      <!--      <el-form-item label="删除" prop="delFlag">-->
+      <!--        <el-select v-model="queryParams.delFlag" placeholder="请选择删除" clearable>-->
+      <!--          <el-option-->
+      <!--            v-for="dict in dict.type.yl_del_flag"-->
+      <!--            :key="dict.value"-->
+      <!--            :label="dict.label"-->
+      <!--            :value="dict.value"-->
+      <!--          />-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -189,35 +216,51 @@
                        prop="userInfoName"/>
       <el-table-column label="设备" :show-overflow-tooltip="true" align="center" v-if="columns[2].visible"
                        prop="deviceName"/>
-      <el-table-column label="设备IMEI号" :show-overflow-tooltip="true" align="center" v-if="columns[3].visible"
+      <el-table-column label="设备类型" :show-overflow-tooltip="true" align="center" v-if="columns[3].visible"
+                       prop="deviceTypeName"/>
+      <el-table-column label="设备IMEI号" :show-overflow-tooltip="true" align="center" v-if="columns[4].visible"
                        prop="deviceImei"/>
-      <el-table-column label="绑定时间" align="center" v-if="columns[4].visible" prop="bindTime" width="180">
+      <el-table-column label="设备状态" align="center" v-if="columns[5].visible" prop="deviceStatus">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.yl_device_status" :value="scope.row.deviceStatus"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="绑定时间" align="center" v-if="columns[6].visible" prop="bindTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.bindTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="解绑时间" align="center" v-if="columns[5].visible" prop="unbindTime" width="180">
+      <el-table-column label="解绑时间" align="center" v-if="columns[7].visible" prop="unbindTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.unbindTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="绑定状态" align="center" v-if="columns[6].visible" prop="bindingStatus">
+      <el-table-column label="绑定状态" align="center" v-if="columns[8].visible" prop="bindingStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yl_binding_status" :value="scope.row.bindingStatus"/>
         </template>
       </el-table-column>
-      <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[7].visible"
+      <el-table-column label="服务人员" :show-overflow-tooltip="true" align="center" v-if="columns[9].visible"
+                       prop="userId"/>
+      <el-table-column label="备注" :show-overflow-tooltip="true" align="center" v-if="columns[10].visible"
+                       prop="remark"/>
+      <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[11].visible"
                        prop="createBy"/>
-      <el-table-column label="修改人" :show-overflow-tooltip="true" align="center" v-if="columns[8].visible"
+      <el-table-column label="修改人" :show-overflow-tooltip="true" align="center" v-if="columns[12].visible"
                        prop="updateBy"/>
-      <el-table-column label="创建时间" align="center" v-if="columns[9].visible" prop="createTime" width="180">
+      <el-table-column label="创建时间" align="center" v-if="columns[13].visible" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="修改时间" align="center" v-if="columns[10].visible" prop="updateTime" width="180">
+      <el-table-column label="修改时间" align="center" v-if="columns[14].visible" prop="updateTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="删除" align="center" v-if="columns[15].visible" prop="delFlag">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.yl_del_flag" :value="scope.row.delFlag"/>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -278,33 +321,43 @@
             remote
             reserve-keyword
             :disabled="this.form.bindingId!=null"
-            placeholder="请输入设备IMEI号"
+            placeholder="请输入设备型号"
             :remote-method="remoteDeviceBrandMethod"
             :loading="deviceLoading">
             <el-option
               v-for="item in deviceList"
               :key="item.deviceId"
-              :label="item.deviceImei"
+              :label="item.deviceModel"
               :value="item.deviceId">
             </el-option>
           </el-select>
         </el-form-item>
-        <!--        <el-form-item label="IMEI号" prop="deviceImei">-->
-        <!--          <el-input v-model="form.deviceImei" placeholder="请输入设备IMEI号" />-->
-        <!--        </el-form-item>-->
+        <el-form-item label="IMEI号" prop="deviceImei">
+          <el-input v-model="form.deviceImei" placeholder="请输入设备IMEI号"/>
+        </el-form-item>
+        <el-form-item label="设备状态" prop="deviceStatus">
+          <el-select v-model="form.deviceStatus" placeholder="请选择设备状态">
+            <el-option
+              v-for="dict in dict.type.yl_device_status"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="绑定时间" prop="bindTime">
           <el-date-picker clearable
                           v-model="form.bindTime"
-                          type="datetime"
-                          value-format="yyyy-MM-dd HH:mm:ss"
+                          type="date"
+                          value-format="yyyy-MM-dd"
                           placeholder="请选择绑定时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="解绑时间" prop="unbindTime">
           <el-date-picker clearable
                           v-model="form.unbindTime"
-                          type="datetime"
-                          value-format="yyyy-MM-dd HH:mm:ss"
+                          type="date"
+                          value-format="yyyy-MM-dd"
                           placeholder="请选择解绑时间">
           </el-date-picker>
         </el-form-item>
@@ -317,6 +370,9 @@
               :value="dict.value"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="服务人员" prop="userId">
+          <el-input v-model="form.userId" placeholder="请输入服务人员"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -340,7 +396,7 @@ import {listDevice} from "@/api/zhyl/device";
 
 export default {
   name: "ElderlyDeviceBinding",
-  dicts: ['yl_del_flag', 'yl_binding_status'],
+  dicts: ['yl_del_flag', 'yl_binding_status', 'yl_device_status'],
   data() {
     return {
       // 长者查询参数
@@ -369,14 +425,19 @@ export default {
         {key: 0, label: '编号', visible: false},
         {key: 1, label: '长者', visible: true},
         {key: 2, label: '设备', visible: true},
-        {key: 3, label: '设备IMEI号', visible: true},
-        {key: 4, label: '绑定时间', visible: true},
-        {key: 5, label: '解绑时间', visible: true},
-        {key: 6, label: '绑定状态', visible: true},
-        {key: 7, label: '创建人', visible: true},
-        {key: 8, label: '修改人', visible: false},
-        {key: 9, label: '创建时间', visible: true},
-        {key: 10, label: '修改时间', visible: false},
+        {key: 3, label: '设备类型', visible: true},
+        {key: 4, label: '设备IMEI号', visible: true},
+        {key: 5, label: '设备状态', visible: true},
+        {key: 6, label: '绑定时间', visible: true},
+        {key: 7, label: '解绑时间', visible: false},
+        {key: 8, label: '绑定状态', visible: true},
+        {key: 9, label: '服务人员', visible: true},
+        {key: 10, label: '备注', visible: false},
+        {key: 11, label: '创建人', visible: false},
+        {key: 12, label: '修改人', visible: false},
+        {key: 13, label: '创建时间', visible: false},
+        {key: 14, label: '修改时间', visible: false},
+        {key: 15, label: '删除', visible: false},
       ],
       // 遮罩层
       loading: true,
@@ -461,7 +522,7 @@ export default {
     remoteDeviceBrandMethod(query) {
       if (query !== '') {
         this.deviceLoading = true
-        this.queryParamsDevice.deviceImei = query
+        this.queryParamsDevice.deviceModel = query
         setTimeout(() => {
           this.getDeviceList()
         }, 200)
@@ -473,7 +534,7 @@ export default {
       if (this.form.deviceId !== null && this.form.deviceId !== '') {
         this.queryParamsDevice.deviceId = this.form.deviceId
       }
-      if (this.queryParamsDevice.deviceImei !== '') {
+      if (this.queryParamsDevice.deviceModel !== '') {
         this.queryParamsDevice.deviceId = null
       }
       listDevice(this.queryParamsDevice).then(response => {

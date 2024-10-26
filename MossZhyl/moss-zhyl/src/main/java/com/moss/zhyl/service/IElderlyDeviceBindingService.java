@@ -58,4 +58,15 @@ public interface IElderlyDeviceBindingService
      * @return 结果
      */
     public int deleteElderlyDeviceBindingByBindingId(Long bindingId);
+
+    /**
+     * @description: 根据IMEI查询
+     * @author: YY
+     * @method: selectElderlyDeviceBindingByDeviceIMEI
+     * @date: 2024/10/26 23:35
+     * @param:
+     * @param: deviceImei
+     * @return: com.moss.zhyl.domain.ElderlyDeviceBinding
+     **/
+    public ElderlyDeviceBinding selectElderlyDeviceBindingByDeviceIMEI(String deviceImei);
 }

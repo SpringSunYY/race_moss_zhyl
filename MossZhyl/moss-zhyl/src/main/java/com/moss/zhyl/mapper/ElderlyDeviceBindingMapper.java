@@ -2,6 +2,7 @@ package com.moss.zhyl.mapper;
 
 import java.util.List;
 import com.moss.zhyl.domain.ElderlyDeviceBinding;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 长者设备绑定Mapper接口
@@ -58,4 +59,15 @@ public interface ElderlyDeviceBindingMapper
      * @return 结果
      */
     public int deleteElderlyDeviceBindingByBindingIds(Long[] bindingIds);
+
+    /**
+     * @description: 根据IMEI查询
+     * @author: YY
+     * @method: selectElderlyDeviceBindingByDeviceIMEI
+     * @date: 2024/10/26 23:35
+     * @param:
+     * @param: deviceImei
+     * @return: com.moss.zhyl.domain.ElderlyDeviceBinding
+     **/
+    ElderlyDeviceBinding selectElderlyDeviceBindingByDeviceIMEI(@Param("deviceImei") String deviceImei);
 }

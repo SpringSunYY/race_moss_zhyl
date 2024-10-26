@@ -8,11 +8,14 @@ import com.moss.common.utils.SecurityUtils;
 import com.moss.common.utils.StringUtils;
 import com.moss.common.utils.uuid.IdUtils;
 import com.moss.zhyl.domain.Device;
+import com.moss.zhyl.domain.DeviceType;
 import com.moss.zhyl.domain.UserInfo;
 import com.moss.zhyl.domain.enums.BindingStatusEnum;
 import com.moss.zhyl.domain.enums.DelFlagEnum;
 import com.moss.zhyl.domain.enums.DeviceBindingStatusEnum;
+import com.moss.zhyl.domain.enums.DeviceStatusEnum;
 import com.moss.zhyl.service.IDeviceService;
+import com.moss.zhyl.service.IDeviceTypeService;
 import com.moss.zhyl.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +45,10 @@ public class ElderlyDeviceBindingServiceImpl implements IElderlyDeviceBindingSer
 
     @Autowired
     private IDeviceService deviceService;
+
+
+    @Autowired
+    private IDeviceTypeService deviceTypeService;
 
     /**
      * 查询长者设备绑定
@@ -75,6 +82,10 @@ public class ElderlyDeviceBindingServiceImpl implements IElderlyDeviceBindingSer
             if (StringUtils.isNotNull(device)) {
                 info.setDeviceName(device.getDeviceModel());
             }
+            DeviceType type = deviceTypeService.selectDeviceTypeByDeviceType(info.getDeviceType());
+            if (StringUtils.isNotNull(type)) {
+                info.setDeviceTypeName(type.getName());
+            }
         }
         return elderlyDeviceBindings;
     }
@@ -88,21 +99,25 @@ public class ElderlyDeviceBindingServiceImpl implements IElderlyDeviceBindingSer
     @Transactional
     @Override
     public int insertElderlyDeviceBinding(ElderlyDeviceBinding elderlyDeviceBinding) {
+        //从设备里面获取到所需数据
         Device device = deviceService.selectDeviceByDeviceId(elderlyDeviceBinding.getDeviceId());
-        //判断状态是否已经绑定
-        if (device.getIsBinding().equals(DEVICE_BINDING_STATUS_1.getValue())) {
-            throw new ServiceException("该设备已经绑定");
+        if (StringUtils.isNull(device)) {
+            throw new ServiceException("获取设备信息异常！！！");
         }
-        //更新状态为已绑定
-        device.setIsBinding(DEVICE_BINDING_STATUS_1.getValue());
-        deviceService.updateDevice(device);
-
+        ElderlyDeviceBinding binding = elderlyDeviceBindingMapper.selectElderlyDeviceBindingByDeviceIMEI(elderlyDeviceBinding.getDeviceImei());
+        if (StringUtils.isNotNull(binding)) {
+            throw new ServiceException("此IMEI已存在！！！");
+        }
+        elderlyDeviceBinding.setDeviceType(device.getDeviceType());
         elderlyDeviceBinding.setBindingId(IdUtils.snowflakeId());
         elderlyDeviceBinding.setDelFlag(DelFlagEnum.DEL_FLAG_0.getValue());
-        elderlyDeviceBinding.setDeviceImei(device.getDeviceImei());
         elderlyDeviceBinding.setCreateBy(SecurityUtils.getUsername());
-        elderlyDeviceBinding.setBindingStatus(BINDING_STATUS_ENUM_0.getValue());
+        //默认在线
+        elderlyDeviceBinding.setDeviceStatus(DeviceStatusEnum.DEVICE_STATUS_ENUM_0.getValue());
         elderlyDeviceBinding.setCreateTime(DateUtils.getNowDate());
+
+        // TODO 先默认userid为0
+        elderlyDeviceBinding.setUserId(1L);
         return elderlyDeviceBindingMapper.insertElderlyDeviceBinding(elderlyDeviceBinding);
     }
 
@@ -120,6 +135,11 @@ public class ElderlyDeviceBindingServiceImpl implements IElderlyDeviceBindingSer
                 || !old.getUserInfoId().equals(elderlyDeviceBinding.getUserInfoId())) {
             throw new ServiceException("不可修改用户或者设备信息！！！");
         }
+        ElderlyDeviceBinding binding = elderlyDeviceBindingMapper.selectElderlyDeviceBindingByDeviceIMEI(elderlyDeviceBinding.getDeviceImei());
+        if (StringUtils.isNotNull(binding) && !old.getDeviceImei().equals(binding.getDeviceImei())) {
+            throw new ServiceException("此IMEI已存在！！！");
+        }
+
         elderlyDeviceBinding.setUpdateBy(SecurityUtils.getUsername());
         elderlyDeviceBinding.setUpdateTime(DateUtils.getNowDate());
         return elderlyDeviceBindingMapper.updateElderlyDeviceBinding(elderlyDeviceBinding);
@@ -145,5 +165,10 @@ public class ElderlyDeviceBindingServiceImpl implements IElderlyDeviceBindingSer
     @Override
     public int deleteElderlyDeviceBindingByBindingId(Long bindingId) {
         return elderlyDeviceBindingMapper.deleteElderlyDeviceBindingByBindingId(bindingId);
+    }
+
+    @Override
+    public ElderlyDeviceBinding selectElderlyDeviceBindingByDeviceIMEI(String deviceImei) {
+        return elderlyDeviceBindingMapper.selectElderlyDeviceBindingByDeviceIMEI(deviceImei);
     }
 }

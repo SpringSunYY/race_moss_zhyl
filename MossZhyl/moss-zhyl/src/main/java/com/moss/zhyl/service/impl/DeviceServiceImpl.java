@@ -7,9 +7,11 @@ import com.moss.common.utils.SecurityUtils;
 import com.moss.common.utils.StringUtils;
 import com.moss.common.utils.uuid.IdUtils;
 import com.moss.zhyl.domain.DeviceBrand;
+import com.moss.zhyl.domain.DeviceType;
 import com.moss.zhyl.domain.enums.DelFlagEnum;
 import com.moss.zhyl.domain.enums.DeviceBindingStatusEnum;
 import com.moss.zhyl.service.IDeviceBrandService;
+import com.moss.zhyl.service.IDeviceTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.moss.zhyl.mapper.DeviceMapper;
@@ -33,6 +35,9 @@ public class DeviceServiceImpl implements IDeviceService {
 
     @Autowired
     private IDeviceBrandService deviceBrandService;
+
+    @Autowired
+    private IDeviceTypeService deviceTypeService;
 
     /**
      * 查询设备
@@ -62,6 +67,10 @@ public class DeviceServiceImpl implements IDeviceService {
             if (StringUtils.isNotNull(deviceBrand)) {
                 info.setBrandName(deviceBrand.getBrandName());
             }
+            DeviceType type = deviceTypeService.selectDeviceTypeByDeviceType(info.getDeviceType());
+            if (StringUtils.isNotNull(type)) {
+                info.setDeviceTypeName(type.getName());
+            }
         }
         return devices;
     }
@@ -74,8 +83,6 @@ public class DeviceServiceImpl implements IDeviceService {
      */
     @Override
     public int insertDevice(Device device) {
-        //默认不绑定
-        device.setIsBinding(DeviceBindingStatusEnum.DEVICE_BINDING_STATUS_0.getValue());
         device.setDelFlag(DelFlagEnum.DEL_FLAG_0.getValue());
         device.setCreateBy(SecurityUtils.getUsername());
         device.setDeviceId(IdUtils.snowflakeId());

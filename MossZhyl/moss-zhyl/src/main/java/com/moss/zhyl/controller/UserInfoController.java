@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.moss.zhyl.domain.dto.UserInfoElderlyDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -77,7 +78,7 @@ public class UserInfoController extends BaseController
     @PreAuthorize("@ss.hasPermi('zhyl:userInfo:add')")
     @Log(title = "用户信息", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody UserInfoElderlyDto userInfo)
+    public AjaxResult add(@Validated @RequestBody UserInfoElderlyDto userInfo)
     {
         return toAjax(userInfoService.insertUserInfo(userInfo));
     }
@@ -88,7 +89,7 @@ public class UserInfoController extends BaseController
     @PreAuthorize("@ss.hasPermi('zhyl:userInfo:edit')")
     @Log(title = "用户信息", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody UserInfoElderlyDto userInfoElderlyDto)
+    public AjaxResult edit(@Validated @RequestBody UserInfoElderlyDto userInfoElderlyDto)
     {
         return toAjax(userInfoService.updateUserInfo(userInfoElderlyDto));
     }

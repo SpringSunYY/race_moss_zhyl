@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moss.zhyl.mapper.DeviceUploadingDataMapper">
+    
+    <resultMap type="DeviceUploadingData" id="DeviceUploadingDataResult">
+        <result property="dataId"    column="data_id"    />
+        <result property="deviceId"    column="device_id"    />
+        <result property="type"    column="type"    />
+        <result property="command"    column="command"    />
+        <result property="deviceType"    column="device_type"    />
+        <result property="userInfoId"    column="user_info_id"    />
+        <result property="argument"    column="argument"    />
+        <result property="warningType"    column="warning_type"    />
+        <result property="lon"    column="lon"    />
+        <result property="lat"    column="lat"    />
+        <result property="processingStatus"    column="processing_status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectDeviceUploadingDataVo">
+        select data_id, device_id, type, command, device_type, user_info_id, argument, warning_type, lon, lat, processing_status, create_time, update_time, del_flag from yl_device_uploading_data
+    </sql>
+
+    <select id="selectDeviceUploadingDataList" parameterType="DeviceUploadingData" resultMap="DeviceUploadingDataResult">
+        <include refid="selectDeviceUploadingDataVo"/>
+        <where>  
+            <if test="dataId != null "> and data_id = #{dataId}</if>
+            <if test="deviceId != null  and deviceId != ''"> and device_id = #{deviceId}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="command != null  and command != ''"> and command = #{command}</if>
+            <if test="deviceType != null  and deviceType != ''"> and device_type = #{deviceType}</if>
+            <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
+            <if test="warningType != null  and warningType != ''"> and warning_type = #{warningType}</if>
+            <if test="processingStatus != null  and processingStatus != ''"> and processing_status = #{processingStatus}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectDeviceUploadingDataByDataId" parameterType="Long" resultMap="DeviceUploadingDataResult">
+        <include refid="selectDeviceUploadingDataVo"/>
+        where data_id = #{dataId}
+    </select>
+
+    <insert id="insertDeviceUploadingData" parameterType="DeviceUploadingData">
+        insert into yl_device_uploading_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dataId != null">data_id,</if>
+            <if test="deviceId != null and deviceId != ''">device_id,</if>
+            <if test="type != null">type,</if>
+            <if test="command != null">command,</if>
+            <if test="deviceType != null">device_type,</if>
+            <if test="userInfoId != null">user_info_id,</if>
+            <if test="argument != null">argument,</if>
+            <if test="warningType != null">warning_type,</if>
+            <if test="lon != null">lon,</if>
+            <if test="lat != null">lat,</if>
+            <if test="processingStatus != null">processing_status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dataId != null">#{dataId},</if>
+            <if test="deviceId != null and deviceId != ''">#{deviceId},</if>
+            <if test="type != null">#{type},</if>
+            <if test="command != null">#{command},</if>
+            <if test="deviceType != null">#{deviceType},</if>
+            <if test="userInfoId != null">#{userInfoId},</if>
+            <if test="argument != null">#{argument},</if>
+            <if test="warningType != null">#{warningType},</if>
+            <if test="lon != null">#{lon},</if>
+            <if test="lat != null">#{lat},</if>
+            <if test="processingStatus != null">#{processingStatus},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDeviceUploadingData" parameterType="DeviceUploadingData">
+        update yl_device_uploading_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceId != null and deviceId != ''">device_id = #{deviceId},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="command != null">command = #{command},</if>
+            <if test="deviceType != null">device_type = #{deviceType},</if>
+            <if test="userInfoId != null">user_info_id = #{userInfoId},</if>
+            <if test="argument != null">argument = #{argument},</if>
+            <if test="warningType != null">warning_type = #{warningType},</if>
+            <if test="lon != null">lon = #{lon},</if>
+            <if test="lat != null">lat = #{lat},</if>
+            <if test="processingStatus != null">processing_status = #{processingStatus},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+        </trim>
+        where data_id = #{dataId}
+    </update>
+
+    <delete id="deleteDeviceUploadingDataByDataId" parameterType="Long">
+        delete from yl_device_uploading_data where data_id = #{dataId}
+    </delete>
+
+    <delete id="deleteDeviceUploadingDataByDataIds" parameterType="String">
+        delete from yl_device_uploading_data where data_id in 
+        <foreach item="dataId" collection="array" open="(" separator="," close=")">
+            #{dataId}
+        </foreach>
+    </delete>
+</mapper>

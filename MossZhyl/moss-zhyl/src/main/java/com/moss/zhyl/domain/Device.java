@@ -10,7 +10,7 @@ import com.moss.common.core.domain.BaseEntity;
  * 设备对象 yl_device
  *
  * @author YY
- * @date 2024-10-25
+ * @date 2024-10-26
  */
 public class Device extends BaseEntity
 {
@@ -24,12 +24,9 @@ public class Device extends BaseEntity
     private String brandName;
     private Long brandId;
 
-    /** 设备IMEI号 */
-    @Excel(name = "设备IMEI号")
-    private String deviceImei;
-
     /** 设备类型 */
     @Excel(name = "设备类型")
+    private String deviceTypeName;
     private String deviceType;
 
     /** 设备型号 */
@@ -56,14 +53,6 @@ public class Device extends BaseEntity
     @Excel(name = "设备价格")
     private BigDecimal devicePrice;
 
-    /** 设备状态 */
-    @Excel(name = "设备状态")
-    private String deviceStatus;
-
-    /** 绑定状态 */
-    @Excel(name = "绑定状态")
-    private String isBinding;
-
     /** 质保时间 */
     @Excel(name = "质保时间")
     private Long warrantyPeriod;
@@ -84,17 +73,25 @@ public class Device extends BaseEntity
     @Excel(name = "删除标记")
     private String delFlag;
 
-    public void setDeviceId(Long deviceId)
-    {
-        this.deviceId = deviceId;
-    }
-
     public String getBrandName() {
         return brandName;
     }
 
     public void setBrandName(String brandName) {
         this.brandName = brandName;
+    }
+
+    public void setDeviceId(Long deviceId)
+    {
+        this.deviceId = deviceId;
+    }
+
+    public String getDeviceTypeName() {
+        return deviceTypeName;
+    }
+
+    public void setDeviceTypeName(String deviceTypeName) {
+        this.deviceTypeName = deviceTypeName;
     }
 
     public Long getDeviceId()
@@ -109,15 +106,6 @@ public class Device extends BaseEntity
     public Long getBrandId()
     {
         return brandId;
-    }
-    public void setDeviceImei(String deviceImei)
-    {
-        this.deviceImei = deviceImei;
-    }
-
-    public String getDeviceImei()
-    {
-        return deviceImei;
     }
     public void setDeviceType(String deviceType)
     {
@@ -182,24 +170,6 @@ public class Device extends BaseEntity
     {
         return devicePrice;
     }
-    public void setDeviceStatus(String deviceStatus)
-    {
-        this.deviceStatus = deviceStatus;
-    }
-
-    public String getDeviceStatus()
-    {
-        return deviceStatus;
-    }
-    public void setIsBinding(String isBinding)
-    {
-        this.isBinding = isBinding;
-    }
-
-    public String getIsBinding()
-    {
-        return isBinding;
-    }
     public void setWarrantyPeriod(Long warrantyPeriod)
     {
         this.warrantyPeriod = warrantyPeriod;
@@ -251,7 +221,6 @@ public class Device extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
                 .append("deviceId", getDeviceId())
                 .append("brandId", getBrandId())
-                .append("deviceImei", getDeviceImei())
                 .append("deviceType", getDeviceType())
                 .append("deviceModel", getDeviceModel())
                 .append("communicationProtocol", getCommunicationProtocol())
@@ -259,12 +228,11 @@ public class Device extends BaseEntity
                 .append("powerSupplyMode", getPowerSupplyMode())
                 .append("installationMode", getInstallationMode())
                 .append("devicePrice", getDevicePrice())
-                .append("deviceStatus", getDeviceStatus())
-                .append("isBinding", getIsBinding())
                 .append("warrantyPeriod", getWarrantyPeriod())
                 .append("deviceFunction", getDeviceFunction())
                 .append("deviceParameters", getDeviceParameters())
                 .append("deviceImageUrl", getDeviceImageUrl())
+                .append("remark", getRemark())
                 .append("createBy", getCreateBy())
                 .append("updateBy", getUpdateBy())
                 .append("createTime", getCreateTime())

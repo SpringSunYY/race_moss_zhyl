@@ -41,6 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
         </where>
+        order by create_time desc
     </select>
     
     <select id="selectServiceStationByServiceStationId" parameterType="Long" resultMap="ServiceStationResult">

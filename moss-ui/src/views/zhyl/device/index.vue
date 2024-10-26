@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <!--      <el-form-item label="设备ID" prop="deviceId">-->
+      <!--      <el-form-item label="编号" prop="deviceId">-->
       <!--        <el-input-->
       <!--          v-model="queryParams.deviceId"-->
       <!--          placeholder="请输入设备ID"-->
@@ -27,28 +27,35 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="IMEI号" prop="deviceImei">
-        <el-input
-          v-model="queryParams.deviceImei"
-          placeholder="请输入设备IMEI号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="设备类型" prop="deviceType">
-        <el-select v-model="queryParams.deviceType" placeholder="请选择设备类型" clearable>
+        <el-select
+          v-model="queryParams.deviceType"
+          filterable
+          remote
+          reserve-keyword
+          placeholder="请输入类型名称"
+          :remote-method="remoteDeviceTypeMethod"
+          :loading="deviceTypeLoading">
           <el-option
-            v-for="dict in dict.type.yl_device_type"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
+            v-for="item in deviceTypeList"
+            :key="item.typeId"
+            :label="item.deviceType"
+            :value="item.deviceType">
+          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="设备型号" prop="deviceModel">
         <el-input
           v-model="queryParams.deviceModel"
           placeholder="请输入设备型号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="通信协议" prop="communicationProtocol">
+        <el-input
+          v-model="queryParams.communicationProtocol"
+          placeholder="请输入通信协议"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -77,26 +84,6 @@
         <el-select v-model="queryParams.installationMode" placeholder="请选择安装方式" clearable>
           <el-option
             v-for="dict in dict.type.yl_installation_mode"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="设备状态" prop="deviceStatus">
-        <el-select v-model="queryParams.deviceStatus" placeholder="请选择设备状态" clearable>
-          <el-option
-            v-for="dict in dict.type.yl_device_status"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="绑定状态" prop="isBinding">
-        <el-select v-model="queryParams.isBinding" placeholder="请选择绑定状态" clearable>
-          <el-option
-            v-for="dict in dict.type.yl_device_binding_status"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -141,16 +128,16 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="删除标记" prop="delFlag">
-        <el-select v-model="queryParams.delFlag" placeholder="请选择删除标记" clearable>
-          <el-option
-            v-for="dict in dict.type.yl_del_flag"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
+      <!--      <el-form-item label="删除标记" prop="delFlag">-->
+      <!--        <el-select v-model="queryParams.delFlag" placeholder="请选择删除标记" clearable>-->
+      <!--          <el-option-->
+      <!--            v-for="dict in dict.type.yl_del_flag"-->
+      <!--            :key="dict.value"-->
+      <!--            :label="dict.label"-->
+      <!--            :value="dict.value"-->
+      <!--          />-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -209,78 +196,65 @@
 
     <el-table v-loading="loading" :data="deviceList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="设备ID" align="center" v-if="columns[0].visible" prop="deviceId"/>
+      <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="deviceId"/>
       <el-table-column label="设备品牌" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible"
                        prop="brandName"/>
-      <el-table-column label="设备IMEI号" :show-overflow-tooltip="true" align="center" v-if="columns[2].visible"
-                       prop="deviceImei"/>
-      <el-table-column label="设备类型" align="center" v-if="columns[3].visible" prop="deviceType">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.yl_device_type" :value="scope.row.deviceType"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="设备型号" :show-overflow-tooltip="true" align="center" v-if="columns[4].visible"
+      <el-table-column label="设备类型" :show-overflow-tooltip="true" align="center" v-if="columns[2].visible"
+                       prop="deviceTypeName"/>
+      <el-table-column label="设备型号" :show-overflow-tooltip="true" align="center" v-if="columns[3].visible"
                        prop="deviceModel"/>
-      <el-table-column label="通信协议" :show-overflow-tooltip="true" align="center" v-if="columns[5].visible"
+      <el-table-column label="通信协议" :show-overflow-tooltip="true" align="center" v-if="columns[4].visible"
                        prop="communicationProtocol"/>
-      <el-table-column label="联网方式" align="center" v-if="columns[6].visible" prop="networkMode">
+      <el-table-column label="联网方式" align="center" v-if="columns[5].visible" prop="networkMode">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yl_network_mode" :value="scope.row.networkMode"/>
         </template>
       </el-table-column>
-      <el-table-column label="供电方式" align="center" v-if="columns[7].visible" prop="powerSupplyMode">
+      <el-table-column label="供电方式" align="center" v-if="columns[6].visible" prop="powerSupplyMode">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yl_power_supply_mode" :value="scope.row.powerSupplyMode"/>
         </template>
       </el-table-column>
-      <el-table-column label="安装方式" align="center" v-if="columns[8].visible" prop="installationMode">
+      <el-table-column label="安装方式" align="center" v-if="columns[7].visible" prop="installationMode">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yl_installation_mode" :value="scope.row.installationMode"/>
         </template>
       </el-table-column>
-      <el-table-column label="设备价格" :show-overflow-tooltip="true" align="center" v-if="columns[9].visible"
+      <el-table-column label="设备价格" :show-overflow-tooltip="true" align="center" v-if="columns[8].visible"
                        prop="devicePrice"/>
-      <el-table-column label="设备状态" align="center" v-if="columns[10].visible" prop="deviceStatus">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.yl_device_status" :value="scope.row.deviceStatus"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="绑定状态" align="center" v-if="columns[11].visible" prop="isBinding">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.yl_device_binding_status" :value="scope.row.isBinding"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="质保时间" :show-overflow-tooltip="true" align="center" v-if="columns[12].visible"
+      <el-table-column label="质保时间" :show-overflow-tooltip="true" align="center" v-if="columns[9].visible"
                        prop="warrantyPeriod"/>
-      <el-table-column label="设备功能" :show-overflow-tooltip="true" align="center" v-if="columns[13].visible"
+      <el-table-column label="设备功能" :show-overflow-tooltip="true" align="center" v-if="columns[10].visible"
                        prop="deviceFunction"/>
-      <el-table-column label="设备参数" :show-overflow-tooltip="true" align="center" v-if="columns[14].visible"
+      <el-table-column label="设备参数" :show-overflow-tooltip="true" align="center" v-if="columns[11].visible"
                        prop="deviceParameters"/>
-      <el-table-column label="设备图片" align="center" v-if="columns[15].visible" prop="deviceImageUrl" width="100">
+      <el-table-column label="设备图片" align="center" v-if="columns[12].visible" prop="deviceImageUrl" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.deviceImageUrl" :width="50" :height="50"/>
         </template>
       </el-table-column>
-      <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[16].visible"
+      <el-table-column label="备注" :show-overflow-tooltip="true" align="center" v-if="columns[13].visible"
+                       prop="remark"/>
+      <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[14].visible"
                        prop="createBy"/>
-      <el-table-column label="修改人" :show-overflow-tooltip="true" align="center" v-if="columns[17].visible"
+      <el-table-column label="修改人" :show-overflow-tooltip="true" align="center" v-if="columns[15].visible"
                        prop="updateBy"/>
-      <el-table-column label="创建时间" align="center" v-if="columns[18].visible" prop="createTime" width="180">
+      <el-table-column label="创建时间" align="center" v-if="columns[16].visible" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="修改时间" align="center" v-if="columns[19].visible" prop="updateTime" width="180">
+      <el-table-column label="修改时间" align="center" v-if="columns[17].visible" prop="updateTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="删除标记" align="center" v-if="columns[20].visible" prop="delFlag">
+      <el-table-column label="删除标记" align="center" v-if="columns[18].visible" prop="delFlag">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yl_del_flag" :value="scope.row.delFlag"/>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -296,7 +270,6 @@
             icon="el-icon-edit"
             @click="handleBinding(scope.row)"
             v-hasPermi="['zhyl:elderlyDeviceBinding:add']"
-            v-if="scope.row.isBinding === '0'"
           >绑定设备
           </el-button>
           <el-button
@@ -323,7 +296,7 @@
     <el-dialog :title="title" :visible.sync="open" width="1200px" append-to-body>
       <el-row :gutter="24">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item label="设备品牌" prop="brandId">
               <el-select
                 v-model="form.brandId"
@@ -342,34 +315,26 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="IMEI号" prop="deviceImei">
-              <el-input v-model="form.deviceImei" placeholder="请输入设备IMEI号"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item label="设备类型" prop="deviceType">
-              <el-select v-model="form.deviceType" placeholder="请选择设备类型">
+              <el-select
+                v-model="form.deviceType"
+                filterable
+                remote
+                reserve-keyword
+                placeholder="请输入类型名称"
+                :remote-method="remoteDeviceTypeMethod"
+                :loading="deviceTypeLoading">
                 <el-option
-                  v-for="dict in dict.type.yl_device_type"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                ></el-option>
+                  v-for="item in deviceTypeList"
+                  :key="item.typeId"
+                  :label="item.deviceType"
+                  :value="item.deviceType">
+                </el-option>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="设备型号" prop="deviceModel">
-              <el-input v-model="form.deviceModel" placeholder="请输入设备型号"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="通信协议" prop="communicationProtocol">
-              <el-input v-model="form.communicationProtocol" placeholder="请输入通信协议"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item label="联网方式" prop="networkMode">
               <el-select v-model="form.networkMode" placeholder="请选择联网方式">
                 <el-option
@@ -381,7 +346,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item label="供电方式" prop="powerSupplyMode">
               <el-select v-model="form.powerSupplyMode" placeholder="请选择供电方式">
                 <el-option
@@ -393,7 +358,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item label="安装方式" prop="installationMode">
               <el-select v-model="form.installationMode" placeholder="请选择安装方式">
                 <el-option
@@ -405,24 +370,22 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
+            <el-form-item label="通信协议" prop="communicationProtocol">
+              <el-input v-model="form.communicationProtocol" placeholder="请输入通信协议"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="设备型号" prop="deviceModel">
+              <el-input v-model="form.deviceModel" placeholder="请输入设备型号"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="设备价格" prop="devicePrice">
               <el-input v-model="form.devicePrice" placeholder="请输入设备价格"/>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="设备状态" prop="deviceStatus">
-              <el-select v-model="form.deviceStatus" placeholder="请选择设备状态">
-                <el-option
-                  v-for="dict in dict.type.yl_device_status"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item label="质保时间" prop="warrantyPeriod">
               <el-input v-model="form.warrantyPeriod" placeholder="请输入质保时间"/>
             </el-form-item>
@@ -470,6 +433,19 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="IMEI号" prop="deviceImei">
+          <el-input v-model="bindingDeviceInfo.deviceImei" placeholder="请输入设备IMEI号"/>
+        </el-form-item>
+        <el-form-item label="绑定状态" prop="bindingStatus">
+          <el-select v-model="bindingDeviceInfo.bindingStatus" placeholder="请选择绑定状态">
+            <el-option
+              v-for="dict in dict.type.yl_binding_status"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="绑定时间" prop="bindTime">
           <el-date-picker clearable
                           v-model="bindingDeviceInfo.bindTime"
@@ -492,17 +468,27 @@ import {addDevice, delDevice, getDevice, listDevice, updateDevice} from "@/api/z
 import {listDeviceBrand} from "@/api/zhyl/deviceBrand";
 import {listUserInfo} from "@/api/zhyl/userInfo";
 import {addElderlyDeviceBinding} from "@/api/zhyl/elderlyDeviceBinding";
+import {listDeviceType} from "@/api/zhyl/deviceType";
 
 export default {
   name: "Device",
-  dicts: ['yl_installation_mode', 'yl_device_type', 'yl_network_mode', 'yl_del_flag', 'yl_power_supply_mode', 'yl_device_status', 'yl_device_binding_status'],
+  dicts: ['yl_installation_mode', 'yl_device_type', 'yl_network_mode', 'yl_del_flag', 'yl_power_supply_mode',
+    'yl_device_status', 'yl_device_binding_status', 'yl_binding_status'],
   data() {
     return {
       //绑定设备信息
       bindingDeviceInfo: {},
       // 遮罩层
       bindingDeviceOpen: false,
-      //用户新增显示数组 是长者查询家属 是家属查询长者
+      // 设备类型
+      deviceTypeList: [],
+      deviceTypeLoading: false,
+      deviceTypeParams: {
+        pageNum: 1,
+        pageSize: 10,
+        name: ''
+      },
+      // 设备品牌
       deviceBrandList: [],
       deviceBrandLoading: false,
       deviceBrandParams: {
@@ -523,27 +509,25 @@ export default {
       elderlyUserInfoLoading: true,
       //表格展示列
       columns: [
-        {key: 0, label: '设备ID', visible: false},
+        {key: 0, label: '编号', visible: false},
         {key: 1, label: '设备品牌', visible: true},
-        {key: 2, label: '设备IMEI号', visible: false},
-        {key: 3, label: '设备类型', visible: true},
-        {key: 4, label: '设备型号', visible: true},
-        {key: 5, label: '通信协议', visible: true},
-        {key: 6, label: '联网方式', visible: true},
-        {key: 7, label: '供电方式', visible: true},
-        {key: 8, label: '安装方式', visible: true},
-        {key: 9, label: '设备价格', visible: true},
-        {key: 10, label: '设备状态', visible: true},
-        {key: 11, label: '绑定状态', visible: true},
-        {key: 12, label: '质保时间', visible: true},
-        {key: 13, label: '设备功能', visible: false},
-        {key: 14, label: '设备参数', visible: false},
-        {key: 15, label: '设备图片', visible: true},
-        {key: 16, label: '创建人', visible: false},
-        {key: 17, label: '修改人', visible: false},
-        {key: 18, label: '创建时间', visible: false},
-        {key: 19, label: '修改时间', visible: false},
-        {key: 20, label: '删除标记', visible: false},
+        {key: 2, label: '设备类型', visible: true},
+        {key: 3, label: '设备型号', visible: true},
+        {key: 4, label: '通信协议', visible: false},
+        {key: 5, label: '联网方式', visible: true},
+        {key: 6, label: '供电方式', visible: true},
+        {key: 7, label: '安装方式', visible: true},
+        {key: 8, label: '设备价格', visible: true},
+        {key: 9, label: '质保时间', visible: false},
+        {key: 10, label: '设备功能', visible: false},
+        {key: 11, label: '设备参数', visible: false},
+        {key: 12, label: '设备图片', visible: true},
+        {key: 13, label: '备注', visible: false},
+        {key: 14, label: '创建人', visible: true},
+        {key: 15, label: '修改人', visible: false},
+        {key: 16, label: '创建时间', visible: false},
+        {key: 17, label: '修改时间', visible: false},
+        {key: 18, label: '删除标记', visible: false},
       ],
       // 遮罩层
       loading: true,
@@ -595,13 +579,10 @@ export default {
           {required: true, message: "设备品牌不能为空", trigger: "blur"}
         ],
         deviceType: [
-          {required: true, message: "设备类型不能为空", trigger: "change"}
+          {required: true, message: "设备类型不能为空", trigger: "blur"}
         ],
         deviceModel: [
           {required: true, message: "设备型号不能为空", trigger: "blur"}
-        ],
-        deviceStatus: [
-          {required: true, message: "设备状态不能为空", trigger: "change"}
         ],
         createBy: [
           {required: true, message: "创建人不能为空", trigger: "blur"}
@@ -612,6 +593,7 @@ export default {
   created() {
     this.getList();
     this.getDeviceBrandList()
+    this.getDeviceTypeList()
   },
   methods: {
     remoteElderlyUserInfoMethod(query) {
@@ -637,7 +619,6 @@ export default {
       this.bindingDeviceOpen = true
       this.title = "绑定设备--" + row.deviceModel
       this.bindingDeviceInfo.deviceId = row.deviceId
-      this.bindingDeviceInfo.deviceImei = row.deviceImei
     },
     //提交绑定信息
     submitFormBinding() {
@@ -648,6 +629,32 @@ export default {
         this.getList();
       })
     },
+    // 设备类型
+    remoteDeviceTypeMethod(query) {
+      if (query !== '') {
+        this.deviceTypeLoading = true
+        this.deviceTypeParams.brandName = query
+        setTimeout(() => {
+          // 使用箭头函数，确保 this 仍然指向 Vue 实例
+          this.getDeviceTypeList()
+        }, 200)
+      } else {
+        this.deviceTypeList = []
+      }
+    },
+    getDeviceTypeList() {
+      if (this.form.deviceType != null) {
+        this.deviceTypeParams.deviceType = this.form.deviceType
+      }
+      if (this.deviceTypeParams.name !== '') {
+        this.deviceTypeParams.deviceType = null
+      }
+      listDeviceType(this.deviceTypeParams).then(response => {
+        this.deviceTypeList = response.rows
+        this.deviceTypeLoading = false
+      })
+    },
+    // 设备品牌
     remoteDeviceBrandMethod(query) {
       if (query !== '') {
         this.deviceBrandLoading = true
@@ -698,7 +705,6 @@ export default {
       this.form = {
         deviceId: null,
         brandId: null,
-        deviceImei: null,
         deviceType: null,
         deviceModel: null,
         communicationProtocol: null,
@@ -706,12 +712,11 @@ export default {
         powerSupplyMode: null,
         installationMode: null,
         devicePrice: null,
-        deviceStatus: null,
-        isBinding: null,
         warrantyPeriod: null,
         deviceFunction: null,
         deviceParameters: null,
         deviceImageUrl: null,
+        remark: null,
         createBy: null,
         updateBy: null,
         createTime: null,

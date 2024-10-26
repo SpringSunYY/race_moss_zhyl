@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -75,7 +76,7 @@ public class ElderlyDeviceBindingController extends BaseController
     @PreAuthorize("@ss.hasPermi('zhyl:elderlyDeviceBinding:add')")
     @Log(title = "长者设备绑定", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ElderlyDeviceBinding elderlyDeviceBinding)
+    public AjaxResult add(@Validated @RequestBody ElderlyDeviceBinding elderlyDeviceBinding)
     {
         return toAjax(elderlyDeviceBindingService.insertElderlyDeviceBinding(elderlyDeviceBinding));
     }

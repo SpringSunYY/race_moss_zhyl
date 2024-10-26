@@ -29,6 +29,7 @@
             <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
             <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
         </where>
+        order by create_time desc
     </select>
 
     <select id="selectDeviceAgreementByAgreementId" parameterType="Long" resultMap="DeviceAgreementResult">

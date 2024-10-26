@@ -32,7 +32,9 @@
 >
 > 设备品牌
 >
-> 设备绑定，一个设备只可以绑定一个用户
+> 设备绑定，一个设备只可以绑定一个用户，只会有deviceIMEI，优化设备管理，提出设备公共信息，设备deviceIMEI在用户绑定处
+>
+> 新增设备类型
 >
 > 设备管理
 
@@ -43,6 +45,8 @@
 > 权限Constants
 >
 > 参数Constants
+>
+> 排序为创建时间倒序
 
 ### 数据库
 
@@ -409,6 +413,7 @@ CREATE TABLE `yl_device` (
 | `bind_time`      | datetime |      | 否       |                | 绑定时间                 |
 | `unbind_time`    | datetime |      | 是       |                | 解绑时间                 |
 | `binding_status` | char     | 1    | 否       |                | 绑定状态                 |
+| `user_id`        | bigint   |      | 否       |                | 服务人员                 |
 | `create_by`      | varchar  | 50   | 否       |                | 创建人                   |
 | `update_by`      | varchar  | 50   | 是       |                | 修改人                   |
 | `create_time`    | datetime |      | 否       |                | 创建时间                 |
@@ -416,6 +421,8 @@ CREATE TABLE `yl_device` (
 | `del_flag`       | char     | 1    | 否       |                | 删除                     |
 
 绑定状态：0绑定，1解绑
+
+管理人员：如果告警，发送信息给管理人员
 
 删除：0正常1删除
 
@@ -430,6 +437,7 @@ CREATE TABLE `yl_elderly_device_binding` (
     `bind_time` datetime NOT NULL COMMENT '绑定时间',
     `unbind_time` datetime DEFAULT NULL COMMENT '解绑时间',
     `binding_status` char(1) NOT NULL COMMENT '绑定状态',
+    `user_id` BIGINT NOT NULL COMMENT '服务人员（sys_user:user_id）',
     `create_by` varchar(50) NOT NULL COMMENT '创建人',
     `update_by` varchar(50) DEFAULT NULL COMMENT '修改人',
     `create_time` datetime NOT NULL COMMENT '创建时间',
@@ -437,7 +445,8 @@ CREATE TABLE `yl_elderly_device_binding` (
     `del_flag` char(1) NOT NULL COMMENT '删除',
     PRIMARY KEY (`binding_id`),
     FOREIGN KEY (`user_info_id`) REFERENCES `yl_user_info`(`user_info_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (`device_id`) REFERENCES `yl_device`(`device_id`) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (`device_id`) REFERENCES `yl_device`(`device_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`user_info_id`) REFERENCES `yl_user_info`(`user_info_id`)
 ) COMMENT='长者设备绑定表';
 
 ```
@@ -855,6 +864,8 @@ CREATE TABLE `yl_appointment_dispose`
 ```
 
 #### 所有建表语句
+
+
 
 
 

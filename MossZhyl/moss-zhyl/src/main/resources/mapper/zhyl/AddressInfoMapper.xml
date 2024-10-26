@@ -30,6 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="center != null  and center != ''"> and center = #{center}</if>
             <if test="orderNum != null "> and order_num = #{orderNum}</if>
         </where>
+        order by order_num asc
     </select>
     
     <select id="selectAddressInfoByAddressId" parameterType="Long" resultMap="AddressInfoResult">
