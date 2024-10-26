@@ -306,35 +306,55 @@ CREATE TABLE `yl_device_agreement` (
 
 ```
 
+#### 设备类型表：yl_device_type
 
+| 字段名        | 数据类型 | 长度 | 是否为空 | 外键 | 备注           |
+| ------------- | -------- | ---- | -------- | ---- | -------------- |
+| `type_id`     | bigint   |      | 否       |      | 编号           |
+| `name`        | varchar  | 64   | 否       |      | 名称           |
+| `device_type` | varchar  | 64   | 否       |      | 设备类型(唯一) |
+| `remark`      | varchar  | 255  | 是       |      | 备注           |
+| `create_by`   | varchar  | 50   | 否       |      | 创建人         |
+| `create_time` | datetime |      | 是       |      | 创建时间       |
+| `update_time` | datetime |      | 是       |      | 修改时间       |
+
+```sql
+CREATE TABLE `yl_device_type` (
+    `type_id` bigint NOT NULL COMMENT '编号',
+    `name` varchar(64) NOT NULL COMMENT '名称',
+    `device_type` varchar(64) NOT NULL UNIQUE COMMENT '设备类型',
+    `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+    `create_by` varchar(50) NOT NULL COMMENT '创建人',
+    `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+    `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+    PRIMARY KEY (`type_id`)
+) COMMENT='设备类型表';
+
+```
 
 #### 设备表：yl_device
 
-| 字段名                   | 数据类型 | 长度 | 是否为空 | 外键       | 备注                           |
-| ------------------------ | -------- | ---- | -------- | ---------- | ------------------------------ |
-| `device_id`              | bigint   |      | 否       |            | 设备ID                         |
-| `brand_id`               | bigint   |      | 否       | `brand_id` | 设备品牌（设备品牌表brand_id） |
-| `device_imei`            | varchar  | 255  | 否       |            | 设备IMEI号                     |
-| `device_type`            | char     | 1    | 否       |            | 设备类型                       |
-| `device_model`           | varchar  | 100  | 否       |            | 设备型号                       |
-| `communication_protocol` | tinyint  |      | 是       |            | 通信协议                       |
-| `network_mode`           | tinyint  |      | 是       |            | 联网方式                       |
-| `power_supply_mode`      | tinyint  |      | 是       |            | 供电方式                       |
-| `installation_mode`      | tinyint  |      | 是       |            | 安装方式                       |
-| `device_price`           | float    |      | 是       |            | 设备价格                       |
-| `device_status`          | char     | 1    | 否       |            | 设备状态                       |
-| `is_banding`             | char     | 1    | 否       |            | 绑定状态                       |
-| `warranty_period`        | int      |      | 是       |            | 质保时间                       |
-| `device_function`        | text     |      | 是       |            | 设备功能                       |
-| `device_parameters`      | text     |      | 是       |            | 设备参数                       |
-| `device_image_url`       | varchar  | 1024 | 是       |            | 设备图片                       |
-| `create_by`              | varchar  | 50   | 否       |            | 创建人                         |
-| `update_by`              | varchar  | 50   | 是       |            | 修改人                         |
-| `create_time`            | datetime |      | 是       |            | 创建时间                       |
-| `update_time`            | datetime |      | 是       |            | 修改时间                       |
-| `del_flag`               | char     | 1    | 是       |            | 删除标记                       |
-
-设备状态：0在线，1离线
+| 字段名                   | 数据类型 | 长度 | 是否为空 | 外键          | 备注                                |
+| ------------------------ | -------- | ---- | -------- | ------------- | ----------------------------------- |
+| `device_id`              | bigint   |      | 否       |               | 编号                                |
+| `brand_id`               | bigint   |      | 否       | `brand_id`    | 设备品牌（设备品牌表brand_id）      |
+| `device_type`            | varchar  | 64   | 否       | `device_type` | 设备类型（设备类型表：device_type） |
+| `device_model`           | varchar  | 100  | 否       |               | 设备型号                            |
+| `communication_protocol` | tinyint  |      | 是       |               | 通信协议                            |
+| `network_mode`           | tinyint  |      | 是       |               | 联网方式                            |
+| `power_supply_mode`      | tinyint  |      | 是       |               | 供电方式                            |
+| `installation_mode`      | tinyint  |      | 是       |               | 安装方式                            |
+| `device_price`           | float    |      | 是       |               | 设备价格                            |
+| `warranty_period`        | int      |      | 是       |               | 质保时间                            |
+| `device_function`        | text     |      | 是       |               | 设备功能                            |
+| `device_parameters`      | text     |      | 是       |               | 设备参数                            |
+| `device_image_url`       | varchar  | 1024 | 是       |               | 设备图片                            |
+| `remark`                 | varchar  | 255  | 是       |               | 备注                                |
+| `create_by`              | varchar  | 50   | 否       |               | 创建人                              |
+| `update_by`              | varchar  | 50   | 是       |               | 修改人                              |
+| `create_time`            | datetime |      | 是       |               | 创建时间                            |
+| `update_time`            | datetime |      | 是       |               | 修改时间                            |
+| `del_flag`               | char     | 1    | 是       |               | 删除标记                            |
 
 联网方式：其他0，4G 1，WiFi 2
 
@@ -347,32 +367,30 @@ CREATE TABLE `yl_device_agreement` (
 删除：0正常1删除
 
 ```sql
-DROP TABLE IF EXISTS `yl_device`;
 CREATE TABLE `yl_device` (
-    `device_id` BIGINT NOT NULL COMMENT '设备ID',
-    `brand_id` BIGINT NOT NULL COMMENT '设备品牌',
-    `device_imei` VARCHAR(255) NOT NULL COMMENT '设备IMEI号',
-    `device_type` CHAR(1) NOT NULL COMMENT '设备类型',
-    `device_model` VARCHAR(100) NOT NULL COMMENT '设备型号',
-    `communication_protocol` TINYINT DEFAULT NULL COMMENT '通信协议',
-    `network_mode` TINYINT DEFAULT NULL COMMENT '联网方式',
-    `power_supply_mode` TINYINT DEFAULT NULL COMMENT '供电方式',
-    `installation_mode` TINYINT DEFAULT NULL COMMENT '安装方式',
-    `device_price` FLOAT DEFAULT NULL COMMENT '设备价格',
-    `device_status` CHAR(1) NOT NULL COMMENT '设备状态',
-    `is_binding` CHAR(1) NOT NULL COMMENT '绑定状态',
+    `device_id` bigint NOT NULL COMMENT '编号',
+    `brand_id` bigint NOT NULL COMMENT '设备品牌',
+    `device_type` varchar(64) NOT NULL COMMENT '设备类型',
+    `device_model` varchar(100) NOT NULL COMMENT '设备型号',
+    `communication_protocol` tinyint DEFAULT NULL COMMENT '通信协议',
+    `network_mode` tinyint DEFAULT NULL COMMENT '联网方式',
+    `power_supply_mode` tinyint DEFAULT NULL COMMENT '供电方式',
+    `installation_mode` tinyint DEFAULT NULL COMMENT '安装方式',
+    `device_price` float DEFAULT NULL COMMENT '设备价格',
     `warranty_period` int DEFAULT NULL COMMENT '质保时间',
-    `device_function` TEXT DEFAULT NULL COMMENT '设备功能',
-    `device_parameters` TEXT DEFAULT NULL COMMENT '设备参数',
-    `device_image_url` VARCHAR(1024) DEFAULT NULL COMMENT '设备图片',
-    `create_by` VARCHAR(50) NOT NULL COMMENT '创建人',
-    `update_by` VARCHAR(50) DEFAULT NULL COMMENT '修改人',
-    `create_time` DATETIME DEFAULT NULL COMMENT '创建时间',
-    `update_time` DATETIME DEFAULT NULL COMMENT '修改时间',
-    `del_flag` CHAR(1) DEFAULT NULL COMMENT '删除标记',
+    `device_function` text DEFAULT NULL COMMENT '设备功能',
+    `device_parameters` text DEFAULT NULL COMMENT '设备参数',
+    `device_image_url` varchar(1024) DEFAULT NULL COMMENT '设备图片',
+    `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+    `create_by` varchar(50) NOT NULL COMMENT '创建人',
+    `update_by` varchar(50) DEFAULT NULL COMMENT '修改人',
+    `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+    `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+    `del_flag` char(1) DEFAULT NULL COMMENT '删除标记',
     PRIMARY KEY (`device_id`),
-    FOREIGN KEY (`brand_id`) REFERENCES `yl_device_brand`(`brand_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='设备表';
+    FOREIGN KEY (`brand_id`) REFERENCES `yl_device_brand`(`brand_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`device_type`) REFERENCES `yl_device_type`(`device_type`) ON DELETE CASCADE ON UPDATE CASCADE
+) COMMENT='设备表';
 
 ```
 
@@ -385,7 +403,9 @@ CREATE TABLE `yl_device` (
 | `binding_id`     | bigint   |      | 否       |                | 编号                     |
 | `user_info_id`   | bigint   |      | 否       | `user_info_id` | 长者(用户表user_info_id) |
 | `device_id`      | bigint   |      | 否       | `device_id`    | 设备（设备表device_id）  |
+| `device_type`    | varchar  | 64   | 否       | `device_type`  | 设备类型                 |
 | `device_imei`    | varchar  | 255  | 否       |                | 设备IMEI号               |
+| `device_status`  | char     | 1    | 否       |                | 设备状态                 |
 | `bind_time`      | datetime |      | 否       |                | 绑定时间                 |
 | `unbind_time`    | datetime |      | 是       |                | 解绑时间                 |
 | `binding_status` | char     | 1    | 否       |                | 绑定状态                 |
@@ -400,30 +420,31 @@ CREATE TABLE `yl_device` (
 删除：0正常1删除
 
 ```sql
-DROP TABLE IF EXISTS `yl_elderly_device_binding`;
 CREATE TABLE `yl_elderly_device_binding` (
-    `binding_id` BIGINT NOT NULL COMMENT '编号',
-    `user_info_id` BIGINT NOT NULL COMMENT '长者',
-    `device_id` BIGINT NOT NULL COMMENT '设备',
-    `device_imei` VARCHAR(255) NOT NULL COMMENT '设备IMEI号',
-    `bind_time` DATETIME NOT NULL COMMENT '绑定时间',
-    `unbind_time` DATETIME DEFAULT NULL COMMENT '解绑时间',
+    `binding_id` bigint NOT NULL COMMENT '编号',
+    `user_info_id` bigint NOT NULL COMMENT '长者(用户表user_info_id)',
+    `device_id` bigint NOT NULL COMMENT '设备（设备表device_id）',
+    `device_type` varchar(64) NOT NULL COMMENT '设备类型',
+    `device_imei` varchar(255) NOT NULL COMMENT '设备IMEI号',
+    `device_status` char(1)  NOT NULL COMMENT '设备状态'
+    `bind_time` datetime NOT NULL COMMENT '绑定时间',
+    `unbind_time` datetime DEFAULT NULL COMMENT '解绑时间',
     `binding_status` char(1) NOT NULL COMMENT '绑定状态',
-    `create_by` VARCHAR(50) NOT NULL COMMENT '创建人',
-    `update_by` VARCHAR(50) DEFAULT NULL COMMENT '修改人',
-    `create_time` DATETIME NOT NULL COMMENT '创建时间',
-    `update_time` DATETIME DEFAULT NULL COMMENT '修改时间',
-    `del_flag` CHAR(1) NOT NULL COMMENT '删除',
+    `create_by` varchar(50) NOT NULL COMMENT '创建人',
+    `update_by` varchar(50) DEFAULT NULL COMMENT '修改人',
+    `create_time` datetime NOT NULL COMMENT '创建时间',
+    `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+    `del_flag` char(1) NOT NULL COMMENT '删除',
     PRIMARY KEY (`binding_id`),
-    FOREIGN KEY (`user_info_id`) REFERENCES `yl_user_info`(`user_info_id`),
-    FOREIGN KEY (`device_id`) REFERENCES `yl_device`(`device_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='长者设备绑定表';
+    FOREIGN KEY (`user_info_id`) REFERENCES `yl_user_info`(`user_info_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`device_id`) REFERENCES `yl_device`(`device_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) COMMENT='长者设备绑定表';
 
 ```
 
 
 
-#### 设备通信记录表：yl_device_communication
+#### 设备通信记录表：yl_device_communication TODO:后续要设计
 
 | 字段名                    | 数据类型 | 长度 | 是否为空 | 外键          | 备注                                  |
 | ------------------------- | -------- | ---- | -------- | ------------- | ------------------------------------- |
@@ -472,46 +493,66 @@ CREATE TABLE `yl_device_communication` (
 
 
 
-#### 设备预警表：yl_device_sos_alarm
 
-| 字段名              | 数据类型 | 长度 | 是否为空 | 外键           | 备注                                  |
-| ------------------- | -------- | ---- | -------- | -------------- | ------------------------------------- |
-| `sos_alarm_id`      | bigint   |      | 否       |                | 编号                                  |
-| `user_info_id`      | bigint   |      | 否       | `user_info_id` | 长者（用户表user_info_id）            |
-| `user_info_name`    | varchar  |      | 是       |                | 用户名                                |
-| `contact_number`    | varchar  | 255  | 是       |                | 联系电话                              |
-| `alarm_time`        | datetime |      | 是       |                | 警报时间                              |
-| `device_model`      | varchar  | 255  | 是       |                | 设备型号                              |
-| `processing_status` | varchar  | 255  | 是       |                | 处理状态                              |
-| `processing_result` | varchar  | 255  | 是       |                | 处理结果                              |
-| `device_imei`       | varchar  | 255  | 否       | `device_imei`  | 设备IMEI号(长者设备绑定表device_imei) |
-| `alarm_content`     | varchar  | 255  | 是       |                | 警报内容                              |
-| `alarm_address`     | varchar  | 255  | 是       |                | 警报发生地址                          |
-| `del_flag`          | char     | 1    | 否       |                | 删除                                  |
 
-处理状态：1待处理、2、处理中、3处理完成、4未处理、5处理失败
+#### 设备上传数据表：yl_device_uploading_data
+
+| 字段名              | 数据类型 | 长度 | 是否为空 | 外键           | 备注                       |
+| ------------------- | -------- | ---- | -------- | -------------- | -------------------------- |
+| `data_id`           | bigint   |      | 否       |                | 编号                       |
+| `device_id`         | varchar  | 64   | 否       |                | 设备编号                   |
+| `type`              | varcahr  | 16   | 是       |                | 类型                       |
+| `command`           | varchar  | 16   | 是       |                | 命令                       |
+| `device_type`       | varchar  | 64   | 是       |                | 设备类型                   |
+| `user_info_id`      | bigint   |      | 是       | `user_info_id` | 长者（用户表user_info_id） |
+| `argument`          | varchar  | 2048 | 是       |                | 对象参数                   |
+| `warning_type`      | varchar  | 8    | 是       |                | 报警类型                   |
+| `lon`               | varchar  | 32   | 是       |                | 经度                       |
+| `lat`               | varchar  | 32   | 是       |                | 纬度                       |
+| `processing_status` | varchar  | 255  | 是       |                | 状态                       |
+| `create_time`       | datetime |      | 否       |                | 创建时间                   |
+| `update_time`       | datetime |      | 是       |                | 修改时间                   |
+| `del_flag`          | char     | 1    | 否       |                | 删除                       |
+
+设备上传数据表，设备上传的所有数据，也就是命令的这几种类型的数据
+
+命令： disconnected设备离线、connected 设备上线、location定位信息、warning预警信息、health健康信息、beatHeart运动情况
+
+设备编号：如果设备编号为空把他作为脏数据，其实是设备IMEI
+
+长者：因为报警信息没有长者信息，这个需要重设备id去获取
+
+状态：1待处理、2处理完成、3未处理、4处理失败
+
+对象参数：从报警信息
+
+报警类型、地址、经纬度:从对象参数中获取，为较为重要的数据，把他们提出来好做为后续的统计
+
+报警类型：为string,“1” sos 预警 、“2” 跌倒预警 、“3” 脱手预警 、“4” 久坐预警 、“5” 低电预警（无,已经弃用） 、“6” 家庭医生 、“7” 房颤预警 、“8” 司法手表拆卸预警 、“9” 红外预警、 “101” sos报警恢复
+
+这里功能实现使用策略模式
 
 这里的长者家属信息后台直接查
 
 ```sql
-DROP TABLE IF EXISTS `yl_device_sos_alarm`;
-CREATE TABLE `yl_device_sos_alarm` (
-    `sos_alarm_id` BIGINT NOT NULL COMMENT '编号',
-    `user_info_id` BIGINT NOT NULL COMMENT '长者（用户表user_info_id）',
-    `user_info_name` VARCHAR(255) DEFAULT NULL COMMENT '用户名',
-    `contact_number` VARCHAR(255) DEFAULT NULL COMMENT '联系电话',
-    `alarm_time` DATETIME DEFAULT NULL COMMENT '警报时间',
-    `device_model` VARCHAR(255) DEFAULT NULL COMMENT '设备型号',
-    `processing_status` VARCHAR(255) DEFAULT NULL COMMENT '处理状态',
-    `processing_result` VARCHAR(255) DEFAULT NULL COMMENT '处理结果',
-    `device_imei` VARCHAR(255) NOT NULL COMMENT '设备IMEI号',
-    `alarm_content` VARCHAR(255) DEFAULT NULL COMMENT '警报内容',
-    `alarm_address` VARCHAR(255) DEFAULT NULL COMMENT '警报发生地址',
-    `del_flag` CHAR(1) NOT NULL COMMENT '删除',
-    PRIMARY KEY (`sos_alarm_id`),
-    FOREIGN KEY (`user_info_id`) REFERENCES `yl_user_info`(`user_info_id`),
-    FOREIGN KEY (`device_imei`) REFERENCES `yl_elderly_device_binding`(`device_imei`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='设备预警表';
+CREATE TABLE `yl_device_uploading_data` (
+    `data_id` bigint NOT NULL COMMENT '编号',
+    `device_id` varchar(64) NOT NULL COMMENT '设备编号',
+    `type` varchar(16) DEFAULT NULL COMMENT '类型',
+    `command` varchar(16) DEFAULT NULL COMMENT '命令',
+    `device_type` varchar(64) DEFAULT NULL COMMENT '设备类型',
+    `user_info_id` bigint DEFAULT NULL COMMENT '长者',
+    `argument` varchar(2048) DEFAULT NULL COMMENT '对象参数',
+    `warning_type` varchar(8) DEFAULT NULL COMMENT '报警类型',
+    `lon` varchar(32) DEFAULT NULL COMMENT '经度',
+    `lat` varchar(32) DEFAULT NULL COMMENT '纬度',
+    `processing_status` varchar(255) DEFAULT NULL COMMENT '状态',
+    `create_time` datetime NOT NULL COMMENT '创建时间',
+    `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+    `del_flag` char(1) NOT NULL COMMENT '删除',
+    PRIMARY KEY (`data_id`),
+    FOREIGN KEY (`user_info_id`) REFERENCES `yl_user_info`(`user_info_id`)
+) COMMENT='设备上传数据表';
 
 ```
 
@@ -538,7 +579,7 @@ CREATE TABLE `yl_device_sos_alarm` (
 
 处理凭证：处理这个sos预警的凭证，拍照上传
 
-处理情况：0处理成功、1处理失败
+处理状态：0处理成功、1处理失败、2无需处理
 
 处理人：系统角色
 
@@ -547,7 +588,7 @@ DROP TABLE IF EXISTS `yl_device_sos_alarm_dispose`;
 CREATE TABLE `yl_device_sos_alarm_dispose` (
     `dispose_id` BIGINT NOT NULL COMMENT '编号',
     `user_info_id` BIGINT NOT NULL COMMENT '长者（用户表user_info_id）',
-    `sos_alarm_id` BIGINT NOT NULL COMMENT '预警（设备预警表：sos_alarm_id）',
+    `data_id` BIGINT NOT NULL COMMENT '预警（设备预警表：sos_alarm_id）',
     `dispose_voucher` VARCHAR(1024) NOT NULL COMMENT '处理凭证',
     `dispose_describe` TEXT NOT NULL COMMENT '处理描述',
     `dispose_address` BIGINT NOT NULL COMMENT '处理地址',
@@ -561,7 +602,7 @@ CREATE TABLE `yl_device_sos_alarm_dispose` (
     `del_flag` CHAR(1) NOT NULL COMMENT '删除',
     PRIMARY KEY (`dispose_id`),
     FOREIGN KEY (`user_info_id`) REFERENCES `yl_user_info`(`user_info_id`),
-    FOREIGN KEY (`sos_alarm_id`) REFERENCES `yl_device_sos_alarm`(`sos_alarm_id`),
+    FOREIGN KEY (`sos_alarm_id`) REFERENCES `yl_device_uploading_data`(`data_id`),
     FOREIGN KEY (`user_id`) REFERENCES `sys_user`(`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='设备预警处理表';
 
@@ -730,7 +771,7 @@ CREATE TABLE `yl_health_report` (
 | `appoint_address`     | varchar  | 255  | 是       |              | 预约地址                   |
 | `user_id`             | bigint   |      | 否       | user_id      | 预约人（sys_user:user_id） |
 | `appointment_time`    | datetime |      | 否       |              | 预约时间                   |
-| `appointment_status`  | char     | 1    | 否       |              | 处理情况                   |
+| `appointment_status`  | char     | 1    | 否       |              | 预约状态                   |
 | `create_by`           | varchar  | 50   | 否       |              | 创建人                     |
 | `create_time`         | datetime |      | 否       |              | 创建时间                   |
 | `del_flag`            | char     | 1    | 否       |              | 删除                       |
@@ -741,7 +782,7 @@ user_info_id：用户，可以是家属也可以是用户
 
 预约人：系统角色
 
-处理状态：1待处理、2、处理中、3处理完成、4未处理、5处理失败
+处理状态：1待处理、2处理完成、3未处理
 
 ```sql
 DROP TABLE IF EXISTS `yl_appointment`;
@@ -780,7 +821,7 @@ CREATE TABLE `yl_appointment` (
 | `address_detail`   | varchar  | 255  | 是       |                  | 详细地址                       |
 | `user_id`          | bigint   |      | 否       | user_id          | 处理人（sys_user:user_id）     |
 | `dispose_time`     | datetime |      | 否       |                  | 处理时间                       |
-| `dispose_status`   | char     | 1    | 否       |                  | 处理状态                       |
+| `dispose_status`   | char     | 1    | 否       |                  | 状态                           |
 | `remark`           | varchar  | 255  | 是       |                  | 备注                           |
 | `create_by`        | varchar  | 50   | 否       |                  | 创建人                         |
 | `create_time`      | datetime |      | 否       |                  | 创建时间                       |
