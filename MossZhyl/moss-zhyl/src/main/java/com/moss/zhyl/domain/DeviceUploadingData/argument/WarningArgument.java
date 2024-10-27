@@ -16,8 +16,8 @@ public class WarningArgument extends Argument {
     private String warningType; // 预警类型，例如 "1" 表示 SOS 预警
     private Integer battery;    // 设备电量（仅在低电预警时有值）
     private String address;     // 预警地址（仅在 SOS 预警时有值）
-    private Double lon;         // SOS 高德坐标经度（仅在 SOS 预警时有值）
-    private Double lat;         // SOS 高德坐标纬度（仅在 SOS 预警时有值）
+    private String lon;         // SOS 高德坐标经度（仅在 SOS 预警时有值）
+    private String lat;         // SOS 高德坐标纬度（仅在 SOS 预警时有值）
 
     @Override
     public WarningArgument jsonFormatObject(String json) {
@@ -48,19 +48,19 @@ public class WarningArgument extends Argument {
         this.address = address;
     }
 
-    public Double getLon() {
+    public String getLon() {
         return lon;
     }
 
-    public void setLon(Double lon) {
+    public void setLon(String lon) {
         this.lon = lon;
     }
 
-    public Double getLat() {
+    public String getLat() {
         return lat;
     }
 
-    public void setLat(Double lat) {
+    public void setLat(String lat) {
         this.lat = lat;
     }
 

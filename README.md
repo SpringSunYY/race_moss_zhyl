@@ -518,7 +518,7 @@ CREATE TABLE `yl_device_communication` (
 | `warning_type`      | varchar  | 8    | 是       |                | 报警类型                   |
 | `lon`               | varchar  | 32   | 是       |                | 经度                       |
 | `lat`               | varchar  | 32   | 是       |                | 纬度                       |
-| `processing_status` | varchar  | 255  | 是       |                | 状态                       |
+| `processing_status` | varchar  | 1    | 是       |                | 状态                       |
 | `create_time`       | datetime |      | 否       |                | 创建时间                   |
 | `update_time`       | datetime |      | 是       |                | 修改时间                   |
 | `del_flag`          | char     | 1    | 否       |                | 删除                       |
@@ -555,7 +555,7 @@ CREATE TABLE `yl_device_uploading_data` (
     `warning_type` varchar(8) DEFAULT NULL COMMENT '报警类型',
     `lon` varchar(32) DEFAULT NULL COMMENT '经度',
     `lat` varchar(32) DEFAULT NULL COMMENT '纬度',
-    `processing_status` varchar(255) DEFAULT NULL COMMENT '状态',
+    `processing_status` char(1) DEFAULT NULL COMMENT '状态',
     `create_time` datetime NOT NULL COMMENT '创建时间',
     `update_time` datetime DEFAULT NULL COMMENT '修改时间',
     `del_flag` char(1) NOT NULL COMMENT '删除',

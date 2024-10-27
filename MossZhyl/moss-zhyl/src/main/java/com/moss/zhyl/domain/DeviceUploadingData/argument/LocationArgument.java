@@ -15,8 +15,8 @@ import com.moss.zhyl.domain.DeviceUploadingData.Argument;
  */
 public class LocationArgument extends Argument {
     private String mapType; // 地图类型，目前只支持高德
-    private double lon;     // 高德坐标经度
-    private double lat;     // 高德坐标纬度
+    private String lon;     // 高德坐标经度
+    private String lat;     // 高德坐标纬度
 
     @Override
     public LocationArgument jsonFormatObject(String json) {
@@ -31,19 +31,19 @@ public class LocationArgument extends Argument {
         this.mapType = mapType;
     }
 
-    public double getLon() {
+    public String getLon() {
         return lon;
     }
 
-    public void setLon(double lon) {
+    public void setLon(String lon) {
         this.lon = lon;
     }
 
-    public double getLat() {
+    public String getLat() {
         return lat;
     }
 
-    public void setLat(double lat) {
+    public void setLat(String lat) {
         this.lat = lat;
     }
 

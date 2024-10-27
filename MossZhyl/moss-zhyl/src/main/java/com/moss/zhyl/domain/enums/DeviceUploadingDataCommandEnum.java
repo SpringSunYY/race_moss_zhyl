@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
  */
 public enum DeviceUploadingDataCommandEnum {
 
+    DEVICE_UPLOADING_DATA_COMMAND_DEFAULT("默认", "default"),
     DEVICE_UPLOADING_DATA_COMMAND_DISCONNECTED("设备离线", "disconnected"),
     DEVICE_UPLOADING_DATA_COMMAND_CONNECTED("设备上线", "connected"),
     DEVICE_UPLOADING_DATA_COMMAND_LOCATION("定位信息", "location"),

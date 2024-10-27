@@ -3,6 +3,7 @@ package com.moss.zhyl.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.moss.zhyl.strategy.deviceUploadingDataStrategy.saveStrategy.DeviceUploadingDataSaveStrategyExecutor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,9 @@ import com.moss.common.core.page.TableDataInfo;
 public class DeviceUploadingDataController extends BaseController {
     @Autowired
     private IDeviceUploadingDataService deviceUploadingDataService;
+
+    @Autowired
+    private DeviceUploadingDataSaveStrategyExecutor deviceUploadingDataSaveStrategyExecutor;
 
     /**
      * 查询设备上传数据列表
@@ -73,7 +77,7 @@ public class DeviceUploadingDataController extends BaseController {
     @Log(title = "设备上传数据", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody DeviceUploadingData deviceUploadingData) {
-        return toAjax(deviceUploadingDataService.insertDeviceUploadingData(deviceUploadingData));
+        return toAjax(deviceUploadingDataSaveStrategyExecutor.saveDeviceUploadingData(deviceUploadingData));
     }
 
     /**

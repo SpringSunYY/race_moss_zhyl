@@ -27,6 +27,16 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="类型" prop="type">
+        <el-select v-model="queryParams.type" placeholder="请选择类型" clearable>
+          <el-option
+            v-for="dict in dict.type.yl_device_uploading_command_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="设备类型" prop="deviceType">
         <el-input
           v-model="queryParams.deviceType"
@@ -85,14 +95,16 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="删除" prop="delFlag">
-        <el-input
-          v-model="queryParams.delFlag"
-          placeholder="请输入删除"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+      <!--      <el-form-item label="删除" prop="delFlag">-->
+      <!--        <el-select v-model="queryParams.delFlag" placeholder="请选择删除" clearable>-->
+      <!--          <el-option-->
+      <!--            v-for="dict in dict.type.yl_del_flag"-->
+      <!--            :key="dict.value"-->
+      <!--            :label="dict.label"-->
+      <!--            :value="dict.value"-->
+      <!--          />-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -108,7 +120,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['zhyl:deviceUploadingData:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -119,7 +132,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['zhyl:deviceUploadingData:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -130,7 +144,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['zhyl:deviceUploadingData:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -140,52 +155,61 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['zhyl:deviceUploadingData:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="deviceUploadingDataList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="dataId" />
-        <el-table-column label="设备编号" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible" prop="deviceId" />
-        <el-table-column label="类型" :show-overflow-tooltip="true" align="center" v-if="columns[2].visible" prop="type" />
-        <el-table-column label="命令" align="center" v-if="columns[3].visible" prop="command">
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="dataId"/>
+      <el-table-column label="设备编号" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible"
+                       prop="deviceId"/>
+      <el-table-column label="类型" align="center" v-if="columns[2].visible" prop="type">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.yl_device_uploading_command_type" :value="scope.row.type"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="命令" align="center" v-if="columns[3].visible" prop="command">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yl_device_uploading_data_command" :value="scope.row.command"/>
         </template>
       </el-table-column>
-        <el-table-column label="设备类型" :show-overflow-tooltip="true" align="center" v-if="columns[4].visible" prop="deviceType" />
-        <el-table-column label="长者" :show-overflow-tooltip="true" align="center" v-if="columns[5].visible" prop="userInfoId" />
-        <el-table-column label="对象参数" :show-overflow-tooltip="true" align="center" v-if="columns[6].visible" prop="argument" />
-        <el-table-column label="报警类型" align="center" v-if="columns[7].visible" prop="warningType">
+      <el-table-column label="设备类型" :show-overflow-tooltip="true" align="center" v-if="columns[4].visible"
+                       prop="deviceType"/>
+      <el-table-column label="长者" :show-overflow-tooltip="true" align="center" v-if="columns[5].visible"
+                       prop="userInfoId"/>
+      <el-table-column label="对象参数" :show-overflow-tooltip="true" align="center" v-if="columns[6].visible"
+                       prop="argument"/>
+      <el-table-column label="报警类型" align="center" v-if="columns[7].visible" prop="warningType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yl_warning_type" :value="scope.row.warningType"/>
         </template>
       </el-table-column>
-        <el-table-column label="经度" :show-overflow-tooltip="true" align="center" v-if="columns[8].visible" prop="lon" />
-        <el-table-column label="纬度" :show-overflow-tooltip="true" align="center" v-if="columns[9].visible" prop="lat" />
-        <el-table-column label="状态" align="center" v-if="columns[10].visible" prop="processingStatus">
+      <el-table-column label="经度" :show-overflow-tooltip="true" align="center" v-if="columns[8].visible" prop="lon"/>
+      <el-table-column label="纬度" :show-overflow-tooltip="true" align="center" v-if="columns[9].visible" prop="lat"/>
+      <el-table-column label="状态" align="center" v-if="columns[10].visible" prop="processingStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yl_processing_status" :value="scope.row.processingStatus"/>
         </template>
       </el-table-column>
-        <el-table-column label="创建时间" align="center" v-if="columns[11].visible" prop="createTime" width="180">
+      <el-table-column label="创建时间" align="center" v-if="columns[11].visible" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-        <el-table-column label="修改时间" align="center" v-if="columns[12].visible" prop="updateTime" width="180">
+      <el-table-column label="修改时间" align="center" v-if="columns[12].visible" prop="updateTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-        <el-table-column label="删除" align="center" v-if="columns[13].visible" prop="delFlag">
+      <el-table-column label="删除" align="center" v-if="columns[13].visible" prop="delFlag">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yl_del_flag" :value="scope.row.delFlag"/>
         </template>
       </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -193,14 +217,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['zhyl:deviceUploadingData:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['zhyl:deviceUploadingData:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -217,7 +243,17 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="设备编号" prop="deviceId">
-          <el-input v-model="form.deviceId" placeholder="请输入设备编号" />
+          <el-input v-model="form.deviceId" placeholder="请输入设备编号"/>
+        </el-form-item>
+        <el-form-item label="类型" prop="type">
+          <el-select v-model="form.type" placeholder="请选择类型">
+            <el-option
+              v-for="dict in dict.type.yl_device_uploading_command_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="命令" prop="command">
           <el-select v-model="form.command" placeholder="请选择命令">
@@ -230,31 +266,31 @@
           </el-select>
         </el-form-item>
         <el-form-item label="设备类型" prop="deviceType">
-          <el-input v-model="form.deviceType" placeholder="请输入设备类型" />
+          <el-input v-model="form.deviceType" placeholder="请输入设备类型"/>
         </el-form-item>
-        <el-form-item label="长者" prop="userInfoId">
-          <el-input v-model="form.userInfoId" placeholder="请输入长者" />
-        </el-form-item>
+        <!--        <el-form-item label="长者" prop="userInfoId">-->
+        <!--          <el-input v-model="form.userInfoId" placeholder="请输入长者" />-->
+        <!--        </el-form-item>-->
         <el-form-item label="对象参数" prop="argument">
-          <el-input v-model="form.argument" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="form.argument" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
-        <el-form-item label="报警类型" prop="warningType">
-          <el-select v-model="form.warningType" placeholder="请选择报警类型">
-            <el-option
-              v-for="dict in dict.type.yl_warning_type"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="经度" prop="lon">
-          <el-input v-model="form.lon" placeholder="请输入经度" />
-        </el-form-item>
-        <el-form-item label="纬度" prop="lat">
-          <el-input v-model="form.lat" placeholder="请输入纬度" />
-        </el-form-item>
-        <el-form-item label="状态" prop="processingStatus">
+        <!--        <el-form-item label="报警类型" prop="warningType">-->
+        <!--          <el-select v-model="form.warningType" placeholder="请选择报警类型">-->
+        <!--            <el-option-->
+        <!--              v-for="dict in dict.type.yl_warning_type"-->
+        <!--              :key="dict.value"-->
+        <!--              :label="dict.label"-->
+        <!--              :value="dict.value"-->
+        <!--            ></el-option>-->
+        <!--          </el-select>-->
+        <!--        </el-form-item>-->
+        <!--        <el-form-item label="经度" prop="lon">-->
+        <!--          <el-input v-model="form.lon" placeholder="请输入经度" />-->
+        <!--        </el-form-item>-->
+        <!--        <el-form-item label="纬度" prop="lat">-->
+        <!--          <el-input v-model="form.lat" placeholder="请输入纬度" />-->
+        <!--        </el-form-item>-->
+        <el-form-item label="状态" prop="processingStatus" v-if="form.command==='warning'">
           <el-select v-model="form.processingStatus" placeholder="请选择状态">
             <el-option
               v-for="dict in dict.type.yl_processing_status"
@@ -274,30 +310,36 @@
 </template>
 
 <script>
-import { listDeviceUploadingData, getDeviceUploadingData, delDeviceUploadingData, addDeviceUploadingData, updateDeviceUploadingData } from "@/api/zhyl/deviceUploadingData";
+import {
+  listDeviceUploadingData,
+  getDeviceUploadingData,
+  delDeviceUploadingData,
+  addDeviceUploadingData,
+  updateDeviceUploadingData
+} from "@/api/zhyl/deviceUploadingData";
 
 export default {
   name: "DeviceUploadingData",
-  dicts: ['yl_processing_status', 'yl_device_uploading_data_command', 'yl_warning_type'],
+  dicts: ['yl_processing_status', 'yl_del_flag', 'yl_device_uploading_command_type', 'yl_device_uploading_data_command', 'yl_warning_type'],
   data() {
     return {
       //表格展示列
       columns: [
-        { key: 0, label: '编号', visible: true },
-          { key: 1, label: '设备编号', visible: true },
-          { key: 2, label: '类型', visible: true },
-          { key: 3, label: '命令', visible: true },
-          { key: 4, label: '设备类型', visible: true },
-          { key: 5, label: '长者', visible: true },
-          { key: 6, label: '对象参数', visible: true },
-          { key: 7, label: '报警类型', visible: true },
-          { key: 8, label: '经度', visible: true },
-          { key: 9, label: '纬度', visible: true },
-          { key: 10, label: '状态', visible: true },
-          { key: 11, label: '创建时间', visible: true },
-          { key: 12, label: '修改时间', visible: true },
-          { key: 13, label: '删除', visible: true },
-        ],
+        {key: 0, label: '编号', visible: true},
+        {key: 1, label: '设备编号', visible: true},
+        {key: 2, label: '类型', visible: true},
+        {key: 3, label: '命令', visible: true},
+        {key: 4, label: '设备类型', visible: true},
+        {key: 5, label: '长者', visible: true},
+        {key: 6, label: '对象参数', visible: true},
+        {key: 7, label: '报警类型', visible: true},
+        {key: 8, label: '经度', visible: true},
+        {key: 9, label: '纬度', visible: true},
+        {key: 10, label: '状态', visible: true},
+        {key: 11, label: '创建时间', visible: true},
+        {key: 12, label: '修改时间', visible: true},
+        {key: 13, label: '删除', visible: true},
+      ],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -341,13 +383,13 @@ export default {
       // 表单校验
       rules: {
         deviceId: [
-          { required: true, message: "设备编号不能为空", trigger: "blur" }
+          {required: true, message: "设备编号不能为空", trigger: "blur"}
         ],
         createTime: [
-          { required: true, message: "创建时间不能为空", trigger: "blur" }
+          {required: true, message: "创建时间不能为空", trigger: "blur"}
         ],
         delFlag: [
-          { required: true, message: "删除不能为空", trigger: "blur" }
+          {required: true, message: "删除不能为空", trigger: "blur"}
         ]
       }
     };
@@ -414,7 +456,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.dataId)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -456,12 +498,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const dataIds = row.dataId || this.ids;
-      this.$modal.confirm('是否确认删除设备上传数据编号为"' + dataIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除设备上传数据编号为"' + dataIds + '"的数据项？').then(function () {
         return delDeviceUploadingData(dataIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {

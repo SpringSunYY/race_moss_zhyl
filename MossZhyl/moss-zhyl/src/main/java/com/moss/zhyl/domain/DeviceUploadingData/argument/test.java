@@ -23,9 +23,9 @@ public class test {
         deviceUploadingData.setCommand("");
         deviceUploadingData.setDeviceType("");
         deviceUploadingData.setUserInfoId(0L);
-        Argument argument = new LocationArgument();
+        LocationArgument argument = new LocationArgument();
         String json = "{ \"mapType\": \"1\", \"lon\": 120.31, \"lat\": 30.12 }";
-        deviceUploadingData.setArgument(argument.jsonFormatObject(json));
+        deviceUploadingData.setArgumentData(argument.jsonFormatObject(json));
         deviceUploadingData.setWarningType("");
         deviceUploadingData.setLon("");
         deviceUploadingData.setLat("");

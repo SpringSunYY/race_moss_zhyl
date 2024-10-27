@@ -18,7 +18,7 @@ public class DeviceUploadingData extends BaseEntity
     /** 编号 */
     private Long dataId;
 
-    /** 设备编号 */
+    /** 设备编号 也就是IMEI */
     @Excel(name = "设备编号")
     private String deviceId;
 
@@ -40,7 +40,9 @@ public class DeviceUploadingData extends BaseEntity
 
     /** 对象参数 */
     @Excel(name = "对象参数")
-    private Argument argument;
+    private String argument;
+
+    private Argument argumentData;
 
     /** 报警类型 */
     @Excel(name = "报警类型")
@@ -116,12 +118,12 @@ public class DeviceUploadingData extends BaseEntity
     {
         return userInfoId;
     }
-    public void setArgument(Argument argument)
+    public void setArgument(String argument)
     {
         this.argument = argument;
     }
 
-    public Argument getArgument()
+    public String getArgument()
     {
         return argument;
     }
@@ -171,23 +173,30 @@ public class DeviceUploadingData extends BaseEntity
         return delFlag;
     }
 
+    public Argument getArgumentData() {
+        return argumentData;
+    }
+
+    public void setArgumentData(Argument argumentData) {
+        this.argumentData = argumentData;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("dataId", getDataId())
-            .append("deviceId", getDeviceId())
-            .append("type", getType())
-            .append("command", getCommand())
-            .append("deviceType", getDeviceType())
-            .append("userInfoId", getUserInfoId())
-            .append("argument", getArgument())
-            .append("warningType", getWarningType())
-            .append("lon", getLon())
-            .append("lat", getLat())
-            .append("processingStatus", getProcessingStatus())
-            .append("createTime", getCreateTime())
-            .append("updateTime", getUpdateTime())
-            .append("delFlag", getDelFlag())
-            .toString();
+        return "DeviceUploadingData{" +
+                "dataId=" + dataId +
+                ", deviceId='" + deviceId + '\'' +
+                ", type='" + type + '\'' +
+                ", command='" + command + '\'' +
+                ", deviceType='" + deviceType + '\'' +
+                ", userInfoId=" + userInfoId +
+                ", argument='" + argument + '\'' +
+                ", argumentData=" + argumentData +
+                ", warningType='" + warningType + '\'' +
+                ", lon='" + lon + '\'' +
+                ", lat='" + lat + '\'' +
+                ", processingStatus='" + processingStatus + '\'' +
+                ", delFlag='" + delFlag + '\'' +
+                '}';
     }
 }
