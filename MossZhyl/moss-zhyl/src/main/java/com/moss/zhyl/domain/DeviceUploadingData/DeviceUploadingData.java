@@ -1,4 +1,4 @@
-package com.moss.zhyl.domain;
+package com.moss.zhyl.domain.DeviceUploadingData;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -7,7 +7,7 @@ import com.moss.common.core.domain.BaseEntity;
 
 /**
  * 设备上传数据对象 yl_device_uploading_data
- * 
+ *
  * @author YY
  * @date 2024-10-26
  */
@@ -40,7 +40,7 @@ public class DeviceUploadingData extends BaseEntity
 
     /** 对象参数 */
     @Excel(name = "对象参数")
-    private String argument;
+    private Argument argument;
 
     /** 报警类型 */
     @Excel(name = "报警类型")
@@ -62,111 +62,111 @@ public class DeviceUploadingData extends BaseEntity
     @Excel(name = "删除")
     private String delFlag;
 
-    public void setDataId(Long dataId) 
+    public void setDataId(Long dataId)
     {
         this.dataId = dataId;
     }
 
-    public Long getDataId() 
+    public Long getDataId()
     {
         return dataId;
     }
-    public void setDeviceId(String deviceId) 
+    public void setDeviceId(String deviceId)
     {
         this.deviceId = deviceId;
     }
 
-    public String getDeviceId() 
+    public String getDeviceId()
     {
         return deviceId;
     }
-    public void setType(String type) 
+    public void setType(String type)
     {
         this.type = type;
     }
 
-    public String getType() 
+    public String getType()
     {
         return type;
     }
-    public void setCommand(String command) 
+    public void setCommand(String command)
     {
         this.command = command;
     }
 
-    public String getCommand() 
+    public String getCommand()
     {
         return command;
     }
-    public void setDeviceType(String deviceType) 
+    public void setDeviceType(String deviceType)
     {
         this.deviceType = deviceType;
     }
 
-    public String getDeviceType() 
+    public String getDeviceType()
     {
         return deviceType;
     }
-    public void setUserInfoId(Long userInfoId) 
+    public void setUserInfoId(Long userInfoId)
     {
         this.userInfoId = userInfoId;
     }
 
-    public Long getUserInfoId() 
+    public Long getUserInfoId()
     {
         return userInfoId;
     }
-    public void setArgument(String argument) 
+    public void setArgument(Argument argument)
     {
         this.argument = argument;
     }
 
-    public String getArgument() 
+    public Argument getArgument()
     {
         return argument;
     }
-    public void setWarningType(String warningType) 
+    public void setWarningType(String warningType)
     {
         this.warningType = warningType;
     }
 
-    public String getWarningType() 
+    public String getWarningType()
     {
         return warningType;
     }
-    public void setLon(String lon) 
+    public void setLon(String lon)
     {
         this.lon = lon;
     }
 
-    public String getLon() 
+    public String getLon()
     {
         return lon;
     }
-    public void setLat(String lat) 
+    public void setLat(String lat)
     {
         this.lat = lat;
     }
 
-    public String getLat() 
+    public String getLat()
     {
         return lat;
     }
-    public void setProcessingStatus(String processingStatus) 
+    public void setProcessingStatus(String processingStatus)
     {
         this.processingStatus = processingStatus;
     }
 
-    public String getProcessingStatus() 
+    public String getProcessingStatus()
     {
         return processingStatus;
     }
-    public void setDelFlag(String delFlag) 
+    public void setDelFlag(String delFlag)
     {
         this.delFlag = delFlag;
     }
 
-    public String getDelFlag() 
+    public String getDelFlag()
     {
         return delFlag;
     }

@@ -5,7 +5,7 @@ import com.moss.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.moss.zhyl.mapper.DeviceUploadingDataMapper;
-import com.moss.zhyl.domain.DeviceUploadingData;
+import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
 import com.moss.zhyl.service.IDeviceUploadingDataService;
 
 /**

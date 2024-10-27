@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,7 +17,7 @@ import com.moss.common.annotation.Log;
 import com.moss.common.core.controller.BaseController;
 import com.moss.common.core.domain.AjaxResult;
 import com.moss.common.enums.BusinessType;
-import com.moss.zhyl.domain.DeviceUploadingData;
+import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
 import com.moss.zhyl.service.IDeviceUploadingDataService;
 import com.moss.common.utils.poi.ExcelUtil;
 import com.moss.common.core.page.TableDataInfo;

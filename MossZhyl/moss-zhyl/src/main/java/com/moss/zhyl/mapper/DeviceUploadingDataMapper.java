@@ -1,7 +1,7 @@
 package com.moss.zhyl.mapper;
 
 import java.util.List;
-import com.moss.zhyl.domain.DeviceUploadingData;
+import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
 
 /**
  * 设备上传数据Mapper接口
