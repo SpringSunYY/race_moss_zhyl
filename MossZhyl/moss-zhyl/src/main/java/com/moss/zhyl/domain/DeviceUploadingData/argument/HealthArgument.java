@@ -1,5 +1,7 @@
 package com.moss.zhyl.domain.DeviceUploadingData.argument;
 
+import com.moss.zhyl.domain.DeviceUploadingData.Argument;
+
 /**
  * @Project: MossZhyl
  * @Package: com.moss.zhyl.domain.DeviceUploadingData.argument
@@ -9,7 +11,7 @@ package com.moss.zhyl.domain.DeviceUploadingData.argument;
  * 健康数据子节点
  * @Version: 1.0
  */
-public class HealthArgument {
+public class HealthArgument extends Argument {
     private int heartRate;       // 心率
     private int dbp;             // 低压（舒张压）
     private int sdp;             // 高压（收缩压）

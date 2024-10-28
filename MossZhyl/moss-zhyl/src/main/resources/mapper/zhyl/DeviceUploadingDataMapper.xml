@@ -126,13 +126,12 @@
     </update>
 
     <delete id="deleteDeviceUploadingDataByDataId" parameterType="Long">
-        delete
-        from yl_device_uploading_data
+        update yl_device_uploading_data set del_flag= '1'
         where data_id = #{dataId}
     </delete>
 
     <delete id="deleteDeviceUploadingDataByDataIds" parameterType="String">
-        delete from yl_device_uploading_data where data_id in
+        update yl_device_uploading_data set del_flag= '1' in
         <foreach item="dataId" collection="array" open="(" separator="," close=")">
             #{dataId}
         </foreach>

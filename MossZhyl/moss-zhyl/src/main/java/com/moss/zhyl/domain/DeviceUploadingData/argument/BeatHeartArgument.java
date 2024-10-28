@@ -12,14 +12,14 @@ import com.moss.zhyl.domain.DeviceUploadingData.Argument;
  * 设备电量/计步数据/温度计电量子节点
  * @Version: 1.0
  */
-public class BeatHeart extends Argument {
+public class BeatHeartArgument extends Argument {
     private Integer battery; // 设备电量
     private Integer pedometer; // 计步数据
     private Integer tmBattery; // 温度计电量
 
     @Override
-    public BeatHeart jsonFormatObject(String json) {
-        return JSON.parseObject(json, BeatHeart.class);
+    public BeatHeartArgument jsonFormatObject(String json) {
+        return JSON.parseObject(json, BeatHeartArgument.class);
     }
 
     public Integer getBattery() {

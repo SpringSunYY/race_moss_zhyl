@@ -98,12 +98,23 @@
         </el-select>
       </el-form-item>
       <el-form-item label="服务人员" prop="userId">
-        <el-input
+        <el-select
           v-model="queryParams.userId"
-          placeholder="请输入服务人员"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+          filterable
+          remote
+          reserve-keyword
+          placeholder="请输入用户账号"
+          :remote-method="selectUserServiceList"
+          :loading="userServiceLoading"
+        >
+          <el-option
+            v-for="item in userServiceList"
+            :key="item.userId"
+            :label="item.userName"
+            :value="item.userId"
+          >
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="创建人" prop="createBy">
         <el-input
@@ -241,7 +252,7 @@
         </template>
       </el-table-column>
       <el-table-column label="服务人员" :show-overflow-tooltip="true" align="center" v-if="columns[9].visible"
-                       prop="userId"/>
+                       prop="userName"/>
       <el-table-column label="备注" :show-overflow-tooltip="true" align="center" v-if="columns[10].visible"
                        prop="remark"/>
       <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[11].visible"
@@ -372,7 +383,26 @@
           </el-select>
         </el-form-item>
         <el-form-item label="服务人员" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入服务人员"/>
+          <el-select
+            v-model="form.userId"
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入用户账号"
+            :remote-method="selectUserServiceList"
+            :loading="userServiceLoading"
+          >
+            <el-option
+              v-for="item in userServiceList"
+              :key="item.userId"
+              :label="item.userName"
+              :value="item.userId"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -393,12 +423,22 @@ import {
 } from "@/api/zhyl/elderlyDeviceBinding";
 import {listUserInfo} from "@/api/zhyl/userInfo";
 import {listDevice} from "@/api/zhyl/device";
+import {allocatedUserList} from "@/api/system/role";
 
 export default {
   name: "ElderlyDeviceBinding",
   dicts: ['yl_del_flag', 'yl_binding_status', 'yl_device_status'],
   data() {
     return {
+      //系统客服角色信息
+      userServiceList: [],
+      userServiceLoading: false,
+      userServiceQueryParams: {
+        userName: '',
+        roleId: 100,
+        pageNum: 1,
+        pageSize: 10
+      },
       // 长者查询参数
       queryParamsElderly: {
         pageNum: 1,
@@ -516,8 +556,42 @@ export default {
     this.getList();
     this.getElderlyUserInfoList()
     this.getDeviceList()
+    this.getUserServiceList()
   },
   methods: {
+    /**
+     * 获取用户列表推荐
+     * @param query
+     */
+    selectUserServiceList(query) {
+      if (query !== '') {
+        this.userServiceLoading = true
+        this.userServiceQueryParams.userName = query
+        setTimeout(() => {
+          this.getUserServiceList()
+        }, 200)
+      } else {
+        this.userServiceList = []
+      }
+    },
+    /**
+     * 获取用户信息列表
+     */
+    getUserServiceList() {
+      //添加查询参数
+      if (this.form.userId != null) {
+        this.userServiceQueryParams.userId = this.form.userId
+      } else {
+        this.userServiceQueryParams.userId = null
+      }
+      if (this.userServiceQueryParams.userName != null) {
+        this.userServiceQueryParams.userId = null
+      }
+      allocatedUserList(this.userServiceQueryParams).then(res => {
+        this.userServiceList = res.rows
+        this.userServiceLoading = false
+      })
+    },
     //远程调用搜索
     remoteDeviceBrandMethod(query) {
       if (query !== '') {

@@ -6,9 +6,13 @@ import com.moss.common.exception.ServiceException;
 import com.moss.common.utils.DateUtils;
 import com.moss.common.utils.StringUtils;
 import com.moss.common.utils.uuid.IdUtils;
+import com.moss.zhyl.domain.DeviceBrand;
+import com.moss.zhyl.domain.DeviceUploadingData.Argument;
 import com.moss.zhyl.domain.ElderlyDeviceBinding;
+import com.moss.zhyl.domain.UserInfo;
 import com.moss.zhyl.domain.enums.DelFlagEnum;
 import com.moss.zhyl.service.IElderlyDeviceBindingService;
+import com.moss.zhyl.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.moss.zhyl.mapper.DeviceUploadingDataMapper;
@@ -29,6 +33,9 @@ public class DeviceUploadingDataServiceImpl implements IDeviceUploadingDataServi
     @Autowired
     private IElderlyDeviceBindingService elderlyDeviceBindingService;
 
+    @Autowired
+    private IUserInfoService userInfoService;
+
     /**
      * 查询设备上传数据
      *
@@ -37,7 +44,9 @@ public class DeviceUploadingDataServiceImpl implements IDeviceUploadingDataServi
      */
     @Override
     public DeviceUploadingData selectDeviceUploadingDataByDataId(Long dataId) {
-        return deviceUploadingDataMapper.selectDeviceUploadingDataByDataId(dataId);
+        DeviceUploadingData deviceUploadingData = deviceUploadingDataMapper.selectDeviceUploadingDataByDataId(dataId);
+        Argument.returnArgumentData(deviceUploadingData);
+        return deviceUploadingData;
     }
 
     /**
@@ -48,7 +57,14 @@ public class DeviceUploadingDataServiceImpl implements IDeviceUploadingDataServi
      */
     @Override
     public List<DeviceUploadingData> selectDeviceUploadingDataList(DeviceUploadingData deviceUploadingData) {
-        return deviceUploadingDataMapper.selectDeviceUploadingDataList(deviceUploadingData);
+        List<DeviceUploadingData> uploadingDataList = deviceUploadingDataMapper.selectDeviceUploadingDataList(deviceUploadingData);
+        for (DeviceUploadingData info : uploadingDataList) {
+            UserInfo userInfo = userInfoService.selectUserInfoByUserInfoIdResultUserInfo(info.getUserInfoId());
+            if (StringUtils.isNotNull(userInfo)) {
+                info.setUserInfoName(userInfo.getUserInfoName());
+            }
+        }
+        return uploadingDataList;
     }
 
     /**

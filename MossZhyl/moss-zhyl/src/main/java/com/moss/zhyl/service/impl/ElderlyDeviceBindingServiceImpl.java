@@ -2,11 +2,13 @@ package com.moss.zhyl.service.impl;
 
 import java.util.List;
 
+import com.moss.common.core.domain.entity.SysUser;
 import com.moss.common.exception.ServiceException;
 import com.moss.common.utils.DateUtils;
 import com.moss.common.utils.SecurityUtils;
 import com.moss.common.utils.StringUtils;
 import com.moss.common.utils.uuid.IdUtils;
+import com.moss.system.service.ISysUserService;
 import com.moss.zhyl.domain.Device;
 import com.moss.zhyl.domain.DeviceType;
 import com.moss.zhyl.domain.UserInfo;
@@ -50,6 +52,9 @@ public class ElderlyDeviceBindingServiceImpl implements IElderlyDeviceBindingSer
     @Autowired
     private IDeviceTypeService deviceTypeService;
 
+    @Autowired
+    private ISysUserService userService;
+
     /**
      * 查询长者设备绑定
      *
@@ -86,6 +91,10 @@ public class ElderlyDeviceBindingServiceImpl implements IElderlyDeviceBindingSer
             if (StringUtils.isNotNull(type)) {
                 info.setDeviceTypeName(type.getName());
             }
+            SysUser sysUser = userService.selectUserById(info.getUserId());
+            if (StringUtils.isNotNull(sysUser)) {
+                info.setUserName(sysUser.getUserName());
+            }
         }
         return elderlyDeviceBindings;
     }
@@ -116,8 +125,6 @@ public class ElderlyDeviceBindingServiceImpl implements IElderlyDeviceBindingSer
         elderlyDeviceBinding.setDeviceStatus(DeviceStatusEnum.DEVICE_STATUS_ENUM_0.getValue());
         elderlyDeviceBinding.setCreateTime(DateUtils.getNowDate());
 
-        // TODO 先默认userid为0
-        elderlyDeviceBinding.setUserId(1L);
         return elderlyDeviceBindingMapper.insertElderlyDeviceBinding(elderlyDeviceBinding);
     }
 

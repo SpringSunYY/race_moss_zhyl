@@ -8,6 +8,7 @@ import com.moss.common.annotation.Excel;
 import com.moss.common.core.domain.BaseEntity;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * 长者设备绑定对象 yl_elderly_device_binding
@@ -61,11 +62,21 @@ public class ElderlyDeviceBinding extends BaseEntity
 
     /** 服务人员 */
     @Excel(name = "服务人员")
+    private String userName;
     private Long userId;
 
     /** 删除 */
     @Excel(name = "删除")
     private String delFlag;
+
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public String getDeviceTypeName() {
         return deviceTypeName;
@@ -179,6 +190,7 @@ public class ElderlyDeviceBinding extends BaseEntity
         this.userId = userId;
     }
 
+    @NotNull(message = "必须选择服务用户！！！")
     public Long getUserId()
     {
         return userId;

@@ -46,33 +46,44 @@
         />
       </el-form-item>
       <el-form-item label="长者" prop="userInfoId">
-        <el-input
+        <el-select
           v-model="queryParams.userInfoId"
-          placeholder="请输入长者"
-          clearable
+          filterable
+          remote
+          reserve-keyword
+          :disabled="this.form.elderlyId!=null"
+          placeholder="请输入手机号码"
+          :remote-method="remoteElderlyUserInfoMethod"
           @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="报警类型" prop="warningType">
-        <el-select v-model="queryParams.warningType" placeholder="请选择报警类型" clearable>
+          :loading="elderlyUserInfoLoading">
           <el-option
-            v-for="dict in dict.type.yl_warning_type"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
+            v-for="item in elderlyUserInfoList"
+            :key="item.userInfoId"
+            :label="item.userInfoName"
+            :value="item.userInfoId">
+          </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="状态" prop="processingStatus">
-        <el-select v-model="queryParams.processingStatus" placeholder="请选择状态" clearable>
-          <el-option
-            v-for="dict in dict.type.yl_processing_status"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
+<!--      <el-form-item label="报警类型" prop="warningType">-->
+<!--        <el-select v-model="queryParams.warningType" placeholder="请选择报警类型" clearable>-->
+<!--          <el-option-->
+<!--            v-for="dict in dict.type.yl_warning_type"-->
+<!--            :key="dict.value"-->
+<!--            :label="dict.label"-->
+<!--            :value="dict.value"-->
+<!--          />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="状态" prop="processingStatus">-->
+<!--        <el-select v-model="queryParams.processingStatus" placeholder="请选择状态" clearable>-->
+<!--          <el-option-->
+<!--            v-for="dict in dict.type.yl_processing_status"-->
+<!--            :key="dict.value"-->
+<!--            :label="dict.label"-->
+<!--            :value="dict.value"-->
+<!--          />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
       <el-form-item label="创建时间">
         <el-date-picker
           v-model="daterangeCreateTime"
@@ -164,22 +175,22 @@
     <el-table v-loading="loading" :data="deviceUploadingDataList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="dataId"/>
-      <el-table-column label="设备编号" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible"
-                       prop="deviceId"/>
-      <el-table-column label="类型" align="center" v-if="columns[2].visible" prop="type">
+      <el-table-column label="类型" align="center" v-if="columns[1].visible" prop="type">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yl_device_uploading_command_type" :value="scope.row.type"/>
         </template>
       </el-table-column>
-      <el-table-column label="命令" align="center" v-if="columns[3].visible" prop="command">
+      <el-table-column label="命令" align="center" v-if="columns[2].visible" prop="command">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yl_device_uploading_data_command" :value="scope.row.command"/>
         </template>
       </el-table-column>
-      <el-table-column label="设备类型" :show-overflow-tooltip="true" align="center" v-if="columns[4].visible"
+      <el-table-column label="设备编号" :show-overflow-tooltip="true" align="center" v-if="columns[3].visible"
+                       prop="deviceId"/>
+      <el-table-column label="长者" :show-overflow-tooltip="true" align="center" v-if="columns[4].visible"
+                       prop="userInfoName"/>
+      <el-table-column label="设备类型" :show-overflow-tooltip="true" align="center" v-if="columns[5].visible"
                        prop="deviceType"/>
-      <el-table-column label="长者" :show-overflow-tooltip="true" align="center" v-if="columns[5].visible"
-                       prop="userInfoId"/>
       <el-table-column label="对象参数" :show-overflow-tooltip="true" align="center" v-if="columns[6].visible"
                        prop="argument"/>
       <el-table-column label="报警类型" align="center" v-if="columns[7].visible" prop="warningType">
@@ -317,28 +328,39 @@ import {
   addDeviceUploadingData,
   updateDeviceUploadingData
 } from "@/api/zhyl/deviceUploadingData";
+import {listUserInfo} from "@/api/zhyl/userInfo";
 
 export default {
   name: "DeviceUploadingData",
   dicts: ['yl_processing_status', 'yl_del_flag', 'yl_device_uploading_command_type', 'yl_device_uploading_data_command', 'yl_warning_type'],
   data() {
     return {
+      // 长者信息表格数据 查询
+      elderlyUserInfoList: [],
+      elderlyUserInfoLoading: true,
+      // 长者查询参数
+      queryParamsDevice: {
+        pageNum: 1,
+        pageSize: 10,
+        deviceImei: '',
+        deviceId: null
+      },
       //表格展示列
       columns: [
-        {key: 0, label: '编号', visible: true},
-        {key: 1, label: '设备编号', visible: true},
-        {key: 2, label: '类型', visible: true},
-        {key: 3, label: '命令', visible: true},
-        {key: 4, label: '设备类型', visible: true},
-        {key: 5, label: '长者', visible: true},
-        {key: 6, label: '对象参数', visible: true},
-        {key: 7, label: '报警类型', visible: true},
-        {key: 8, label: '经度', visible: true},
-        {key: 9, label: '纬度', visible: true},
-        {key: 10, label: '状态', visible: true},
+        {key: 0, label: '编号', visible: false},
+        {key: 1, label: '类型', visible: true},
+        {key: 2, label: '命令', visible: true},
+        {key: 3, label: '设备编号', visible: true},
+        {key: 4, label: '长者', visible: true},
+        {key: 5, label: '设备类型', visible: true},
+        {key: 6, label: '对象参数', visible: false},
+        {key: 7, label: '报警类型', visible: false},
+        {key: 8, label: '经度', visible: false},
+        {key: 9, label: '纬度', visible: false},
+        {key: 10, label: '状态', visible: false},
         {key: 11, label: '创建时间', visible: true},
-        {key: 12, label: '修改时间', visible: true},
-        {key: 13, label: '删除', visible: true},
+        {key: 12, label: '修改时间', visible: false},
+        {key: 13, label: '删除', visible: false},
       ],
       // 遮罩层
       loading: true,
@@ -396,8 +418,37 @@ export default {
   },
   created() {
     this.getList();
+    this.getElderlyUserInfoList()
   },
   methods: {
+    /**
+     * 获取长者信息
+     * @param query
+     */
+    remoteElderlyUserInfoMethod(query) {
+      if (query !== '') {
+        this.elderlyUserInfoLoading = true
+        this.queryParamsElderly.contactPhone = query
+        setTimeout(() => {
+          this.getElderlyUserInfoList()
+        }, 200)
+      } else {
+        this.elderlyUserInfoList = []
+      }
+    },
+
+    getElderlyUserInfoList() {
+      // if (this.form.userInfoId !== null && this.form.userInfoId !== '') {
+      //   this.queryParamsElderly.userInfoId = this.form.userInfoId
+      // }
+      // if (this.queryParamsElderly.contactPhone !== '') {
+      //   this.queryParamsElderly.userInfoId = null
+      // }
+      listUserInfo(this.queryParamsElderly).then(response => {
+        this.elderlyUserInfoList = response.rows
+        this.elderlyUserInfoLoading = false
+      })
+    },
     /** 查询设备上传数据列表 */
     getList() {
       this.loading = true;

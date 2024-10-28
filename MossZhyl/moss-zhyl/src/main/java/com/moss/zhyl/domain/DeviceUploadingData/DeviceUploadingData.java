@@ -36,6 +36,7 @@ public class DeviceUploadingData extends BaseEntity
 
     /** 长者 */
     @Excel(name = "长者")
+    private String userInfoName;
     private Long userInfoId;
 
     /** 对象参数 */
@@ -63,6 +64,14 @@ public class DeviceUploadingData extends BaseEntity
     /** 删除 */
     @Excel(name = "删除")
     private String delFlag;
+
+    public String getUserInfoName() {
+        return userInfoName;
+    }
+
+    public void setUserInfoName(String userInfoName) {
+        this.userInfoName = userInfoName;
+    }
 
     public void setDataId(Long dataId)
     {
