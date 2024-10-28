@@ -186,7 +186,13 @@
         </template>
       </el-table-column>
       <el-table-column label="设备编号" :show-overflow-tooltip="true" align="center" v-if="columns[3].visible"
-                       prop="deviceId"/>
+                       prop="deviceId">
+        <template slot-scope="scope">
+          <router-link :to="'/alarm/deviceSosAlarmDispose/history/index/' + scope.row.dataId" class="link-type">
+            <span>{{ scope.row.deviceId }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column label="长者" :show-overflow-tooltip="true" align="center" v-if="columns[4].visible"
                        prop="userInfoName"/>
       <el-table-column label="设备类型" :show-overflow-tooltip="true" align="center" v-if="columns[5].visible"
@@ -348,14 +354,14 @@
     </el-dialog>
 
     <!-- 添加或修改设备预警处理对话框 -->
-    <el-dialog :title="title" :visible.sync="disposeDataOpen" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="disposeDataOpen" width="1000px" append-to-body>
       <el-form ref="form" :model="disposeData" :rules="rules" label-width="80px">
-<!--        <el-form-item label="长者" prop="userInfoId">-->
-<!--          <el-input v-model="disposeData.userInfoId" placeholder="请输入长者"/>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="预警" prop="dataId">-->
-<!--          <el-input v-model="disposeData.dataId" placeholder="请输入预警"/>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="长者" prop="userInfoId">-->
+        <!--          <el-input v-model="disposeData.userInfoId" placeholder="请输入长者"/>-->
+        <!--        </el-form-item>-->
+        <!--        <el-form-item label="预警" prop="dataId">-->
+        <!--          <el-input v-model="disposeData.dataId" placeholder="请输入预警"/>-->
+        <!--        </el-form-item>-->
         <el-form-item label="处理凭证" prop="disposeVoucher">
           <image-upload v-model="disposeData.disposeVoucher"/>
         </el-form-item>
@@ -436,7 +442,7 @@ import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 export default {
   name: "DeviceUploadingData",
   components: {Treeselect},
-  dicts: ['yl_processing_status', 'yl_del_flag', 'yl_device_uploading_command_type', 'yl_device_uploading_data_command', 'yl_warning_type','yl_dispose_status'],
+  dicts: ['yl_processing_status', 'yl_del_flag', 'yl_device_uploading_command_type', 'yl_device_uploading_data_command', 'yl_warning_type', 'yl_dispose_status'],
   data() {
     return {
       //地址树选项

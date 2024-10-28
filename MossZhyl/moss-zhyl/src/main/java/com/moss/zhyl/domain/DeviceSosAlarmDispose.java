@@ -25,6 +25,7 @@ public class DeviceSosAlarmDispose extends BaseEntity {
 
     /** 长者 */
     @Excel(name = "长者")
+    private String userInfoName;
     private Long userInfoId;
 
     /** 预警 */
@@ -49,6 +50,7 @@ public class DeviceSosAlarmDispose extends BaseEntity {
 
     /** 处理人 */
     @Excel(name = "处理人")
+    private String userName;
     private Long userId;
 
     /** 处理时间 */
@@ -86,6 +88,22 @@ public class DeviceSosAlarmDispose extends BaseEntity {
 
     public void setDataId(Long dataId) {
         this.dataId = dataId;
+    }
+
+    public String getUserInfoName() {
+        return userInfoName;
+    }
+
+    public void setUserInfoName(String userInfoName) {
+        this.userInfoName = userInfoName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public void setDisposeVoucher(String disposeVoucher) {

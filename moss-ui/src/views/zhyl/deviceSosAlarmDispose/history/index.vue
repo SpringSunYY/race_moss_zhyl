@@ -1,30 +1,30 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="长者" prop="userInfoId">
-        <el-input
-          v-model="queryParams.userInfoId"
-          placeholder="请输入长者"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="预警" prop="dataId">
-        <el-input
-          v-model="queryParams.dataId"
-          placeholder="请输入预警"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="处理地址" prop="addressId">
-        <el-input
-          v-model="queryParams.addressId"
-          placeholder="请输入处理地址"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="长者" prop="userInfoId">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.userInfoId"-->
+<!--          placeholder="请输入长者"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="预警" prop="dataId">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.dataId"-->
+<!--          placeholder="请输入预警"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="处理地址" prop="addressId">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.addressId"-->
+<!--          placeholder="请输入处理地址"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item label="处理人" prop="userId">
         <el-input
           v-model="queryParams.userId"
@@ -214,14 +214,14 @@
     />
 
     <!-- 添加或修改设备预警处理对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="1000px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="长者" prop="userInfoId">
-          <el-input v-model="form.userInfoId" placeholder="请输入长者"/>
-        </el-form-item>
-        <el-form-item label="预警" prop="dataId">
-          <el-input v-model="form.dataId" placeholder="请输入预警"/>
-        </el-form-item>
+<!--        <el-form-item label="长者" prop="userInfoId">-->
+<!--          <el-input v-model="form.userInfoId" placeholder="请输入长者"/>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="预警" prop="dataId">-->
+<!--          <el-input v-model="form.dataId" placeholder="请输入预警"/>-->
+<!--        </el-form-item>-->
         <el-form-item label="处理凭证" prop="disposeVoucher">
           <image-upload v-model="form.disposeVoucher"/>
         </el-form-item>
@@ -229,19 +229,20 @@
           <el-input v-model="form.disposeDescribe" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
         <el-form-item label="处理地址" prop="addressId">
-          <el-input v-model="form.addressId" placeholder="请输入处理地址"/>
+          <treeselect v-model="form.addressId" :options="addressOptions" :show-count="true"
+                      placeholder="请选择地址信息"/>
         </el-form-item>
         <el-form-item label="详细地址" prop="addressDetail">
           <el-input v-model="form.addressDetail" placeholder="请输入详细地址"/>
         </el-form-item>
-        <el-form-item label="处理人" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入处理人"/>
-        </el-form-item>
+<!--        <el-form-item label="处理人" prop="userId">-->
+<!--          <el-input v-model="form.userId" placeholder="请输入处理人"/>-->
+<!--        </el-form-item>-->
         <el-form-item label="处理时间" prop="disposeTime">
           <el-date-picker clearable
                           v-model="form.disposeTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
+                          type="datetime"
+                          value-format="yyyy-MM-dd HH:mm:ss"
                           placeholder="请选择处理时间">
           </el-date-picker>
         </el-form-item>
@@ -275,17 +276,26 @@ import {
   addDeviceSosAlarmDispose,
   updateDeviceSosAlarmDispose
 } from "@/api/zhyl/deviceSosAlarmDispose";
-
+import {listAddressTreeInfo} from "@/api/zhyl/addressInfo";
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 export default {
   name: "DeviceSosAlarmDispose",
+  components: {Treeselect},
   dicts: ['yl_dispose_status', 'yl_del_flag'],
   data() {
     return {
+      //地址树选项
+      addressOptions: undefined,
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
       //表格展示列
       columns: [
         {key: 0, label: '编号', visible: false},
         {key: 1, label: '长者', visible: true},
-        {key: 2, label: '预警', visible: true},
+        {key: 2, label: '预警', visible: false},
         {key: 3, label: '处理凭证', visible: true},
         {key: 4, label: '处理描述', visible: true},
         {key: 5, label: '处理地址', visible: false},
@@ -376,8 +386,17 @@ export default {
   },
   created() {
     this.getList();
+    this.getAddressTree()
   },
   methods: {
+    /**
+     * 查询地址树
+     */
+    getAddressTree() {
+      listAddressTreeInfo().then(res => {
+        this.addressOptions = res.data
+      })
+    },
     /** 查询设备预警处理列表 */
     getList() {
       this.loading = true;

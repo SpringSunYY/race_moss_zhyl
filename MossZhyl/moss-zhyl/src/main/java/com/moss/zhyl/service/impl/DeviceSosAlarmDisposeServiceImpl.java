@@ -2,15 +2,21 @@ package com.moss.zhyl.service.impl;
 
 import java.util.List;
 
+import com.moss.common.core.domain.entity.SysUser;
 import com.moss.common.exception.ServiceException;
 import com.moss.common.utils.DateUtils;
 import com.moss.common.utils.SecurityUtils;
 import com.moss.common.utils.StringUtils;
 import com.moss.common.utils.uuid.IdUtils;
+import com.moss.system.service.ISysUserService;
+import com.moss.zhyl.domain.Device;
+import com.moss.zhyl.domain.DeviceType;
 import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
+import com.moss.zhyl.domain.UserInfo;
 import com.moss.zhyl.domain.enums.DelFlagEnum;
 import com.moss.zhyl.domain.enums.DeviceUploadingDataCommandEnum;
 import com.moss.zhyl.service.IDeviceUploadingDataService;
+import com.moss.zhyl.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.moss.zhyl.mapper.DeviceSosAlarmDisposeMapper;
@@ -33,6 +39,12 @@ public class DeviceSosAlarmDisposeServiceImpl implements IDeviceSosAlarmDisposeS
 
     @Autowired
     private IDeviceUploadingDataService deviceUploadingDataService;
+
+    @Autowired
+    private ISysUserService userService;
+
+    @Autowired
+    private IUserInfoService userInfoService;
 
     /**
      * 查询设备预警处理
@@ -57,6 +69,16 @@ public class DeviceSosAlarmDisposeServiceImpl implements IDeviceSosAlarmDisposeS
             deviceSosAlarmDispose.setDelFlag(DelFlagEnum.DEL_FLAG_0.getValue());
         }
         List<DeviceSosAlarmDispose> deviceSosAlarmDisposes = deviceSosAlarmDisposeMapper.selectDeviceSosAlarmDisposeList(deviceSosAlarmDispose);
+        for (DeviceSosAlarmDispose info : deviceSosAlarmDisposes) {
+            UserInfo userInfo = userInfoService.selectUserInfoByUserInfoIdResultUserInfo(info.getUserInfoId());
+            if (StringUtils.isNotNull(userInfo)) {
+                info.setUserInfoName(userInfo.getUserInfoName());
+            }
+            SysUser sysUser = userService.selectUserById(info.getUserId());
+            if (StringUtils.isNotNull(sysUser)) {
+                info.setUserName(sysUser.getUserName());
+            }
+        }
         return deviceSosAlarmDisposes;
     }
 
