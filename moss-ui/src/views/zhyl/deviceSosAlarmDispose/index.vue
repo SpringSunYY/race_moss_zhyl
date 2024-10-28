@@ -9,17 +9,17 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="预警" prop="sosAlarmId">
+      <el-form-item label="预警" prop="dataId">
         <el-input
-          v-model="queryParams.sosAlarmId"
+          v-model="queryParams.dataId"
           placeholder="请输入预警"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="处理地址" prop="disposeAddress">
+      <el-form-item label="处理地址" prop="addressId">
         <el-input
-          v-model="queryParams.disposeAddress"
+          v-model="queryParams.addressId"
           placeholder="请输入处理地址"
           clearable
           @keyup.enter.native="handleQuery"
@@ -136,35 +136,40 @@
     <el-table v-loading="loading" :data="deviceSosAlarmDisposeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="disposeId" />
-        <el-table-column label="长者" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible" prop="userInfoId" />
-        <el-table-column label="预警" :show-overflow-tooltip="true" align="center" v-if="columns[2].visible" prop="sosAlarmId" />
-        <el-table-column label="处理凭证" align="center" v-if="columns[3].visible" prop="disposeVoucher" width="100">
+      <el-table-column label="长者" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible" prop="userInfoId" />
+      <el-table-column label="预警" :show-overflow-tooltip="true" align="center" v-if="columns[2].visible" prop="dataId" />
+      <el-table-column label="处理凭证" align="center" v-if="columns[3].visible" prop="disposeVoucher" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.disposeVoucher" :width="50" :height="50"/>
         </template>
       </el-table-column>
-        <el-table-column label="处理描述" :show-overflow-tooltip="true" align="center" v-if="columns[4].visible" prop="disposeDescribe" />
-        <el-table-column label="处理地址" :show-overflow-tooltip="true" align="center" v-if="columns[5].visible" prop="disposeAddress" />
-        <el-table-column label="详细地址" :show-overflow-tooltip="true" align="center" v-if="columns[6].visible" prop="addressDetail" />
-        <el-table-column label="处理人" :show-overflow-tooltip="true" align="center" v-if="columns[7].visible" prop="userId" />
-        <el-table-column label="处理时间" align="center" v-if="columns[8].visible" prop="disposeTime" width="180">
+      <el-table-column label="处理描述" :show-overflow-tooltip="true" align="center" v-if="columns[4].visible" prop="disposeDescribe" />
+      <el-table-column label="处理地址" :show-overflow-tooltip="true" align="center" v-if="columns[5].visible" prop="addressId" />
+      <el-table-column label="详细地址" :show-overflow-tooltip="true" align="center" v-if="columns[6].visible" prop="addressDetail" />
+      <el-table-column label="处理人" :show-overflow-tooltip="true" align="center" v-if="columns[7].visible" prop="userId" />
+      <el-table-column label="处理时间" align="center" v-if="columns[8].visible" prop="disposeTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.disposeTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-        <el-table-column label="处理状态" align="center" v-if="columns[9].visible" prop="disposeStatus">
+      <el-table-column label="处理状态" align="center" v-if="columns[9].visible" prop="disposeStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yl_dispose_status" :value="scope.row.disposeStatus"/>
         </template>
       </el-table-column>
-        <el-table-column label="备注" :show-overflow-tooltip="true" align="center" v-if="columns[10].visible" prop="remark" />
-        <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[11].visible" prop="createBy" />
-        <el-table-column label="创建时间" align="center" v-if="columns[12].visible" prop="createTime" width="180">
+      <el-table-column label="备注" :show-overflow-tooltip="true" align="center" v-if="columns[10].visible" prop="remark" />
+      <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[11].visible" prop="createBy" />
+      <el-table-column label="创建时间" align="center" v-if="columns[12].visible" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="删除" align="center" v-if="columns[13].visible" prop="delFlag">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.yl_del_flag" :value="scope.row.delFlag"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -198,8 +203,8 @@
         <el-form-item label="长者" prop="userInfoId">
           <el-input v-model="form.userInfoId" placeholder="请输入长者" />
         </el-form-item>
-        <el-form-item label="预警" prop="sosAlarmId">
-          <el-input v-model="form.sosAlarmId" placeholder="请输入预警" />
+        <el-form-item label="预警" prop="dataId">
+          <el-input v-model="form.dataId" placeholder="请输入预警" />
         </el-form-item>
         <el-form-item label="处理凭证" prop="disposeVoucher">
           <image-upload v-model="form.disposeVoucher"/>
@@ -207,8 +212,8 @@
         <el-form-item label="处理描述" prop="disposeDescribe">
           <el-input v-model="form.disposeDescribe" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="处理地址" prop="disposeAddress">
-          <el-input v-model="form.disposeAddress" placeholder="请输入处理地址" />
+        <el-form-item label="处理地址" prop="addressId">
+          <el-input v-model="form.addressId" placeholder="请输入处理地址" />
         </el-form-item>
         <el-form-item label="详细地址" prop="addressDetail">
           <el-input v-model="form.addressDetail" placeholder="请输入详细地址" />
@@ -218,10 +223,10 @@
         </el-form-item>
         <el-form-item label="处理时间" prop="disposeTime">
           <el-date-picker clearable
-            v-model="form.disposeTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择处理时间">
+                          v-model="form.disposeTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择处理时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="处理状态" prop="disposeStatus">
@@ -256,19 +261,20 @@ export default {
       //表格展示列
       columns: [
         { key: 0, label: '编号', visible: true },
-          { key: 1, label: '长者', visible: true },
-          { key: 2, label: '预警', visible: true },
-          { key: 3, label: '处理凭证', visible: true },
-          { key: 4, label: '处理描述', visible: true },
-          { key: 5, label: '处理地址', visible: true },
-          { key: 6, label: '详细地址', visible: true },
-          { key: 7, label: '处理人', visible: true },
-          { key: 8, label: '处理时间', visible: true },
-          { key: 9, label: '处理状态', visible: true },
-          { key: 10, label: '备注', visible: true },
-          { key: 11, label: '创建人', visible: true },
-          { key: 12, label: '创建时间', visible: true },
-        ],
+        { key: 1, label: '长者', visible: true },
+        { key: 2, label: '预警', visible: true },
+        { key: 3, label: '处理凭证', visible: true },
+        { key: 4, label: '处理描述', visible: true },
+        { key: 5, label: '处理地址', visible: true },
+        { key: 6, label: '详细地址', visible: true },
+        { key: 7, label: '处理人', visible: true },
+        { key: 8, label: '处理时间', visible: true },
+        { key: 9, label: '处理状态', visible: true },
+        { key: 10, label: '备注', visible: true },
+        { key: 11, label: '创建人', visible: true },
+        { key: 12, label: '创建时间', visible: true },
+        { key: 13, label: '删除', visible: true },
+      ],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -296,8 +302,8 @@ export default {
         pageNum: 1,
         pageSize: 10,
         userInfoId: null,
-        sosAlarmId: null,
-        disposeAddress: null,
+        dataId: null,
+        addressId: null,
         userId: null,
         disposeTime: null,
         disposeStatus: null,
@@ -312,7 +318,7 @@ export default {
         userInfoId: [
           { required: true, message: "长者不能为空", trigger: "blur" }
         ],
-        sosAlarmId: [
+        dataId: [
           { required: true, message: "预警不能为空", trigger: "blur" }
         ],
         disposeVoucher: [
@@ -321,7 +327,7 @@ export default {
         disposeDescribe: [
           { required: true, message: "处理描述不能为空", trigger: "blur" }
         ],
-        disposeAddress: [
+        addressId: [
           { required: true, message: "处理地址不能为空", trigger: "blur" }
         ],
         userId: [
@@ -377,10 +383,10 @@ export default {
       this.form = {
         disposeId: null,
         userInfoId: null,
-        sosAlarmId: null,
+        dataId: null,
         disposeVoucher: null,
         disposeDescribe: null,
-        disposeAddress: null,
+        addressId: null,
         addressDetail: null,
         userId: null,
         disposeTime: null,

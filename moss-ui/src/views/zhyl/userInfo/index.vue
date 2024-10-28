@@ -428,7 +428,7 @@
           <el-col :span="12">
             <el-form-item label="地址" prop="addressId">
               <treeselect v-model="form.addressId" :options="addressOptions" :show-count="true"
-                          placeholder="请选择资产单位"/>
+                          placeholder="请选择地址信息"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">

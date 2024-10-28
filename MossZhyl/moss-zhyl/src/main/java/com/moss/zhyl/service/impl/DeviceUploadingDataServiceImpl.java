@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.moss.common.exception.ServiceException;
 import com.moss.common.utils.DateUtils;
+import com.moss.common.utils.SecurityUtils;
 import com.moss.common.utils.StringUtils;
 import com.moss.common.utils.uuid.IdUtils;
 import com.moss.zhyl.domain.DeviceBrand;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 import com.moss.zhyl.mapper.DeviceUploadingDataMapper;
 import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
 import com.moss.zhyl.service.IDeviceUploadingDataService;
+
+import static com.moss.common.constant.PermissionsConstants.ZHYL_DEVICE_UPLOADING_DATA_LOOK_DELETE;
 
 /**
  * 设备上传数据Service业务层处理
@@ -57,6 +60,9 @@ public class DeviceUploadingDataServiceImpl implements IDeviceUploadingDataServi
      */
     @Override
     public List<DeviceUploadingData> selectDeviceUploadingDataList(DeviceUploadingData deviceUploadingData) {
+        if (!SecurityUtils.hasPermi(ZHYL_DEVICE_UPLOADING_DATA_LOOK_DELETE)) {
+            deviceUploadingData.setDelFlag(DelFlagEnum.DEL_FLAG_0.getValue());
+        }
         List<DeviceUploadingData> uploadingDataList = deviceUploadingDataMapper.selectDeviceUploadingDataList(deviceUploadingData);
         for (DeviceUploadingData info : uploadingDataList) {
             UserInfo userInfo = userInfoService.selectUserInfoByUserInfoIdResultUserInfo(info.getUserInfoId());

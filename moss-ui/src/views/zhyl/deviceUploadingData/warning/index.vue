@@ -1,14 +1,14 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-<!--      <el-form-item label="编号" prop="dataId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.dataId"-->
-<!--          placeholder="请输入编号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="编号" prop="dataId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.dataId"-->
+      <!--          placeholder="请输入编号"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item label="设备编号" prop="deviceId">
         <el-input
           v-model="queryParams.deviceId"
@@ -17,16 +17,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="命令" prop="command">
-        <el-select v-model="queryParams.command" placeholder="请选择命令" clearable>
-          <el-option
-            v-for="dict in dict.type.yl_device_uploading_data_command"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
+      <!--      <el-form-item label="命令" prop="command">-->
+      <!--        <el-select v-model="queryParams.command" placeholder="请选择命令" clearable>-->
+      <!--          <el-option-->
+      <!--            v-for="dict in dict.type.yl_device_uploading_data_command"-->
+      <!--            :key="dict.value"-->
+      <!--            :label="dict.label"-->
+      <!--            :value="dict.value"-->
+      <!--          />-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
       <el-form-item label="类型" prop="type">
         <el-select v-model="queryParams.type" placeholder="请选择类型" clearable>
           <el-option
@@ -64,26 +64,26 @@
           </el-option>
         </el-select>
       </el-form-item>
-<!--      <el-form-item label="报警类型" prop="warningType">-->
-<!--        <el-select v-model="queryParams.warningType" placeholder="请选择报警类型" clearable>-->
-<!--          <el-option-->
-<!--            v-for="dict in dict.type.yl_warning_type"-->
-<!--            :key="dict.value"-->
-<!--            :label="dict.label"-->
-<!--            :value="dict.value"-->
-<!--          />-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="状态" prop="processingStatus">-->
-<!--        <el-select v-model="queryParams.processingStatus" placeholder="请选择状态" clearable>-->
-<!--          <el-option-->
-<!--            v-for="dict in dict.type.yl_processing_status"-->
-<!--            :key="dict.value"-->
-<!--            :label="dict.label"-->
-<!--            :value="dict.value"-->
-<!--          />-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
+      <el-form-item label="报警类型" prop="warningType">
+        <el-select v-model="queryParams.warningType" placeholder="请选择报警类型" clearable>
+          <el-option
+            v-for="dict in dict.type.yl_warning_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="状态" prop="processingStatus">
+        <el-select v-model="queryParams.processingStatus" placeholder="请选择状态" clearable>
+          <el-option
+            v-for="dict in dict.type.yl_processing_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="创建时间">
         <el-date-picker
           v-model="daterangeCreateTime"
@@ -95,17 +95,17 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="修改时间">
-        <el-date-picker
-          v-model="daterangeUpdateTime"
-          style="width: 240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
-      </el-form-item>
+      <!--      <el-form-item label="修改时间">-->
+      <!--        <el-date-picker-->
+      <!--          v-model="daterangeUpdateTime"-->
+      <!--          style="width: 240px"-->
+      <!--          value-format="yyyy-MM-dd"-->
+      <!--          type="daterange"-->
+      <!--          range-separator="-"-->
+      <!--          start-placeholder="开始日期"-->
+      <!--          end-placeholder="结束日期"-->
+      <!--        ></el-date-picker>-->
+      <!--      </el-form-item>-->
       <!--      <el-form-item label="删除" prop="delFlag">-->
       <!--        <el-select v-model="queryParams.delFlag" placeholder="请选择删除" clearable>-->
       <!--          <el-option-->
@@ -233,6 +233,14 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-edit"
+            @click="handleDisposeData(scope.row)"
+            v-hasPermi="['zhyl:deviceSosAlarmDispose:add']"
+          >处理预警
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['zhyl:deviceUploadingData:remove']"
@@ -250,51 +258,67 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改设备上传数据对话框 -->
+    <!-- 添加或修改设备预警数据对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="设备编号" prop="deviceId">
-          <el-input v-model="form.deviceId" placeholder="请输入设备编号"/>
+          <el-input v-model="form.deviceId" :readonly="this.form.dataId!=null" placeholder="请输入设备编号"/>
         </el-form-item>
-        <el-form-item label="类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择类型">
-            <el-option
-              v-for="dict in dict.type.yl_device_uploading_command_type"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="命令" prop="command">
-          <el-select v-model="form.command" placeholder="请选择命令">
-            <el-option
-              v-for="dict in dict.type.yl_device_uploading_data_command"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="设备类型" prop="deviceType">
-          <el-input v-model="form.deviceType" placeholder="请输入设备类型"/>
-        </el-form-item>
-        <!--        <el-form-item label="长者" prop="userInfoId">-->
-        <!--          <el-input v-model="form.userInfoId" placeholder="请输入长者" />-->
-        <!--        </el-form-item>-->
-        <el-form-item label="对象参数" prop="argument">
-          <el-input v-model="form.argument" type="textarea" placeholder="请输入内容"/>
-        </el-form-item>
-        <!--        <el-form-item label="报警类型" prop="warningType">-->
-        <!--          <el-select v-model="form.warningType" placeholder="请选择报警类型">-->
+        <!--        <el-form-item label="类型" prop="type">-->
+        <!--          <el-select v-model="form.type" placeholder="请选择类型">-->
         <!--            <el-option-->
-        <!--              v-for="dict in dict.type.yl_warning_type"-->
+        <!--              v-for="dict in dict.type.yl_device_uploading_command_type"-->
         <!--              :key="dict.value"-->
         <!--              :label="dict.label"-->
         <!--              :value="dict.value"-->
         <!--            ></el-option>-->
         <!--          </el-select>-->
         <!--        </el-form-item>-->
+        <!--        <el-form-item label="命令" prop="command">-->
+        <!--          <el-select v-model="form.command" placeholder="请选择命令">-->
+        <!--            <el-option-->
+        <!--              v-for="dict in dict.type.yl_device_uploading_data_command"-->
+        <!--              :key="dict.value"-->
+        <!--              :label="dict.label"-->
+        <!--              :value="dict.value"-->
+        <!--            ></el-option>-->
+        <!--          </el-select>-->
+        <!--        </el-form-item>-->
+        <el-form-item label="设备类型" prop="deviceType">
+          <el-input v-model="form.deviceType" :readonly="this.form.dataId!=null" placeholder="请输入设备类型"/>
+        </el-form-item>
+        <el-form-item label="长者" prop="userInfoId">
+          <el-select
+            v-model="form.userInfoId"
+            filterable
+            remote
+            reserve-keyword
+            :disabled="this.form.dataId!=null"
+            placeholder="请输入手机号码"
+            :remote-method="remoteElderlyUserInfoMethod"
+            @keyup.enter.native="handleQuery"
+            :loading="elderlyUserInfoLoading">
+            <el-option
+              v-for="item in elderlyUserInfoList"
+              :key="item.userInfoId"
+              :label="item.userInfoName"
+              :value="item.userInfoId">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <!--        <el-form-item label="对象参数" prop="argument">-->
+        <!--          <el-input v-model="form.argument" type="textarea" placeholder="请输入内容"/>-->
+        <!--        </el-form-item>-->
+        <el-form-item label="报警类型" prop="warningType">
+          <el-select v-model="form.warningType" :disabled="this.form.dataId!=null" placeholder="请选择报警类型">
+            <el-option
+              v-for="dict in dict.type.yl_warning_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <!--        <el-form-item label="经度" prop="lon">-->
         <!--          <el-input v-model="form.lon" placeholder="请输入经度" />-->
         <!--        </el-form-item>-->
@@ -311,9 +335,83 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="地址" prop="address">
+          <!--          <el-input v-model="form.argumentData.address" :readonly="this.form.dataId!=null"-->
+          <!--                    placeholder="请输入地址"/>-->
+          {{ form.argumentData.address }}
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 添加或修改设备预警处理对话框 -->
+    <el-dialog :title="title" :visible.sync="disposeDataOpen" width="500px" append-to-body>
+      <el-form ref="form" :model="disposeData" :rules="rules" label-width="80px">
+<!--        <el-form-item label="长者" prop="userInfoId">-->
+<!--          <el-input v-model="disposeData.userInfoId" placeholder="请输入长者"/>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="预警" prop="dataId">-->
+<!--          <el-input v-model="disposeData.dataId" placeholder="请输入预警"/>-->
+<!--        </el-form-item>-->
+        <el-form-item label="处理凭证" prop="disposeVoucher">
+          <image-upload v-model="disposeData.disposeVoucher"/>
+        </el-form-item>
+        <el-form-item label="处理描述" prop="disposeDescribe">
+          <el-input v-model="disposeData.disposeDescribe" type="textarea" placeholder="请输入内容"/>
+        </el-form-item>
+        <el-form-item label="处理地址" prop="addressId">
+          <treeselect v-model="disposeData.addressId" :options="addressOptions" :show-count="true"
+                      placeholder="请选择地址信息"/>
+        </el-form-item>
+        <el-form-item label="详细地址" prop="addressDetail">
+          <el-input v-model="disposeData.addressDetail" placeholder="请输入详细地址"/>
+        </el-form-item>
+        <el-form-item label="处理人" prop="userId">
+          <el-select
+            v-model="disposeData.userId"
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入用户账号"
+            :remote-method="selectUserServiceList"
+            :loading="userServiceLoading"
+          >
+            <el-option
+              v-for="item in userServiceList"
+              :key="item.userId"
+              :label="item.userName"
+              :value="item.userId"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="处理时间" prop="disposeTime">
+          <el-date-picker clearable
+                          v-model="disposeData.disposeTime"
+                          type="datetime"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+                          placeholder="请选择处理时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="处理状态" prop="disposeStatus">
+          <el-radio-group v-model="disposeData.disposeStatus">
+            <el-radio
+              v-for="dict in dict.type.yl_dispose_status"
+              :key="dict.value"
+              :label="dict.value"
+            >{{ dict.label }}
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="disposeData.remark" placeholder="请输入备注"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitDisposeData">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -329,12 +427,37 @@ import {
   updateDeviceUploadingData
 } from "@/api/zhyl/deviceUploadingData";
 import {listUserInfo} from "@/api/zhyl/userInfo";
+import {addDeviceSosAlarmDispose} from "@/api/zhyl/deviceSosAlarmDispose";
+import {allocatedUserList} from "@/api/system/role";
+import {listAddressTreeInfo} from "@/api/zhyl/addressInfo";
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 export default {
   name: "DeviceUploadingData",
-  dicts: ['yl_processing_status', 'yl_del_flag', 'yl_device_uploading_command_type', 'yl_device_uploading_data_command', 'yl_warning_type'],
+  components: {Treeselect},
+  dicts: ['yl_processing_status', 'yl_del_flag', 'yl_device_uploading_command_type', 'yl_device_uploading_data_command', 'yl_warning_type','yl_dispose_status'],
   data() {
     return {
+      //地址树选项
+      addressOptions: undefined,
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
+      //系统客服角色信息
+      userServiceList: [],
+      userServiceLoading: false,
+      userServiceQueryParams: {
+        userName: '',
+        roleId: 100,
+        pageNum: 1,
+        pageSize: 10
+      },
+      //处理预警信息
+      disposeData: {},
+      // 遮罩层
+      disposeDataOpen: false,
       // 长者信息表格数据 查询
       elderlyUserInfoList: [],
       elderlyUserInfoLoading: true,
@@ -349,15 +472,15 @@ export default {
       columns: [
         {key: 0, label: '编号', visible: false},
         {key: 1, label: '类型', visible: true},
-        {key: 2, label: '命令', visible: true},
+        {key: 2, label: '命令', visible: false},
         {key: 3, label: '设备编号', visible: true},
         {key: 4, label: '长者', visible: true},
         {key: 5, label: '设备类型', visible: true},
         {key: 6, label: '对象参数', visible: false},
-        {key: 7, label: '报警类型', visible: false},
+        {key: 7, label: '报警类型', visible: true},
         {key: 8, label: '经度', visible: false},
         {key: 9, label: '纬度', visible: false},
-        {key: 10, label: '状态', visible: false},
+        {key: 10, label: '状态', visible: true},
         {key: 11, label: '创建时间', visible: true},
         {key: 12, label: '修改时间', visible: false},
         {key: 13, label: '删除', visible: false},
@@ -374,7 +497,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 设备上传数据表格数据
+      // 设备预警数据表格数据
       deviceUploadingDataList: [],
       // 弹出层标题
       title: "",
@@ -391,7 +514,7 @@ export default {
         dataId: null,
         deviceId: null,
         type: null,
-        command: null,
+        command: 'warning',
         deviceType: null,
         userInfoId: null,
         warningType: null,
@@ -401,7 +524,23 @@ export default {
         delFlag: null
       },
       // 表单参数
-      form: {},
+      form: {
+        id: null,
+        dataId: null,
+        deviceId: null,
+        type: null,
+        command: 'warning',
+        deviceType: null,
+        userInfoId: null,
+        warningType: null,
+        longitude: null,
+        latitude: null,
+        processingStatus: null,
+        createTime: null,
+        updateTime: null,
+        delFlag: null,
+        argumentData: {}
+      },
       // 表单校验
       rules: {
         deviceId: [
@@ -419,8 +558,70 @@ export default {
   created() {
     this.getList();
     this.getElderlyUserInfoList()
+    this.getAddressTree()
   },
   methods: {
+    /**
+     * 查询地址树
+     */
+    getAddressTree() {
+      listAddressTreeInfo().then(res => {
+        this.addressOptions = res.data
+      })
+    },
+    /**
+     * 获取用户列表推荐
+     * @param query
+     */
+    selectUserServiceList(query) {
+      if (query !== '') {
+        this.userServiceLoading = true
+        this.userServiceQueryParams.userName = query
+        setTimeout(() => {
+          this.getUserServiceList()
+        }, 200)
+      } else {
+        this.userServiceList = []
+      }
+    },
+    /**
+     * 获取用户信息列表
+     */
+    getUserServiceList() {
+      //添加查询参数
+      if (this.form.userId != null) {
+        this.userServiceQueryParams.userId = this.form.userId
+      } else {
+        this.userServiceQueryParams.userId = null
+      }
+      if (this.userServiceQueryParams.userName != null) {
+        this.userServiceQueryParams.userId = null
+      }
+      allocatedUserList(this.userServiceQueryParams).then(res => {
+        this.userServiceList = res.rows
+        this.userServiceLoading = false
+      })
+    },
+    //打开处理预警
+    handleDisposeData(row) {
+      this.getUserServiceList()
+      this.disposeData = {}
+      this.title = "处理预警"
+      this.disposeData.userInfoId = row.userInfoId
+      this.disposeData.dataId = row.dataId
+      this.disposeDataOpen = true
+    },
+    /**
+     * 提交处理预警
+     */
+    submitDisposeData() {
+      addDeviceSosAlarmDispose(this.disposeData).then(res => {
+        this.$modal.msgSuccess("处理成功");
+        this.disposeDataOpen = false;
+        this.disposeData = {}
+        this.getList();
+      })
+    },
     /**
      * 获取长者信息
      * @param query
@@ -438,18 +639,18 @@ export default {
     },
 
     getElderlyUserInfoList() {
-      // if (this.form.userInfoId !== null && this.form.userInfoId !== '') {
-      //   this.queryParamsElderly.userInfoId = this.form.userInfoId
-      // }
-      // if (this.queryParamsElderly.contactPhone !== '') {
-      //   this.queryParamsElderly.userInfoId = null
-      // }
+      if (this.form.userInfoId !== null && this.form.userInfoId !== '') {
+        this.queryParamsElderly.userInfoId = this.form.userInfoId
+      }
+      if (this.queryParamsElderly.contactPhone !== '') {
+        this.queryParamsElderly.userInfoId = null
+      }
       listUserInfo(this.queryParamsElderly).then(response => {
         this.elderlyUserInfoList = response.rows
         this.elderlyUserInfoLoading = false
       })
     },
-    /** 查询设备上传数据列表 */
+    /** 查询设备预警数据列表 */
     getList() {
       this.loading = true;
       this.queryParams.params = {};
@@ -488,7 +689,10 @@ export default {
         processingStatus: null,
         createTime: null,
         updateTime: null,
-        delFlag: null
+        delFlag: null,
+        argumentData: {
+          address: ''
+        }
       };
       this.resetForm("form");
     },
@@ -514,7 +718,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加设备上传数据";
+      this.title = "添加设备预警数据";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -523,7 +727,7 @@ export default {
       getDeviceUploadingData(dataId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改设备上传数据";
+        this.title = "修改设备预警数据";
       });
     },
     /** 提交按钮 */
@@ -549,7 +753,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const dataIds = row.dataId || this.ids;
-      this.$modal.confirm('是否确认删除设备上传数据编号为"' + dataIds + '"的数据项？').then(function () {
+      this.$modal.confirm('是否确认删除设备预警数据编号为"' + dataIds + '"的数据项？').then(function () {
         return delDeviceUploadingData(dataIds);
       }).then(() => {
         this.getList();

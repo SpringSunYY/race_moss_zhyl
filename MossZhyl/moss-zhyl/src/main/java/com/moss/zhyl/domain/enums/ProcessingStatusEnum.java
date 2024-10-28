@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
  */
 public enum ProcessingStatusEnum {
 
-    PROCESSING_STATUS_ENUM_1("待处理", "1"),
-    PROCESSING_STATUS_ENUM_2("处理完成", "2"),
-    PROCESSING_STATUS_ENUM_3("无需处理", "3"),
-    PROCESSING_STATUS_ENUM_4("处理失败", "4");
+    PROCESSING_STATUS_ENUM_0("待处理", "0"),
+    PROCESSING_STATUS_ENUM_1("处理完成", "1"),
+    PROCESSING_STATUS_ENUM_2("处理失败", "2"),
+    PROCESSING_STATUS_ENUM_3("无需处理", "3");
 //    PROCESSING_STATUS_ENUM_5("处理失败", "5");
 
     private final String text;

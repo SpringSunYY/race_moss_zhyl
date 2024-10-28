@@ -32,7 +32,7 @@ public class DeviceUploadingDataSaveWarningStrategyImpl implements DeviceUploadi
             deviceUploadingData.setLat(argument.getLat());
             deviceUploadingData.setLon(argument.getLon());
             //处理状态
-            deviceUploadingData.setProcessingStatus(ProcessingStatusEnum.PROCESSING_STATUS_ENUM_1.getValue());
+            deviceUploadingData.setProcessingStatus(ProcessingStatusEnum.PROCESSING_STATUS_ENUM_0.getValue());
             //报警类型
             deviceUploadingData.setWarningType(argument.getWarningType());
         } catch (Exception e) {

@@ -531,7 +531,7 @@ CREATE TABLE `yl_device_communication` (
 
 长者：因为报警信息没有长者信息，这个需要重设备id去获取
 
-状态：1待处理、2处理完成、3未处理、4处理失败
+状态：0待处理、1处理完成、3无需处理、2处理失败
 
 对象参数：从报警信息
 
@@ -569,22 +569,22 @@ CREATE TABLE `yl_device_uploading_data` (
 
 #### 设备预警处理表：yl_device_sos_alarm_dispose
 
-| 字段名             | 数据类型 | 长度 | 是否为空 | 外键           | 备注                             |
-| ------------------ | -------- | ---- | -------- | -------------- | -------------------------------- |
-| `dispose_id`       | bigint   |      | 否       |                | 编号                             |
-| `user_info_id`     | bigint   |      | 否       | `user_info_id` | 长者（用户表user_info_id）       |
-| `sos_alarm_id`     | bigint   |      | 否       | `sos_alarm_id` | 预警（设备预警表：sos_alarm_id） |
-| `dispose_voucher`  | varchar  | 1024 | 否       |                | 处理凭证                         |
-| `dispose_describe` | text     |      | 否       |                | 处理描述                         |
-| `dispose_address`  | bigint   |      | 否       |                | 处理地址                         |
-| `address_detail`   | varchar  | 255  | 是       |                | 详细地址                         |
-| `dispose_status`   | char     | 1    | 否       |                | 处理状态                         |
-| `user_id`          | bigint   |      | 否       | user_id        | 处理人（sys_user:user_id）       |
-| `dispose_time`     | datetime |      | 否       |                | 处理时间                         |
-| `remark`           | varchar  | 255  | 是       |                | 备注                             |
-| `create_by`        | varchar  | 50   | 否       |                | 创建人                           |
-| `create_time`      | datetime |      | 否       |                | 创建时间                         |
-| `del_flag`         | char     | 1    | 否       |                | 删除                             |
+| 字段名               | 数据类型 | 长度 | 是否为空 | 外键           | 备注                             |
+| -------------------- | -------- | ---- | -------- | -------------- | -------------------------------- |
+| `dispose_id`         | bigint   |      | 否       |                | 编号                             |
+| `user_info_id`       | bigint   |      | 否       | `user_info_id` | 长者（用户表user_info_id）       |
+| `data_id`            | bigint   |      | 否       | `sos_alarm_id` | 预警（设备预警表：sos_alarm_id） |
+| `dispose_voucher`    | varchar  | 1024 | 是       |                | 处理凭证                         |
+| `dispose_describe`   | text     |      | 否       |                | 处理描述                         |
+| `dispose_address_id` | bigint   |      | 否       |                | 处理地址                         |
+| `address_detail`     | varchar  | 255  | 是       |                | 详细地址                         |
+| `dispose_status`     | char     | 1    | 否       |                | 处理状态                         |
+| `user_id`            | bigint   |      | 否       | user_id        | 处理人（sys_user:user_id）       |
+| `dispose_time`       | datetime |      | 否       |                | 处理时间                         |
+| `remark`             | varchar  | 255  | 是       |                | 备注                             |
+| `create_by`          | varchar  | 50   | 否       |                | 创建人                           |
+| `create_time`        | datetime |      | 否       |                | 创建时间                         |
+| `del_flag`           | char     | 1    | 否       |                | 删除                             |
 
 处理凭证：处理这个sos预警的凭证，拍照上传
 
@@ -596,13 +596,13 @@ CREATE TABLE `yl_device_uploading_data` (
 DROP TABLE IF EXISTS `yl_device_sos_alarm_dispose`;
 CREATE TABLE `yl_device_sos_alarm_dispose` (
     `dispose_id` BIGINT NOT NULL COMMENT '编号',
-    `user_info_id` BIGINT NOT NULL COMMENT '长者（用户表user_info_id）',
-    `data_id` BIGINT NOT NULL COMMENT '预警（设备预警表：sos_alarm_id）',
+    `user_info_id` BIGINT NOT NULL COMMENT '长者',
+    `data_id` BIGINT NOT NULL COMMENT '预警',
     `dispose_voucher` VARCHAR(1024) NOT NULL COMMENT '处理凭证',
     `dispose_describe` TEXT NOT NULL COMMENT '处理描述',
-    `dispose_address` BIGINT NOT NULL COMMENT '处理地址',
+    `address_id` BIGINT NOT NULL COMMENT '处理地址',
     `address_detail` VARCHAR(255) DEFAULT NULL COMMENT '详细地址',
-    `user_id` BIGINT NOT NULL COMMENT '处理人（sys_user:user_id）',
+    `user_id` BIGINT NOT NULL COMMENT '处理人',
     `dispose_time` DATETIME NOT NULL COMMENT '处理时间',
     `dispose_status` CHAR(1) NOT NULL COMMENT '处理状态',
     `remark` VARCHAR(255) DEFAULT NULL COMMENT '备注',
@@ -611,8 +611,9 @@ CREATE TABLE `yl_device_sos_alarm_dispose` (
     `del_flag` CHAR(1) NOT NULL COMMENT '删除',
     PRIMARY KEY (`dispose_id`),
     FOREIGN KEY (`user_info_id`) REFERENCES `yl_user_info`(`user_info_id`),
-    FOREIGN KEY (`sos_alarm_id`) REFERENCES `yl_device_uploading_data`(`data_id`),
-    FOREIGN KEY (`user_id`) REFERENCES `sys_user`(`user_id`)
+    FOREIGN KEY (`data_id2`) REFERENCES `yl_device_uploading_data`(`data_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `sys_user`(`user_id`),
+    FOREIGN KEY (`address_id`) REFERENCES `yl_address_info`(`address_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='设备预警处理表';
 
 ```
@@ -791,7 +792,7 @@ user_info_id：用户，可以是家属也可以是用户
 
 预约人：系统角色
 
-处理状态：1待处理、2处理完成、3未处理
+状态：0待处理、1处理完成、3无需处理、2处理失败
 
 ```sql
 DROP TABLE IF EXISTS `yl_appointment`;
@@ -836,7 +837,7 @@ CREATE TABLE `yl_appointment` (
 | `create_time`      | datetime |      | 否       |                  | 创建时间                       |
 | `del_flag`         | char     | 1    | 否       |                  | 删除                           |
 
-  处理情况：0处理成功、1处理失败
+  处理情况：1处理成功、2处理失败，3无需处理
 
 ```sql
 DROP TABLE IF EXISTS `yl_appointment_dispose`;

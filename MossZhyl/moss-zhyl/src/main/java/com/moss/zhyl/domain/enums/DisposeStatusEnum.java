@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
  */
 public enum DisposeStatusEnum {
 
-    DISPOSE_STATUS_ENUM_0("处理成功", "0"),
-    DISPOSE_STATUS_ENUM_1("处理失败", "1"),
-    DISPOSE_STATUS_ENUM_2("无需处理", "1");
+    DISPOSE_STATUS_ENUM_1("处理成功", "1"),
+    DISPOSE_STATUS_ENUM_2("处理失败", "2"),
+    DISPOSE_STATUS_ENUM_4("无需处理", "3");
 
     private final String text;
     private final String value;

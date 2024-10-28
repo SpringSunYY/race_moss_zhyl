@@ -27,4 +27,12 @@ public class PermissionsConstants {
      * 查看绑定设备删除
      */
     public static final String ZHYL_ELDERLY_DEVICE_BINDING_LOOK_DELETE = "zhyl:device:lookDelete";
+    /**
+     * 查看sos预警处理删除
+     */
+    public static final String ZHYL_DEVICE_SOS_ALARM_DISPOSE_LOOK_DELETE="zhyl:deviceSosAlarmDispose:lookDelete";
+    /**
+     * 查看设备上传数据删除
+     */
+    public static final String ZHYL_DEVICE_UPLOADING_DATA_LOOK_DELETE="zhyl:deviceUploadingData:lookDelete";
 }
