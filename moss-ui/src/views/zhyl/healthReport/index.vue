@@ -9,18 +9,38 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="长者" prop="userInfoId">
+      <el-form-item label="报告类型" prop="reportType">
+        <el-select v-model="queryParams.reportType" placeholder="请选择报告类型" clearable>
+          <el-option
+            v-for="dict in dict.type.health_report_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="使用模型" prop="useModel">
         <el-input
-          v-model="queryParams.userInfoId"
-          placeholder="请输入长者"
+          v-model="queryParams.useModel"
+          placeholder="请输入使用模型"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="tokens" prop="useTokens">
+      <el-form-item label="任务状态" prop="taskStatus">
+        <el-select v-model="queryParams.taskStatus" placeholder="请选择任务状态" clearable>
+          <el-option
+            v-for="dict in dict.type.health_report_task_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="长者" prop="userInfoId">
         <el-input
-          v-model="queryParams.useTokens"
-          placeholder="请输入tokens"
+          v-model="queryParams.userInfoId"
+          placeholder="请输入长者"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -32,6 +52,28 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+      <el-form-item label="完成时间">
+        <el-date-picker
+          v-model="daterangeAccomplishTime"
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item label="修改时间">
+        <el-date-picker
+          v-model="daterangeUpdateTime"
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item label="创建时间">
         <el-date-picker
@@ -109,23 +151,51 @@
     <el-table v-loading="loading" :data="healthReportList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="healthReportId" />
-        <el-table-column label="标题" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible" prop="reportTitle" />
-        <el-table-column label="封面" align="center" v-if="columns[2].visible" prop="reportImage" width="100">
+      <el-table-column label="标题" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible" prop="reportTitle" />
+      <el-table-column label="报告类型" align="center" v-if="columns[2].visible" prop="reportType">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.health_report_type" :value="scope.row.reportType"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="使用模型" :show-overflow-tooltip="true" align="center" v-if="columns[3].visible" prop="useModel" />
+      <el-table-column label="封面" align="center" v-if="columns[4].visible" prop="reportImage" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.reportImage" :width="50" :height="50"/>
         </template>
       </el-table-column>
-        <el-table-column label="报告内容" :show-overflow-tooltip="true" align="center" v-if="columns[3].visible" prop="reportContent" />
-        <el-table-column label="长者" :show-overflow-tooltip="true" align="center" v-if="columns[4].visible" prop="userInfoId" />
-        <el-table-column label="tokens" :show-overflow-tooltip="true" align="center" v-if="columns[5].visible" prop="useTokens" />
-        <el-table-column label="备注" :show-overflow-tooltip="true" align="center" v-if="columns[6].visible" prop="remark" />
-        <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[7].visible" prop="createBy" />
-        <el-table-column label="创建时间" align="center" v-if="columns[8].visible" prop="createTime" width="180">
+      <el-table-column label="请求内容" :show-overflow-tooltip="true" align="center" v-if="columns[5].visible" prop="reportContent" />
+      <el-table-column label="报告返回" :show-overflow-tooltip="true" align="center" v-if="columns[6].visible" prop="reportReturn" />
+      <el-table-column label="任务ID" :show-overflow-tooltip="true" align="center" v-if="columns[7].visible" prop="taskId" />
+      <el-table-column label="任务状态" align="center" v-if="columns[8].visible" prop="taskStatus">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <dict-tag :options="dict.type.health_report_task_status" :value="scope.row.taskStatus"/>
         </template>
       </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="长者" :show-overflow-tooltip="true" align="center" v-if="columns[9].visible" prop="userInfoId" />
+      <el-table-column label="tokens" :show-overflow-tooltip="true" align="center" v-if="columns[10].visible" prop="useTokens" />
+      <el-table-column label="备注" :show-overflow-tooltip="true" align="center" v-if="columns[11].visible" prop="remark" />
+      <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[12].visible" prop="createBy" />
+      <el-table-column label="完成时间" align="center" v-if="columns[13].visible" prop="accomplishTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.accomplishTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="修改时间" align="center" v-if="columns[14].visible" prop="updateTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="创建时间" align="center" v-if="columns[15].visible" prop="createTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="删除" align="center" v-if="columns[16].visible" prop="delFlag">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.yl_del_flag" :value="scope.row.delFlag"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -159,11 +229,40 @@
         <el-form-item label="标题" prop="reportTitle">
           <el-input v-model="form.reportTitle" placeholder="请输入标题" />
         </el-form-item>
+        <el-form-item label="报告类型" prop="reportType">
+          <el-select v-model="form.reportType" placeholder="请选择报告类型">
+            <el-option
+              v-for="dict in dict.type.health_report_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="使用模型" prop="useModel">
+          <el-input v-model="form.useModel" placeholder="请输入使用模型" />
+        </el-form-item>
         <el-form-item label="封面" prop="reportImage">
           <image-upload v-model="form.reportImage"/>
         </el-form-item>
-        <el-form-item label="报告内容">
+        <el-form-item label="请求内容">
           <editor v-model="form.reportContent" :min-height="192"/>
+        </el-form-item>
+        <el-form-item label="报告返回" prop="reportReturn">
+          <el-input v-model="form.reportReturn" type="textarea" placeholder="请输入内容" />
+        </el-form-item>
+        <el-form-item label="任务ID" prop="taskId">
+          <el-input v-model="form.taskId" placeholder="请输入任务ID" />
+        </el-form-item>
+        <el-form-item label="任务状态" prop="taskStatus">
+          <el-select v-model="form.taskStatus" placeholder="请选择任务状态">
+            <el-option
+              v-for="dict in dict.type.health_report_task_status"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="长者" prop="userInfoId">
           <el-input v-model="form.userInfoId" placeholder="请输入长者" />
@@ -173,6 +272,14 @@
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
+        </el-form-item>
+        <el-form-item label="完成时间" prop="accomplishTime">
+          <el-date-picker clearable
+                          v-model="form.accomplishTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择完成时间">
+          </el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -188,21 +295,29 @@ import { listHealthReport, getHealthReport, delHealthReport, addHealthReport, up
 
 export default {
   name: "HealthReport",
-  dicts: ['yl_del_flag'],
+  dicts: ['health_report_type', 'health_report_task_status', 'yl_del_flag'],
   data() {
     return {
       //表格展示列
       columns: [
         { key: 0, label: '编号', visible: true },
-          { key: 1, label: '标题', visible: true },
-          { key: 2, label: '封面', visible: true },
-          { key: 3, label: '报告内容', visible: true },
-          { key: 4, label: '长者', visible: true },
-          { key: 5, label: 'tokens', visible: true },
-          { key: 6, label: '备注', visible: true },
-          { key: 7, label: '创建人', visible: true },
-          { key: 8, label: '创建时间', visible: true },
-        ],
+        { key: 1, label: '标题', visible: true },
+        { key: 2, label: '报告类型', visible: true },
+        { key: 3, label: '使用模型', visible: true },
+        { key: 4, label: '封面', visible: true },
+        { key: 5, label: '请求内容', visible: true },
+        { key: 6, label: '报告返回', visible: true },
+        { key: 7, label: '任务ID', visible: true },
+        { key: 8, label: '任务状态', visible: true },
+        { key: 9, label: '长者', visible: true },
+        { key: 10, label: 'tokens', visible: true },
+        { key: 11, label: '备注', visible: true },
+        { key: 12, label: '创建人', visible: true },
+        { key: 13, label: '完成时间', visible: true },
+        { key: 14, label: '修改时间', visible: true },
+        { key: 15, label: '创建时间', visible: true },
+        { key: 16, label: '删除', visible: true },
+      ],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -222,15 +337,23 @@ export default {
       // 是否显示弹出层
       open: false,
       // 删除时间范围
+      daterangeAccomplishTime: [],
+      // 删除时间范围
+      daterangeUpdateTime: [],
+      // 删除时间范围
       daterangeCreateTime: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
         reportTitle: null,
+        reportType: null,
+        useModel: null,
+        taskStatus: null,
         userInfoId: null,
-        useTokens: null,
         createBy: null,
+        accomplishTime: null,
+        updateTime: null,
         createTime: null,
         delFlag: null
       },
@@ -241,17 +364,29 @@ export default {
         reportTitle: [
           { required: true, message: "标题不能为空", trigger: "blur" }
         ],
+        reportType: [
+          { required: true, message: "报告类型不能为空", trigger: "change" }
+        ],
+        useModel: [
+          { required: true, message: "使用模型不能为空", trigger: "blur" }
+        ],
         reportImage: [
           { required: true, message: "封面不能为空", trigger: "blur" }
         ],
         reportContent: [
-          { required: true, message: "报告内容不能为空", trigger: "blur" }
+          { required: true, message: "请求内容不能为空", trigger: "blur" }
+        ],
+        reportReturn: [
+          { required: true, message: "报告返回不能为空", trigger: "blur" }
+        ],
+        taskId: [
+          { required: true, message: "任务ID不能为空", trigger: "blur" }
+        ],
+        taskStatus: [
+          { required: true, message: "任务状态不能为空", trigger: "change" }
         ],
         userInfoId: [
           { required: true, message: "长者不能为空", trigger: "blur" }
-        ],
-        createBy: [
-          { required: true, message: "创建人不能为空", trigger: "blur" }
         ],
         createTime: [
           { required: true, message: "创建时间不能为空", trigger: "blur" }
@@ -270,6 +405,14 @@ export default {
     getList() {
       this.loading = true;
       this.queryParams.params = {};
+      if (null != this.daterangeAccomplishTime && '' != this.daterangeAccomplishTime) {
+        this.queryParams.params["beginAccomplishTime"] = this.daterangeAccomplishTime[0];
+        this.queryParams.params["endAccomplishTime"] = this.daterangeAccomplishTime[1];
+      }
+      if (null != this.daterangeUpdateTime && '' != this.daterangeUpdateTime) {
+        this.queryParams.params["beginUpdateTime"] = this.daterangeUpdateTime[0];
+        this.queryParams.params["endUpdateTime"] = this.daterangeUpdateTime[1];
+      }
       if (null != this.daterangeCreateTime && '' != this.daterangeCreateTime) {
         this.queryParams.params["beginCreateTime"] = this.daterangeCreateTime[0];
         this.queryParams.params["endCreateTime"] = this.daterangeCreateTime[1];
@@ -290,12 +433,19 @@ export default {
       this.form = {
         healthReportId: null,
         reportTitle: null,
+        reportType: null,
+        useModel: null,
         reportImage: null,
         reportContent: null,
+        reportReturn: null,
+        taskId: null,
+        taskStatus: null,
         userInfoId: null,
         useTokens: null,
         remark: null,
         createBy: null,
+        accomplishTime: null,
+        updateTime: null,
         createTime: null,
         delFlag: null
       };
@@ -308,6 +458,8 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.daterangeAccomplishTime = [];
+      this.daterangeUpdateTime = [];
       this.daterangeCreateTime = [];
       this.resetForm("queryForm");
       this.handleQuery();

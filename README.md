@@ -7,7 +7,7 @@
   "age": 76,
   "living_condition": "与配偶居住",
   "disability_status": "轻度",
-  "disability_condition": "身体情况良好，不适合长跑，腿部有旧伤，不能跑步",
+  "disability_condition": "身体情况良好，不适合长跑，腿部残疾，坐轮椅,家住农村",
   "data": "2024-10-27",
   "avg": {
     "heartRate": 20,
@@ -45,7 +45,8 @@
 ```
 
 ```js
-你是一个关于养老与养生的专家，深究智慧养老领域且认真负责，作为一个医生，我会你某一位老人的身体情况和一段时间数据，身体情况包括sex(性别)、age（年龄）、living_condition（居住情况）、disability_status（失能情况）、disability_condition（残疾情况）data(时间)，数据包括这段时间最大数据（max）、最低数据（lowe）、平均数据（avg），数据众数（mode）每种数据包括heartRate（心率）、dbp（低压）、sdp（高压）、oxygen（血氧）、bloodSugar（血糖）、str_temperature（温度）。你根据这些他的身体情况和数据认真且专业的分析数据是否正常，有什么潜在危险并给一些建议，建议在饮食饮食方面推荐吃什么食物，运动方面建议他做什么运动或者怎么调整身体，建议内容每种建议不少于两条，如果有较为严重的数据或者出现紧急情况，应该怎么做，并且总结生成一份健康报告，返回的内容为必须为Json，描述必须为中文。
+你是一个关于养老与养生的专家，深究智慧养老领域且认真负责，作为一个医生，我会你某一位老人的身体情况和一段时间数据，身体情况包括sex(性别)、age（年龄）、living_condition（居住情况）、disability_status（失能情况）、disability_condition（残疾情况）data(时间)，数据包括这段时间最大数据（max）、最低数据（lowe）、平均数据（avg），数据众数（mode）每种数据包括heartRate（心率）、dbp（低压）、sdp（高压）、oxygen（血氧）、bloodSugar（血糖）、str_temperature（温度）。你根据这些他的身体情况和数据认真且专业的分析数据在他这个年龄段是否正常，有什么潜在危险并给一些建议，建议在饮食饮食方面推荐吃什么食物，运动方面建议他做什么运动或者怎么调整身体，建议内容每种建议不少于两条且要根据他的身体情况做出更准确的建议，如果有较为严重的数据或者出现紧急情况，应该怎么做，并且总结生成一份健康报告，返回的内容为必须为Json，描述必须为中文。
+以下是一个事例，你可以模仿事例内容根据实际情况做出分析，返回数据json格式必须和事例格式一样：
 传入数据事例:
 {
   "name": "YY",
@@ -88,48 +89,52 @@
     "str_temperature": "37"
   }
 }
-返回内容格式为：
+返回内容格式以及事例为：
 {
-  "overallAssessment": "尊敬的{name}用户，{data}健康报告已经出炉，.......",
+  "overallAssessment": "尊敬的{name}用户，{data}健康报告已经出炉，.......身体情况.....分析数据的总结",
   "detailedAnalysis": {
     "heartRate": {
-      "currentStatus": "平均心率20次/分钟，最低18次/分钟，最高24次/分钟，远低于正常范围（60-100次/分钟）。",
+      "currentStatus": "平均心率20次/分钟，最低18次/分钟，最高24次/分钟，在您这年龄阶段正常范围是多少是否属于正常范围。",
       "potentialRisks": "可能导致心脏供血不足，出现头晕、乏力、甚至晕厥。",
       "suggestions": [
         "立即就医，进行心电图等检查，排除心脏疾病。",
-        "避免剧烈运动，保持适当活动，如散步、太极拳等。"
+        "避免剧烈运动，保持适当活动，如散步、太极拳等。",
+         "........"
       ]
     },
     "bloodPressure": {
-      "currentStatus": "平均低压60mmHg，高压90mmHg，最低低压55mmHg，最高高压95mmHg，低压偏低。",
+      "currentStatus": "平均低压60mmHg，高压90mmHg，最低低压55mmHg，最高高压95mmHg，在您这年龄阶段正常范围是多少是否属于正常范围。",
       "potentialRisks": "可能导致头晕、乏力，甚至晕厥。",
       "suggestions": [
         "增加盐分摄入，但需在医生指导下进行。",
-        "适量饮水，避免长时间站立。"
+        "适量饮水，避免长时间站立。",
+        "........"  
       ]
     },
     "oxygen": {
-      "currentStatus": "平均血氧80%，最低75%，低于正常范围（95%-100%）。",
+      "currentStatus": "平均血氧80%，最低75%，在您这年龄阶段正常范围是多少是否属于正常范围。",
       "potentialRisks": "可能导致组织缺氧，影响器官功能。",
       "suggestions": [
-        "进行氧疗，使用家用制氧机。",
-        "保持室内空气流通，适当进行深呼吸练习。"
+        "保持室内空气流通，适当进行深呼吸练习。",
+         "........"
       ]
     },
     "bloodSugar": {
-      "currentStatus": "平均血糖7mmol/L，最高9mmol/L，最低9mmol/L，偏高。",
+      "currentStatus": "平均血糖7mmol/L，最高9mmol/L，最低9mmol/L，在您这年龄阶段正常范围是多少是否属于正常范围。",
       "potentialRisks": "可能导致糖尿病及其并发症。",
       "suggestions": [
         "控制饮食，减少糖分摄入，选择低糖食物。",
-        "定期监测血糖，必要时就医调整用药。"
+        "定期监测血糖，必要时就医调整用药。",
+        "........"
       ]
     },
     "temperature": {
-      "currentStatus": "平均体温37℃，最高37.5℃，正常范围内。",
+      "currentStatus": "平均体温37℃，最高37.5℃，在您这年龄阶段正常范围是多少是否属于正常范围。",
       "potentialRisks": "无明显危险。",
       "suggestions": [
         "保持正常作息，避免过度劳累。",
-        "注意保暖，避免受凉。"
+        "注意保暖，避免受凉。",
+        "........"  
       ]
     }
   },
@@ -137,20 +142,22 @@
     "增加富含钾的食物，如香蕉、橙子，有助于维持正常心率。",
     "选择低糖、高纤维的食物，如全麦面包、燕麦，控制血糖。",
     "适量摄入优质蛋白质，如鱼、鸡肉，增强体质。",
-    "多吃新鲜蔬菜和水果，补充维生素和矿物质。"
+    "多吃新鲜蔬菜和水果，补充维生素和矿物质。",
+    "........"  
   ],
   "exerciseSuggestions": [
     "每天进行30分钟左右的温和运动，如散步、慢跑。",
     "练习深呼吸和放松训练，有助于提高血氧水平。",
     "进行适量的力量训练，如哑铃操，增强肌肉力量。",
-    "避免剧烈运动，以免加重心脏负担。"
+    "避免剧烈运动，以免加重心脏负担。",
+    "........"  
   ],
   "emergencyHandling": [
     "若出现紧急情况自己无法做到，请联系相关服务人员（此条建议必须存在且必须为第一条）"
-    "若出现严重头晕、乏力或心悸等症状，应立即拨打急救电话并就医。",
-    "若心率持续低于40次/分钟，应立即进行心肺复苏并呼叫急救。"
+    "........"  
   ]
 }
+注意：后面的对话不能按照事例格式传输，而是给老者的描述，让老者能够清楚，事例只作为平台工作人员代码阶段的使用	
 ```
 
 ```
@@ -994,31 +1001,50 @@ CREATE TABLE `yl_consult` (
 | ------------------ | -------- | ---- | -------- | -------------- | ---------------------------- |
 | `health_report_id` | bigint   |      | 否       |                | 编号                         |
 | `report_title`     | varchar  | 255  | 否       |                | 标题                         |
-| `report_image`     | varchar  | 1024 | 否       |                | 封面                         |
-| `report_content`   | text     |      | 否       |                | 报告内容                     |
+| `report_type`      | char     | 1    | 否       |                | 报告类型                     |
+| `use_model`        | varchar  | 16   | 否       |                | 使用模型                     |
+| `report_image`     | varchar  | 1024 | 是       |                | 封面                         |
+| `report_content`   | text     |      | 否       |                | 请求内容                     |
+| `report_return`    | text     |      | 否       |                | 报告返回                     |
+| `task_id`          | varchar  | 32   | 否       |                | 任务ID                       |
+| `task_status`      | varchar  | 32   | 否       |                | 任务状态                     |
 | `user_info_id`     | bigint   |      | 否       | `user_info_id` | 长者（用户表：user_info_id） |
 | `use_tokens`       | int      |      | 是       |                | tokens                       |
 | `remark`           | varchar  | 255  | 是       |                | 备注                         |
-| `create_by`        | varchar  | 50   | 否       |                | 创建人                       |
+| `create_by`        | varchar  | 50   | 是       |                | 创建人                       |
+| `accomplish_time`  | datetime |      | 是       |                | 完成时间                     |
+| `update_time`      | datetime |      | 是       |                | 修改时间                     |
 | `create_time`      | datetime |      | 否       |                | 创建时间                     |
 | `del_flag`         | char     | 1    | 否       |                | 删除                         |
 
+报告类型：0其他 1健康数据
+
+任务状态：PROCESSING（处理中），SUCCESS（成功），FAIL（失败）
+
+任务ID:ai生成返回id，调用他的返回结果
+
 ```sql
-DROP TABLE IF EXISTS `yl_health_report`;
 CREATE TABLE `yl_health_report` (
-    `health_report_id` BIGINT NOT NULL COMMENT '编号',
-    `report_title` VARCHAR(255) NOT NULL COMMENT '标题',
-    `report_image` VARCHAR(1024) NOT NULL COMMENT '封面',
-    `report_content` TEXT NOT NULL COMMENT '报告内容',
-    `user_info_id` BIGINT NOT NULL COMMENT '长者（用户表：user_info_id）',
-    `use_tokens` INT DEFAULT NULL COMMENT 'tokens',
-    `remark` VARCHAR(255) DEFAULT NULL COMMENT '备注',
-    `create_by` VARCHAR(50) NOT NULL COMMENT '创建人',
-    `create_time` DATETIME NOT NULL COMMENT '创建时间',
-    `del_flag` CHAR(1) NOT NULL COMMENT '删除',
+    `health_report_id` bigint NOT NULL COMMENT '编号',
+    `report_title` varchar(255) NOT NULL COMMENT '标题',
+    `report_type` char(1) NOT NULL COMMENT '报告类型',
+    `use_model` varchar(16) NOT NULL COMMENT '使用模型',
+    `report_image` varchar(1024) DEFAULT NULL COMMENT '封面',
+    `report_content` text NOT NULL COMMENT '请求内容',
+    `report_return` text NOT NULL COMMENT '报告返回',
+    `task_id` varchar(32) NOT NULL COMMENT '任务ID',
+    `task_status` varchar(32) NOT NULL COMMENT '任务状态',
+    `user_info_id` bigint NOT NULL COMMENT '长者',
+    `use_tokens` int DEFAULT NULL COMMENT 'tokens',
+    `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+    `create_by` varchar(50) DEFAULT NULL COMMENT '创建人',
+    `accomplish_time` datetime DEFAULT NULL COMMENT '完成时间',
+    `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+    `create_time` datetime NOT NULL COMMENT '创建时间',
+    `del_flag` char(1) NOT NULL COMMENT '删除',
     PRIMARY KEY (`health_report_id`),
-	FOREIGN KEY (`user_info_id`) REFERENCES `yl_user_info`(`user_info_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='健康报告表';
+    FOREIGN KEY (`user_info_id`) REFERENCES `yl_user_info`(`user_info_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) COMMENT='健康报告表';
 
 ```
 
