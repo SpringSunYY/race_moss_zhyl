@@ -58,12 +58,6 @@
             <groupId>com.moss</groupId>
             <artifactId>moss-system</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>cn.bigmodel.openapi</groupId>
-            <artifactId>oapi-java-sdk</artifactId>
-            <version>release-V4-2.3.0</version>
-        </dependency>
     </dependencies>
 
 </project>

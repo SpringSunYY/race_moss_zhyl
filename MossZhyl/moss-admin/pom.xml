@@ -65,6 +65,12 @@
             <groupId>com.moss</groupId>
             <artifactId>moss-zhyl</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.moss</groupId>
+            <artifactId>moss-ai</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

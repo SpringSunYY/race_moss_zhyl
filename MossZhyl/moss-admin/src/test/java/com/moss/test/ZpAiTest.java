@@ -1,7 +1,7 @@
 package com.moss.test;
 
-import com.moss.common.utils.StringUtils;
-import com.moss.framework.manager.ZpAIManager;
+import com.moss.zpai.manager.ZpAIManager;
+import com.moss.zpai.model.AsyncReturnData;
 import com.zhipu.oapi.ClientV4;
 import com.zhipu.oapi.Constants;
 import com.zhipu.oapi.service.v4.model.*;
@@ -48,7 +48,7 @@ public class ZpAiTest {
         ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
                 .model("glm-4-plus")
                 .stream(Boolean.FALSE)
-                .invokeMethod(Constants.invokeMethod)
+                .invokeMethod(Constants.invokeMethodAsync)
                 .messages(messages)
                 .maxTokens(2048)
                 .temperature(0.95F)
@@ -89,6 +89,11 @@ public class ZpAiTest {
     public void testAi2(){
         String s = zpAIManager.doSyncUnstableRequest(systemMessage, userMessage);
         System.out.println("s = " + s);
+    }
+    @Test
+    public void testAsync(){
+        AsyncReturnData asyncReturnData = zpAIManager.doAsyncStableRequest(systemMessage, userMessage);
+        System.out.println("asyncReturnData = " + asyncReturnData);
     }
 
    static String userMessage = "{\n" +

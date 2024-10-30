@@ -1,4 +1,4 @@
-package com.moss.zhyl.domain.enums;
+package com.moss.zpai.model.enums;
 
 import com.moss.common.utils.StringUtils;
 
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * 健康报告任务状态枚举
  * @Version: 1.0
  */
-public enum HealthReportTaskStatusEnum {
+public enum AsyncReportTaskStatusEnum {
 
     HEALTH_REPORT_TASK_STATUS_PROCESSING("进行中", "PROCESSING"),
     HEALTH_REPORT_TASK_STATUS_SUCCESS("成功", "SUCCESS"),
@@ -24,7 +24,7 @@ public enum HealthReportTaskStatusEnum {
     private final String text;
     private final String value;
 
-    HealthReportTaskStatusEnum(String text, String value) {
+    AsyncReportTaskStatusEnum(String text, String value) {
         this.text = text;
         this.value = value;
     }
@@ -44,11 +44,11 @@ public enum HealthReportTaskStatusEnum {
      * @param value 枚举值
      * @return 对应的枚举类型
      */
-    public static HealthReportTaskStatusEnum getEnumByValue(String value) {
+    public static AsyncReportTaskStatusEnum getEnumByValue(String value) {
         if (StringUtils.isEmpty(value)) {
             return null;
         }
-        for (HealthReportTaskStatusEnum status : HealthReportTaskStatusEnum.values()) {
+        for (AsyncReportTaskStatusEnum status : AsyncReportTaskStatusEnum.values()) {
             if (status.value.equals(value)) {
                 return status;
             }
