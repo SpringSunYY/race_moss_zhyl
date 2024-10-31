@@ -83,6 +83,18 @@ public class ElderlyHealthData {
         public void setStrTemperature(String strTemperature) {
             this.strTemperature = strTemperature;
         }
+
+        @Override
+        public String toString() {
+            return "VitalSigns{" +
+                    "heartRate=" + heartRate +
+                    ", dbp=" + dbp +
+                    ", sdp=" + sdp +
+                    ", oxygen=" + oxygen +
+                    ", bloodSugar='" + bloodSugar + '\'' +
+                    ", strTemperature='" + strTemperature + '\'' +
+                    '}';
+        }
     }
 
     public String getName() {
@@ -171,5 +183,22 @@ public class ElderlyHealthData {
 
     public void setMode(VitalSigns mode) {
         this.mode = mode;
+    }
+
+    @Override
+    public String toString() {
+        return "ElderlyHealthData{" +
+                "name='" + name + '\'' +
+                ", sex='" + sex + '\'' +
+                ", age=" + age +
+                ", livingCondition='" + livingCondition + '\'' +
+                ", disabilityStatus='" + disabilityStatus + '\'' +
+                ", disabilityCondition='" + disabilityCondition + '\'' +
+                ", data='" + data + '\'' +
+                ", avg=" + avg +
+                ", max=" + max +
+                ", lower=" + lower +
+                ", mode=" + mode +
+                '}';
     }
 }

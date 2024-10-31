@@ -36,6 +36,16 @@ public class DeviceUploadingDataTest {
     }
 
     @Test
+    public void testGetElderlyHealthData(){
+        DeviceUploadingData deviceUploadingData = new DeviceUploadingData();
+        deviceUploadingData.setUserInfoId(1849308235669049352L);
+        deviceUploadingData.setCommand("health");
+        deviceUploadingData.setCreateTime(new Date());
+        ElderlyHealthData elderlyHealthData = deviceUploadingDataService.getElderlyHealthData(deviceUploadingData);
+        System.out.println(elderlyHealthData);
+
+    }
+    @Test
     public void testGetAIReportData() {
 
         ElderlyHealthData elderlyHealthData = new ElderlyHealthData();

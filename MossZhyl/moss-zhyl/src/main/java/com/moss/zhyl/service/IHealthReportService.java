@@ -58,4 +58,8 @@ public interface IHealthReportService
      * @return 结果
      */
     public int deleteHealthReportByHealthReportId(Long healthReportId);
+
+    /**
+     * 生成健康报告
+     */
 }

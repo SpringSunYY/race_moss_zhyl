@@ -2,6 +2,7 @@ package com.moss.zpai.model;
 
 import com.moss.common.utils.StringUtils;
 import com.moss.common.utils.spring.SpringUtils;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -27,7 +28,6 @@ public class AsyncResponse {
     }
 
     public void setMessage(String message) {
-
         this.message = message;
     }
 

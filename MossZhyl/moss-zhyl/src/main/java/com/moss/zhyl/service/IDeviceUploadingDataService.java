@@ -2,6 +2,7 @@ package com.moss.zhyl.service;
 
 import java.util.List;
 import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
+import com.moss.zhyl.domain.DeviceUploadingData.ElderlyHealthData;
 
 /**
  * 设备上传数据Service接口
@@ -69,4 +70,15 @@ public interface IDeviceUploadingDataService
      * @return: java.util.List<com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData>
      **/
     public List<DeviceUploadingData> selectDeviceUploadingDataListByDays(DeviceUploadingData deviceUploadingData);
+
+    /**
+     * @description: 获取老者健康信息
+     * @author: YY
+     * @method: getElderlyHealthData
+     * @date: 2024/10/31 21:22
+     * @param:
+     * @param: deviceUploadingData
+     * @return: com.moss.zhyl.domain.DeviceUploadingData.ElderlyHealthData
+     **/
+    public ElderlyHealthData getElderlyHealthData(DeviceUploadingData deviceUploadingData);
 }

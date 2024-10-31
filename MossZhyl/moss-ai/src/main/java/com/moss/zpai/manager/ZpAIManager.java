@@ -52,6 +52,7 @@ public class ZpAIManager {
         //构建返回参数
         ModelData responseData = queryModelResultResponse.getData();
         AsyncResponse asyncResponse = new AsyncResponse();
+        asyncResponse.setTotalTokens(responseData.getUsage().getTotalTokens());
         asyncResponse.setRequestId(responseData.getRequestId());
         asyncResponse.setTaskStatus(responseData.getTaskStatus().toString());
         asyncResponse.setCreated(responseData.getCreated());

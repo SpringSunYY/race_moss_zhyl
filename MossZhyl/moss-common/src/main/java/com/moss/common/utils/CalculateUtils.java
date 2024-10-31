@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @Project: MossZhyl
@@ -54,5 +55,26 @@ public class CalculateUtils {
         DateTimeFormatter birthDateF = DateTimeFormatter.ofPattern(BIRTHDAY_DATE_FORMAT);
         //返回生日
         return birthDate.format(birthDateF);
+    }
+
+    /**
+     * @description: 计算众数
+     * @author: YY
+     * @method: getMode
+     * @date: 2024/10/31 21:45
+     * @param:
+     * @param: countMap
+     * @return: T
+     **/
+    public static  <T> T getMode(Map<T, Integer> countMap) {
+        T mode = null;
+        int maxCount = 0;
+        for (Map.Entry<T, Integer> entry : countMap.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                mode = entry.getKey();
+            }
+        }
+        return mode;
     }
 }

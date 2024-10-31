@@ -386,7 +386,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item v-if="this.form.userInfoRole==='elderly'" label="失能情况" prop="disabilityStatus">
               <el-select v-model="form.disabilityStatus" placeholder="请选择失能情况">
                 <el-option
@@ -398,7 +398,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item v-if="this.form.userInfoRole==='elderly'" label="居住情况" prop="livingCondition">
               <el-select v-model="form.livingCondition" placeholder="请选择居住情况">
                 <el-option
@@ -410,7 +410,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item v-if="this.form.userInfoRole==='elderly'" label="登记时间" prop="registrationTime">
               <el-date-picker clearable
                               v-model="form.registrationTime"
@@ -420,9 +420,9 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item v-if="this.form.userInfoRole==='elderly'" label="残疾情况" prop="disabilityCondition">
-              <el-input v-model="form.disabilityCondition" placeholder="请输入残疾情况"/>
+          <el-col :span="24">
+            <el-form-item v-if="this.form.userInfoRole==='elderly'" label="身体状况" prop="disabilityCondition">
+              <el-input v-model="form.disabilityCondition" type="textarea" placeholder="请输入残疾情况"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
