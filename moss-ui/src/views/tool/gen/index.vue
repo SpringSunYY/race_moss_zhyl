@@ -211,7 +211,7 @@
 </template>
 
 <script>
-import { listTable, previewTable, delTable, genCode, synchDb, getGenTable } from '@/api/tool/gen'
+import {listTable, previewTable, delTable, genCode, synchDb, getGenTable} from '@/api/tool/gen'
 import importTable from './importTable'
 import createTable from './createTable'
 import hljs from 'highlight.js/lib/highlight'
@@ -226,7 +226,7 @@ hljs.registerLanguage('sql', require('highlight.js/lib/languages/sql'))
 
 export default {
   name: 'Gen',
-  components: { importTable, createTable },
+  components: {importTable, createTable},
   data() {
     return {
       // 遮罩层
@@ -279,9 +279,9 @@ export default {
   methods: {
     /** 生成数据 */
     handleGenValue(row) {
-      const tableId = row.tableId
+      const tableId = row.tableId || this.ids[0]
       const tableName = row.tableName || this.tableNames[0]
-      const params = { pageNum: this.queryParams.pageNum }
+      const params = {pageNum: this.queryParams.pageNum}
       this.$tab.openPage('生成[' + tableName + ']数据', '/tool/gen-add-value/index/' + tableId, params)
     },
     /** 查询表集合 */
@@ -317,7 +317,7 @@ export default {
     /** 同步数据库操作 */
     handleSynchDb(row) {
       const tableName = row.tableName
-      this.$modal.confirm('确认要强制同步"' + tableName + '"表结构吗？').then(function() {
+      this.$modal.confirm('确认要强制同步"' + tableName + '"表结构吗？').then(function () {
         return synchDb(tableName)
       }).then(() => {
         this.$modal.msgSuccess('同步成功')
@@ -368,13 +368,13 @@ export default {
     handleEditTable(row) {
       const tableId = row.tableId || this.ids[0]
       const tableName = row.tableName || this.tableNames[0]
-      const params = { pageNum: this.queryParams.pageNum }
+      const params = {pageNum: this.queryParams.pageNum}
       this.$tab.openPage('修改[' + tableName + ']生成配置', '/tool/gen-edit/index/' + tableId, params)
     },
     /** 删除按钮操作 */
     handleDelete(row) {
       const tableIds = row.tableId || this.ids
-      this.$modal.confirm('是否确认删除表编号为"' + tableIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除表编号为"' + tableIds + '"的数据项？').then(function () {
         return delTable(tableIds)
       }).then(() => {
         this.getList()

@@ -11,57 +11,80 @@ import com.moss.common.core.domain.BaseEntity;
  * @author YY
  * @date 2024-10-26
  */
-public class DeviceUploadingData extends BaseEntity
-{
+public class DeviceUploadingData extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** 编号 */
+    /**
+     * 编号
+     */
     private Long dataId;
 
-    /** 设备编号 也就是IMEI */
+    /**
+     * 设备编号 也就是IMEI
+     */
     @Excel(name = "设备编号")
     private String deviceId;
 
-    /** 类型 */
+    /**
+     * 类型
+     */
     @Excel(name = "类型")
     private String type;
 
-    /** 命令 */
+    /**
+     * 命令
+     */
     @Excel(name = "命令")
     private String command;
 
-    /** 设备类型 */
+    /**
+     * 设备类型
+     */
     @Excel(name = "设备类型")
     private String deviceType;
 
-    /** 长者 */
+    /**
+     * 长者
+     */
     @Excel(name = "长者")
     private String userInfoName;
     private Long userInfoId;
 
-    /** 对象参数 */
+    /**
+     * 对象参数
+     */
     @Excel(name = "对象参数")
     private String argument;
 
     private Argument argumentData;
 
-    /** 报警类型 */
+    /**
+     * 报警类型
+     */
     @Excel(name = "报警类型")
     private String warningType;
 
-    /** 经度 */
+    /**
+     * 经度
+     */
     @Excel(name = "经度")
     private String lon;
 
-    /** 纬度 */
+    /**
+     * 纬度
+     */
     @Excel(name = "纬度")
     private String lat;
 
-    /** 状态 */
+    /**
+     * 状态
+     */
     @Excel(name = "状态")
     private String processingStatus;
 
-    /** 删除 */
+    /**
+     * 删除
+     */
     @Excel(name = "删除")
     private String delFlag;
 
@@ -73,112 +96,99 @@ public class DeviceUploadingData extends BaseEntity
         this.userInfoName = userInfoName;
     }
 
-    public void setDataId(Long dataId)
-    {
+    public void setDataId(Long dataId) {
         this.dataId = dataId;
     }
 
-    public Long getDataId()
-    {
+    public Long getDataId() {
         return dataId;
     }
-    public void setDeviceId(String deviceId)
-    {
+
+    public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
     }
 
-    public String getDeviceId()
-    {
+    public String getDeviceId() {
         return deviceId;
     }
-    public void setType(String type)
-    {
+
+    public void setType(String type) {
         this.type = type;
     }
 
-    public String getType()
-    {
+    public String getType() {
         return type;
     }
-    public void setCommand(String command)
-    {
+
+    public void setCommand(String command) {
         this.command = command;
     }
 
-    public String getCommand()
-    {
+    public String getCommand() {
         return command;
     }
-    public void setDeviceType(String deviceType)
-    {
+
+    public void setDeviceType(String deviceType) {
         this.deviceType = deviceType;
     }
 
-    public String getDeviceType()
-    {
+    public String getDeviceType() {
         return deviceType;
     }
-    public void setUserInfoId(Long userInfoId)
-    {
+
+    public void setUserInfoId(Long userInfoId) {
         this.userInfoId = userInfoId;
     }
 
-    public Long getUserInfoId()
-    {
+    public Long getUserInfoId() {
         return userInfoId;
     }
-    public void setArgument(String argument)
-    {
+
+    public void setArgument(String argument) {
         this.argument = argument;
     }
 
-    public String getArgument()
-    {
+    public String getArgument() {
         return argument;
     }
-    public void setWarningType(String warningType)
-    {
+
+    public void setWarningType(String warningType) {
         this.warningType = warningType;
     }
 
-    public String getWarningType()
-    {
+    public String getWarningType() {
         return warningType;
     }
-    public void setLon(String lon)
-    {
+
+    public void setLon(String lon) {
         this.lon = lon;
     }
 
-    public String getLon()
-    {
+    public String getLon() {
         return lon;
     }
-    public void setLat(String lat)
-    {
+
+    public void setLat(String lat) {
         this.lat = lat;
     }
 
-    public String getLat()
-    {
+    public String getLat() {
         return lat;
     }
-    public void setProcessingStatus(String processingStatus)
-    {
+
+    public void setProcessingStatus(String processingStatus) {
         this.processingStatus = processingStatus;
     }
 
-    public String getProcessingStatus()
-    {
+    public String getProcessingStatus() {
         return processingStatus;
     }
-    public void setDelFlag(String delFlag)
-    {
+
+    public void setDelFlag(String delFlag) {
         this.delFlag = delFlag;
     }
 
-    public String getDelFlag()
-    {
+    public String getDelFlag() {
         return delFlag;
     }
 
@@ -206,6 +216,7 @@ public class DeviceUploadingData extends BaseEntity
                 ", lat='" + lat + '\'' +
                 ", processingStatus='" + processingStatus + '\'' +
                 ", delFlag='" + delFlag + '\'' +
+                ", createTime'" + getCreateTime() + '\'' +
                 '}';
     }
 }

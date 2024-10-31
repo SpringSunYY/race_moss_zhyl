@@ -1,5 +1,6 @@
 package com.moss.zhyl.service.impl;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.moss.common.exception.ServiceException;
@@ -126,5 +127,10 @@ public class DeviceUploadingDataServiceImpl implements IDeviceUploadingDataServi
     @Override
     public int deleteDeviceUploadingDataByDataId(Long dataId) {
         return deviceUploadingDataMapper.deleteDeviceUploadingDataByDataId(dataId);
+    }
+
+    @Override
+    public List<DeviceUploadingData> selectDeviceUploadingDataListByDays(DeviceUploadingData deviceUploadingData) {
+        return deviceUploadingDataMapper.selectDeviceUploadingDataListByDays(deviceUploadingData);
     }
 }

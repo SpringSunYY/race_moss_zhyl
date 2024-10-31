@@ -68,6 +68,31 @@
         <include refid="selectDeviceUploadingDataVo"/>
         where data_id = #{dataId}
     </select>
+    <select id="selectDeviceUploadingDataListByDays"  resultMap="DeviceUploadingDataResult"
+            parameterType="DeviceUploadingData">
+        <include refid="selectDeviceUploadingDataVo"/>
+        <where>
+            <if test="dataId != null ">and data_id = #{dataId}</if>
+            <if test="deviceId != null  and deviceId != ''">and device_id = #{deviceId}</if>
+            <if test="type != null  and type != ''">and type = #{type}</if>
+            <if test="command != null  and command != ''">and command = #{command}</if>
+            <if test="deviceType != null  and deviceType != ''">and device_type = #{deviceType}</if>
+            <if test="userInfoId != null ">and user_info_id = #{userInfoId}</if>
+            <if test="warningType != null  and warningType != ''">and warning_type = #{warningType}</if>
+            <if test="processingStatus != null  and processingStatus != ''">and processing_status =
+                #{processingStatus}
+            </if>
+            <if test="createTime != null ">and DATE(create_time) = DATE(#{createTime})</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
+                and DATE(create_time) between DATE(#{params.beginCreateTime}) and DATE(DATE_ADD(#{params.endCreateTime}, INTERVAL 1 DAY))
+            </if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''">
+                and DATE(update_time) between DATE(#{params.beginUpdateTime}) and DATE(DATE_ADD(#{params.endUpdateTime}, INTERVAL 1 DAY))
+            </if>
+            <if test="delFlag != null  and delFlag != ''">and del_flag = #{delFlag}</if>
+        </where>
+        order by create_time desc
+    </select>
 
     <insert id="insertDeviceUploadingData" parameterType="DeviceUploadingData">
         insert into yl_device_uploading_data

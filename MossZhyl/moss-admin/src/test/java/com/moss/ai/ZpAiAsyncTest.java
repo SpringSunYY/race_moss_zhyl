@@ -1,4 +1,4 @@
-package com.moss.test;
+package com.moss.ai;
 
 import com.moss.common.utils.StringUtils;
 import com.moss.zpai.manager.ZpAIManager;

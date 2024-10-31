@@ -58,4 +58,15 @@ public interface IDeviceUploadingDataService
      * @return 结果
      */
     public int deleteDeviceUploadingDataByDataId(Long dataId);
+
+    /**
+     * @description: 查询条件时间范围精确为天
+     * @author: YY
+     * @method: selectDeviceUploadingDataListByDays
+     * @date: 2024/10/31 15:49
+     * @param:
+     * @param: deviceUploadingData
+     * @return: java.util.List<com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData>
+     **/
+    public List<DeviceUploadingData> selectDeviceUploadingDataListByDays(DeviceUploadingData deviceUploadingData);
 }
