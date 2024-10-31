@@ -1,5 +1,6 @@
 package com.moss.zhyl.domain.DeviceUploadingData.argument;
 
+import com.alibaba.fastjson2.JSON;
 import com.moss.zhyl.domain.DeviceUploadingData.Argument;
 
 /**
@@ -17,8 +18,12 @@ public class HealthArgument extends Argument {
     private int sdp;             // 高压（收缩压）
     private int oxygen;          // 血氧饱和度
     private String bloodSugar;   // 血糖值
-    private String strTemperature; // 体温
+    private String str_temperature; // 体温
 
+    @Override
+    public HealthArgument jsonFormatObject(String json) {
+        return JSON.parseObject(json,HealthArgument.class);
+    }
     public int getHeartRate() {
         return heartRate;
     }
@@ -59,12 +64,12 @@ public class HealthArgument extends Argument {
         this.bloodSugar = bloodSugar;
     }
 
-    public String getStrTemperature() {
-        return strTemperature;
+    public String getStr_temperature() {
+        return str_temperature;
     }
 
-    public void setStrTemperature(String strTemperature) {
-        this.strTemperature = strTemperature;
+    public void setStr_temperature(String str_temperature) {
+        this.str_temperature = str_temperature;
     }
 
     @Override
@@ -75,7 +80,7 @@ public class HealthArgument extends Argument {
                 ", sdp=" + sdp +
                 ", oxygen=" + oxygen +
                 ", bloodSugar='" + bloodSugar + '\'' +
-                ", strTemperature='" + strTemperature + '\'' +
+                ", strTemperature='" + str_temperature + '\'' +
                 '}';
     }
 }
