@@ -1,5 +1,6 @@
 package com.moss.zhyl;
 
+import com.moss.common.utils.CalculateUtils;
 import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
 import com.moss.zhyl.domain.DeviceUploadingData.ElderlyHealthData;
 import com.moss.zhyl.domain.DeviceUploadingData.argument.HealthArgument;
@@ -27,6 +28,12 @@ import static com.moss.zhyl.domain.enums.DeviceUploadingDataCommandEnum.DEVICE_U
 public class DeviceUploadingDataTest {
     @Autowired
     private IDeviceUploadingDataService deviceUploadingDataService;
+
+    public static void main(String[] args) {
+        String idCard = "522624200211011211";
+        System.out.println(CalculateUtils.calculateBirthdayByIdCard(idCard));
+        System.out.println(CalculateUtils.calculateAgeByIdCard(idCard));
+    }
 
     @Test
     public void testGetAIReportData() {
