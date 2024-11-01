@@ -86,6 +86,51 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectUserInfoVo"/>
         where id_card=#{idCard} and del_flag = #{delFlag}
     </select>
+    <select id="selectUserInfoCount"  parameterType="UserInfo" resultType="java.lang.Long">
+        select count(user_info_id) from yl_user_info
+        <where>
+            <if test="userInfoIds !=null and userInfoIds.length>0">
+                and user_info_id in
+                <foreach item="id" collection="userInfoIds" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="userInfoId != null ">and user_info_id = #{userInfoId}</if>
+            <if test="userInfoName != null  and userInfoName != ''">
+                and user_info_name like concat('%',#{userInfoName},'%')
+            </if>
+            <if test="contactPhone != null  and contactPhone != ''">and contact_phone like concat('%', #{contactPhone},
+                '%')
+            </if>
+            <if test="userInfoProfile != null  and userInfoProfile != ''">and user_info_profile like concat('%',
+                #{userInfoProfile}, '%')
+            </if>
+            <if test="sex != null  and sex != ''">and sex = #{sex}</if>
+            <if test="userInfoRole != null  and userInfoRole != ''">and user_info_role = #{userInfoRole}</if>
+            <if test="password != null  and password != ''">and password = #{password}</if>
+            <if test="education != null ">and education = #{education}</if>
+            <if test="occupation != null  and occupation != ''">and occupation = #{occupation}</if>
+            <if test="addressId != null ">and
+                (address_id = #{addressId}
+                OR address_id IN (
+                SELECT a.address_id
+                FROM yl_address_info AS a
+                WHERE FIND_IN_SET(#{addressId}, ancestors)
+                ))
+            </if>
+            <if test="wxOpenid != null  and wxOpenid != ''">and wx_openid = #{wxOpenid}</if>
+            <if test="miniOpenid != null  and miniOpenid != ''">and mini_openid = #{miniOpenid}</if>
+            <if test="createBy != null  and createBy != ''">and create_by like concat('%', #{createBy}, '%')</if>
+            <if test="updateBy != null  and updateBy != ''">and update_by like concat('%', #{updateBy}, '%')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
+                and create_time between #{params.beginCreateTime} and #{params.endCreateTime}
+            </if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''">
+                and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}
+            </if>
+            <if test="delFlag != null  and delFlag != ''">and del_flag = #{delFlag}</if>
+        </where>
+    </select>
 
     <insert id="insertUserInfo" parameterType="UserInfo">
         insert into yl_user_info

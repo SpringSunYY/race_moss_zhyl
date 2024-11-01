@@ -69,4 +69,16 @@ public interface DeviceUploadingDataMapper {
      * @return: java.util.List<com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData>
      **/
     List<DeviceUploadingData> selectDeviceUploadingDataListByDays(DeviceUploadingData deviceUploadingData);
+
+    /**
+     * description:  查询数据上传总数
+     * author: YY
+     * method: selectDeviceUploadingDataCount
+     * date: 2024/11/1 22:49
+     * param:
+     *
+     * @param: deviceUploadingData
+     * return: java.lang.Long
+     **/
+    Long selectDeviceUploadingDataCount(DeviceUploadingData deviceUploadingData);
 }

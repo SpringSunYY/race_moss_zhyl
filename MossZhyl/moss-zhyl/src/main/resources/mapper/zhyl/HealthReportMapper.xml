@@ -42,7 +42,7 @@
             <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
             <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
         </where>
-        order create_time desc
+        order by create_time desc
     </select>
 
     <select id="selectHealthReportByHealthReportId" parameterType="Long" resultMap="HealthReportResult">

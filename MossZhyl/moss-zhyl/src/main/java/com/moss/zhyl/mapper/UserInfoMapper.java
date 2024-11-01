@@ -63,4 +63,15 @@ public interface UserInfoMapper {
     UserInfo selectUserInfoByPhone(@Param("contactPhone") String contactPhone, @Param("delFlag") String delFlag);
 
     UserInfo selectUserInfoByIdCard(@Param("idCard") String idCard, @Param("delFlag") String delFlag);
+
+    /**
+     * description: 返回查询总数
+     * author: YY
+     * method: selectUserInfoCount
+     * date: 2024/11/1 22:22
+     * param:
+     * @param: userInfo
+     * return: java.util.List<com.moss.zhyl.domain.UserInfo>
+     **/
+    Long selectUserInfoCount(UserInfo userInfo);
 }

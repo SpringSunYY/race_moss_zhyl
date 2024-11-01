@@ -57,6 +57,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectElderlyDeviceBindingVo"/>
         where device_imei = #{deviceImei}
     </select>
+    <select id="selectElderlyDeviceBindingCounts" resultType="java.lang.Long" parameterType="ElderlyDeviceBinding" >
+        select COUNT(binding_id) from yl_elderly_device_binding
+        <where>
+            <if test="bindingId != null "> and binding_id = #{bindingId}</if>
+            <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
+            <if test="deviceId != null "> and device_id = #{deviceId}</if>
+            <if test="deviceType != null  and deviceType != ''"> and device_type = #{deviceType}</if>
+            <if test="deviceImei != null  and deviceImei != ''"> and device_imei like concat('%', #{deviceImei}, '%')</if>
+            <if test="deviceStatus != null  and deviceStatus != ''"> and device_status = #{deviceStatus}</if>
+            <if test="params.beginBindTime != null and params.beginBindTime != '' and params.endBindTime != null and params.endBindTime != ''"> and bind_time between #{params.beginBindTime} and #{params.endBindTime}</if>
+            <if test="params.beginUnbindTime != null and params.beginUnbindTime != '' and params.endUnbindTime != null and params.endUnbindTime != ''"> and unbind_time between #{params.beginUnbindTime} and #{params.endUnbindTime}</if>
+            <if test="bindingStatus != null  and bindingStatus != ''"> and binding_status = #{bindingStatus}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+            <if test="updateBy != null  and updateBy != ''"> and update_by = #{updateBy}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+        </where>
+    </select>
 
     <insert id="insertElderlyDeviceBinding" parameterType="ElderlyDeviceBinding">
         insert into yl_elderly_device_binding
