@@ -260,6 +260,79 @@
 	}
 ```
 
+```json
+{
+  "overallAssessment": "尊敬的ai报告测试用户，2024-10-29至2024-10-31的健康报告已经出炉。根据您的身体情况和数据，您的整体健康状况存在一些需要注意的问题。特别是心率、血压和血糖方面需要重点关注。您的腿部残疾和智力问题也在一定程度上影响了您的健康状况。以下是对各项数据的详细分析和建议。",
+  "detailedAnalysis": {
+    "heartRate": {
+      "currentStatus": "平均心率53次/分钟，最低0次/分钟（数据异常），最高80次/分钟。在您这年龄阶段，正常心率范围应为60-100次/分钟，您的平均心率偏低，最高心率偏高。",
+      "potentialRisks": "低心率可能导致心脏供血不足，出现头晕、乏力等症状；高心率可能增加心脏负担，引发心血管疾病。",
+      "suggestions": [
+        "立即就医，进行心电图等检查，排除心脏疾病。",
+        "保持适当活动，如散步、太极拳等，避免剧烈运动。",
+        "定期监测心率，注意心率变化。"
+      ]
+    },
+    "bloodPressure": {
+      "currentStatus": "平均低压62mmHg，高压91mmHg，最低低压0mmHg（数据异常），最高高压95mmHg。在您这年龄阶段，正常血压范围应为90/60-140/90mmHg，您的低压偏低，高压接近上限。",
+      "potentialRisks": "低血压可能导致头晕、乏力，甚至晕厥；高血压可能增加心血管疾病风险。",
+      "suggestions": [
+        "增加盐分摄入，但需在医生指导下进行。",
+        "适量饮水，避免长时间站立。",
+        "定期监测血压，必要时就医调整用药。"
+      ]
+    },
+    "oxygen": {
+      "currentStatus": "平均血氧89%，最低0%（数据异常），最高99%。在您这年龄阶段，正常血氧饱和度应大于95%，您的平均血氧偏低。",
+      "potentialRisks": "低血氧可能导致组织缺氧，影响器官功能。",
+      "suggestions": [
+        "保持室内空气流通，适当进行深呼吸练习。",
+        "避免长时间卧床，适当活动以促进血液循环。",
+        "定期监测血氧，必要时就医。"
+      ]
+    },
+    "bloodSugar": {
+      "currentStatus": "平均血糖6.74mmol/L，最高7.0mmol/L，最低0.0mmol/L（数据异常）。在您这年龄阶段，正常血糖范围应为3.9-6.1mmol/L，您的平均血糖偏高。",
+      "potentialRisks": "高血糖可能导致糖尿病及其并发症。",
+      "suggestions": [
+        "控制饮食，减少糖分摄入，选择低糖食物。",
+        "定期监测血糖，必要时就医调整用药。",
+        "增加膳食纤维摄入，如全麦面包、燕麦等。"
+      ]
+    },
+    "temperature": {
+      "currentStatus": "平均体温37.08℃，最高37.3℃，最低0.0℃（数据异常）。在您这年龄阶段，正常体温范围应为36.1-37.2℃，您的体温略高。",
+      "potentialRisks": "无明显危险，但需注意是否有感染迹象。",
+      "suggestions": [
+        "保持正常作息，避免过度劳累。",
+        "注意保暖，避免受凉。",
+        "若体温持续升高，及时就医。"
+      ]
+    }
+  },
+  "dietarySuggestions": [
+    "增加富含钾的食物，如香蕉、橙子，有助于维持正常心率。",
+    "选择低糖、高纤维的食物，如全麦面包、燕麦，控制血糖。",
+    "适量摄入优质蛋白质，如鱼、鸡肉，增强体质。",
+    "多吃新鲜蔬菜和水果，补充维生素和矿物质。",
+    "避免高脂肪、高盐食物，减少心血管疾病风险。"
+  ],
+  "exerciseSuggestions": [
+    "每天进行30分钟左右的温和运动，如散步、慢跑。",
+    "练习深呼吸和放松训练，有助于提高血氧水平。",
+    "进行适量的力量训练，如哑铃操，增强肌肉力量。",
+    "避免剧烈运动，以免加重心脏负担。",
+    "根据身体状况，适当调整运动强度和时间。"
+  ],
+  "emergencyHandling": [
+    "若出现紧急情况自己无法做到，请联系相关服务人员。",
+    "若出现严重头晕、乏力、心悸等症状，立即拨打急救电话。",
+    "若血糖、血压出现剧烈波动，及时就医。",
+    "保持紧急联系人的信息畅通，以便及时求助。"
+  ]
+}
+```
+
 ##### 已完成
 
 > 地址管理
@@ -1003,8 +1076,8 @@ CREATE TABLE `yl_consult` (
 | `use_model`        | varchar  | 16   | 否       |                | 使用模型                     |
 | `report_image`     | varchar  | 1024 | 是       |                | 封面                         |
 | `report_content`   | text     |      | 否       |                | 请求内容                     |
-| `report_return`    | text     |      | 否       |                | 报告返回                     |
-| `task_id`          | varchar  | 32   | 否       |                | 任务ID                       |
+| `report_return`    | text     |      | 是       |                | 报告返回                     |
+| `task_id`          | varchar  | 64   | 否       |                | 任务ID                       |
 | `task_status`      | varchar  | 32   | 否       |                | 任务状态                     |
 | `user_info_id`     | bigint   |      | 否       | `user_info_id` | 长者（用户表：user_info_id） |
 | `use_tokens`       | int      |      | 是       |                | tokens                       |
@@ -1030,7 +1103,7 @@ CREATE TABLE `yl_health_report` (
     `report_image` varchar(1024) DEFAULT NULL COMMENT '封面',
     `report_content` text NOT NULL COMMENT '请求内容',
     `report_return` text NOT NULL COMMENT '报告返回',
-    `task_id` varchar(32) NOT NULL COMMENT '任务ID',
+    `task_id` varchar(64) NOT NULL COMMENT '任务ID',
     `task_status` varchar(32) NOT NULL COMMENT '任务状态',
     `user_info_id` bigint NOT NULL COMMENT '长者',
     `use_tokens` int DEFAULT NULL COMMENT 'tokens',

@@ -1,18 +1,13 @@
 package com.moss.zhyl.service.impl;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.moss.common.exception.ServiceException;
 import com.moss.common.utils.CalculateUtils;
 import com.moss.common.utils.DateUtils;
 import com.moss.common.utils.SecurityUtils;
 import com.moss.common.utils.StringUtils;
 import com.moss.common.utils.uuid.IdUtils;
-import com.moss.zhyl.domain.DeviceBrand;
 import com.moss.zhyl.domain.DeviceUploadingData.Argument;
+import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
 import com.moss.zhyl.domain.DeviceUploadingData.ElderlyHealthData;
 import com.moss.zhyl.domain.DeviceUploadingData.argument.HealthArgument;
 import com.moss.zhyl.domain.ElderlyDeviceBinding;
@@ -22,18 +17,19 @@ import com.moss.zhyl.domain.enums.DelFlagEnum;
 import com.moss.zhyl.domain.enums.DisabilityStatusEnum;
 import com.moss.zhyl.domain.enums.LivingConditionEnum;
 import com.moss.zhyl.domain.enums.UserSexEnum;
+import com.moss.zhyl.mapper.DeviceUploadingDataMapper;
+import com.moss.zhyl.service.IDeviceUploadingDataService;
 import com.moss.zhyl.service.IElderlyDeviceBindingService;
 import com.moss.zhyl.service.IUserInfoService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.moss.zhyl.mapper.DeviceUploadingDataMapper;
-import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
-import com.moss.zhyl.service.IDeviceUploadingDataService;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.moss.common.constant.PermissionsConstants.ZHYL_DEVICE_UPLOADING_DATA_LOOK_DELETE;
-import static com.moss.zhyl.domain.enums.DeviceUploadingDataCommandEnum.DEVICE_UPLOADING_DATA_COMMAND_HEALTH;
 
 /**
  * 设备上传数据Service业务层处理
@@ -41,9 +37,9 @@ import static com.moss.zhyl.domain.enums.DeviceUploadingDataCommandEnum.DEVICE_U
  * @author YY
  * @date 2024-10-26
  */
+@Log
 @Service
 public class DeviceUploadingDataServiceImpl implements IDeviceUploadingDataService {
-    private static final Logger log = LoggerFactory.getLogger(DeviceUploadingDataServiceImpl.class);
     @Autowired
     private DeviceUploadingDataMapper deviceUploadingDataMapper;
 
@@ -154,7 +150,10 @@ public class DeviceUploadingDataServiceImpl implements IDeviceUploadingDataServi
         if (!getElderlyBaseInfo(deviceUploadingData, elderlyHealthData)) {
             return null;
         }
-
+        List<DeviceUploadingData> uploadingDataList = deviceUploadingDataMapper.selectDeviceUploadingDataListByDays(deviceUploadingData);
+        if (StringUtils.isEmpty(uploadingDataList)) {
+            return null;
+        }
         // 平均值初始化
         Long avgHeartRate = 0L, avgDbp = 0L, avgSdp = 0L, avgOxygen = 0L;
         Float avgBloodSugar = 0F, avgTemperature = 0F;
@@ -174,11 +173,6 @@ public class DeviceUploadingDataServiceImpl implements IDeviceUploadingDataServi
         Map<Integer, Integer> oxygenCount = new HashMap<>();
         Map<Float, Integer> bloodSugarCount = new HashMap<>();
         Map<Float, Integer> temperatureCount = new HashMap<>();
-
-        List<DeviceUploadingData> uploadingDataList = deviceUploadingDataMapper.selectDeviceUploadingDataListByDays(deviceUploadingData);
-        if (StringUtils.isEmpty(uploadingDataList)) {
-            return null;
-        }
         for (DeviceUploadingData uploadingData : uploadingDataList) {
             HealthArgument healthArgument = new HealthArgument().jsonFormatObject(uploadingData.getArgument());
             int heartRate = healthArgument.getHeartRate();
@@ -234,7 +228,6 @@ public class DeviceUploadingDataServiceImpl implements IDeviceUploadingDataServi
         // 设置最小值
         ElderlyHealthData.VitalSigns lowerSigns = getLower(lowerHeartRate, lowerDbp, lowerSdp, lowerOxygen, lowerBloodSugar, lowerTemperature);
         elderlyHealthData.setLower(lowerSigns);
-
         return elderlyHealthData;
     }
 
@@ -288,6 +281,9 @@ public class DeviceUploadingDataServiceImpl implements IDeviceUploadingDataServi
      **/
     private boolean getElderlyBaseInfo(DeviceUploadingData deviceUploadingData, ElderlyHealthData elderlyHealthData) {
         UserInfoElderlyDto userInfoElderlyDto = userInfoService.selectUserInfoByUserInfoIdResultDto(deviceUploadingData.getUserInfoId());
+        if (StringUtils.isNull(userInfoElderlyDto)) {
+            return false;
+        }
         elderlyHealthData.setName(userInfoElderlyDto.getUserInfoName());
         elderlyHealthData.setAge(CalculateUtils.calculateAgeByIdCard(userInfoElderlyDto.getIdCard()));
         UserSexEnum userSexEnum = UserSexEnum.getEnumByValue(userInfoElderlyDto.getSex());
@@ -309,7 +305,8 @@ public class DeviceUploadingDataServiceImpl implements IDeviceUploadingDataServi
         } else { //是时间范围
             Map<String, Object> params = deviceUploadingData.getParams();
             if (StringUtils.isEmpty(params) || StringUtils.isNull(params.get("beginCreateTime")) || StringUtils.isNull(params.get("endCreateTime"))) {
-                log.info("生成AI健康报告失败：没有传入有效的开始时间和介绍时间");
+                String msg = "ai健康报告出现异常，请传入正确的时间范围！！！";
+                log.info(msg);
                 return false;
             }
             elderlyHealthData.setData(params.get("beginCreateTime").toString() + "----" + params.get("endCreateTime").toString());

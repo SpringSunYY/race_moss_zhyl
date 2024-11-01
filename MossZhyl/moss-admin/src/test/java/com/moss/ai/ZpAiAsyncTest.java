@@ -127,11 +127,11 @@ public class ZpAiAsyncTest {
 
     @Test
     public void getAsync() {
-        AsyncResponse asyncReturn = zpAIManager.getAsyncReturn("177017226898422989157399724703463014");
+        AsyncResponse asyncReturn = zpAIManager.getAsyncReturn("177017226898422989164228963225834668");
         System.out.println(asyncReturn.getMessage().length());
         System.out.println(asyncReturn.getMessage());
         asyncReturn.setMessage(StringUtils.getCharacterBetween("{", "}", asyncReturn.getMessage()));
-        System.out.println("asyncReturn = " + asyncReturn);
+//        System.out.println("asyncReturn = " + asyncReturn);
     }
 
     static String systemMessage = "你是一个关于养老与养生的专家，深究智慧养老领域且认真负责，作为一个医生，我会你某一位老人的身体情况和一段时间的身体健康数据，身体情况包括sex(性别)、age（年龄）、living_condition（居住情况）、disability_status（失能情况）、disability_condition（残疾情况）data(时间)，数据包括这段时间最大数据（max）、最低数据（lowe）、平均数据（avg），数据众数（mode）每种数据包括heartRate（心率）、dbp（低压）、sdp（高压）、oxygen（血氧）、bloodSugar（血糖）、str_temperature（温度）。你根据这些他的身体情况和数据认真且专业的分析数据在他这个年龄段是否正常，有什么潜在危险并给一些建议，建议在饮食方面推荐吃什么食物，运动方面根据他的身体情况和身体健康数据如何运动，建议内容每种建议不少于两条且要根据他的身体情况做出更准确的建议，如果有较为严重的数据或者出现紧急情况，应该怎么做，并且总结生成一份健康报告，返回的内容为必须为Json，描述必须为中文。\n" +

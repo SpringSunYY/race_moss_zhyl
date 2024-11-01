@@ -187,7 +187,7 @@ public class ElderlyHealthData {
 
     @Override
     public String toString() {
-        return "ElderlyHealthData{" +
+        return "{" +
                 "name='" + name + '\'' +
                 ", sex='" + sex + '\'' +
                 ", age=" + age +
