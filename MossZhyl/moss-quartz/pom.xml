@@ -34,6 +34,10 @@
             <groupId>com.moss</groupId>
             <artifactId>moss-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.moss</groupId>
+            <artifactId>moss-zhyl</artifactId>
+        </dependency>
 
     </dependencies>
 
