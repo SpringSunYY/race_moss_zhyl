@@ -1,19 +1,19 @@
 package com.moss.zhyl.mapper;
 
-import java.util.List;
 import com.moss.zhyl.domain.HealthReport;
+
+import java.util.List;
 
 /**
  * 健康报告Mapper接口
- * 
+ *
  * @author YY
  * @date 2024-10-23
  */
-public interface HealthReportMapper 
-{
+public interface HealthReportMapper {
     /**
      * 查询健康报告
-     * 
+     *
      * @param healthReportId 健康报告主键
      * @return 健康报告
      */
@@ -21,7 +21,7 @@ public interface HealthReportMapper
 
     /**
      * 查询健康报告列表
-     * 
+     *
      * @param healthReport 健康报告
      * @return 健康报告集合
      */
@@ -29,7 +29,7 @@ public interface HealthReportMapper
 
     /**
      * 新增健康报告
-     * 
+     *
      * @param healthReport 健康报告
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface HealthReportMapper
 
     /**
      * 修改健康报告
-     * 
+     *
      * @param healthReport 健康报告
      * @return 结果
      */
@@ -45,7 +45,7 @@ public interface HealthReportMapper
 
     /**
      * 删除健康报告
-     * 
+     *
      * @param healthReportId 健康报告主键
      * @return 结果
      */
@@ -53,7 +53,7 @@ public interface HealthReportMapper
 
     /**
      * 批量删除健康报告
-     * 
+     *
      * @param healthReportIds 需要删除的数据主键集合
      * @return 结果
      */

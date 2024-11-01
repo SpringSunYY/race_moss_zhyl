@@ -32,4 +32,19 @@ public class ReportTask {
         System.out.println("threads = " + threads);
         aiService.AIGenerateHealthReport(threads);
     }
+
+    /**
+     * description:
+     * author: YY
+     * method: GetAIGenerateHealthReportResult
+     * date: 2024/11/1 21:30
+     * param:
+     *
+     * @param: threads 线程数
+     * return: void
+     **/
+    public void GetAIGenerateHealthReportResult(Integer threads) {
+        System.out.println("threads = " + threads);
+        aiService.GetAIGenerateHealthReportResult(threads);
+    }
 }

@@ -35,4 +35,8 @@ public class PermissionsConstants {
      * 查看设备上传数据删除
      */
     public static final String ZHYL_DEVICE_UPLOADING_DATA_LOOK_DELETE="zhyl:deviceUploadingData:lookDelete";
+    /**
+     * 查看健康数据删除
+     */
+    public static final String ZHYL_HEALTH_REPORT_LOOK_DELETE = "zhyl:healthReport:lookDelete";
 }

@@ -309,7 +309,7 @@ public class DeviceUploadingDataServiceImpl implements IDeviceUploadingDataServi
                 log.info(msg);
                 return false;
             }
-            elderlyHealthData.setData(params.get("beginCreateTime").toString() + "----" + params.get("endCreateTime").toString());
+            elderlyHealthData.setData(params.get("beginCreateTime").toString() + "——" + params.get("endCreateTime").toString());
         }
         return true;
     }

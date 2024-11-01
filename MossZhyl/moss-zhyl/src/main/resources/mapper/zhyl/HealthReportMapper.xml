@@ -42,6 +42,7 @@
             <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
             <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
         </where>
+        order create_time desc
     </select>
 
     <select id="selectHealthReportByHealthReportId" parameterType="Long" resultMap="HealthReportResult">
@@ -115,11 +116,11 @@
     </update>
 
     <delete id="deleteHealthReportByHealthReportId" parameterType="Long">
-        delete from yl_health_report where health_report_id = #{healthReportId}
+        update yl_health_report set del_flag = '1' where health_report_id = #{healthReportId}
     </delete>
 
     <delete id="deleteHealthReportByHealthReportIds" parameterType="String">
-        delete from yl_health_report where health_report_id in
+        update yl_health_report set del_flag = '1' where health_report_id in
         <foreach item="healthReportId" collection="array" open="(" separator="," close=")">
             #{healthReportId}
         </foreach>

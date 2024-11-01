@@ -1,4 +1,4 @@
-package com.moss.zhyl.strategy.deviceUploadingDataStrategy.saveStrategy.impl;
+package com.moss.zhyl.service.impl;
 
 import com.moss.common.utils.StringUtils;
 import com.moss.common.utils.uuid.IdUtils;
@@ -14,9 +14,10 @@ import com.moss.zhyl.mapper.HealthReportMapper;
 import com.moss.zhyl.mapper.UserInfoMapper;
 import com.moss.zhyl.service.IAIService;
 import com.moss.zhyl.service.IDeviceUploadingDataService;
-import com.moss.zhyl.service.IHealthReportService;
 import com.moss.zpai.manager.ZpAIManager;
+import com.moss.zpai.model.AsyncResponse;
 import com.moss.zpai.model.AsyncReturnData;
+import com.moss.zpai.model.enums.AsyncReportTaskStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -171,7 +172,7 @@ public class AIServiceImpl implements IAIService {
         userInfo.setUserInfoRole(UserInfoRoleEnum.ELDERLY.getValue());
         List<UserInfo> userInfos = userInfoMapper.selectUserInfoList(userInfo);
         //使用多线程的方式
-        // 自定义线程池（IO 密集型线程池）
+        // 自定义线程池
         ThreadPoolExecutor customExecutor = new ThreadPoolExecutor(
                 threads,             // 核心线程数
                 5 * threads,                        // 最大线程数
@@ -214,7 +215,7 @@ public class AIServiceImpl implements IAIService {
                     healthReport.setUserInfoId(info.getUserInfoId());
                     healthReport.setCreateTime(new Date());
                     healthReport.setDelFlag(DelFlagEnum.DEL_FLAG_0.getValue());
-                    healthReport.setCreateBy("智普AI--"+asyncReturnData.getModel());
+                    healthReport.setCreateBy("智普AI--" + asyncReturnData.getModel());
                     healthReport.setReportType(HealthReportTypeEnum.HEALTH_REPORT_TYPE_DATA.getValue());
                     healthReport.setTaskId(asyncReturnData.getId());
                     healthReportMapper.insertHealthReport(healthReport);
@@ -223,13 +224,55 @@ public class AIServiceImpl implements IAIService {
                     log.error("生成健康报告失败：{}", e.getMessage());
                 }
             }, customExecutor);
+            futures.add(future);
         }
+        // 等待所有批次完成操作
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        // 关闭线程池
+        customExecutor.shutdown();
     }
 
     @Override
-    public void GetAIGenerateHealthReportResult() {
+    public void GetAIGenerateHealthReportResult(Integer threads) {
         //1、查询任务状态还是没有完成的结果
-        //2、获取任务结果
+        HealthReport healthReport = new HealthReport();
+        healthReport.setTaskStatus(AsyncReportTaskStatusEnum.HEALTH_REPORT_TASK_STATUS_PROCESSING.getValue());
+        List<HealthReport> healthReportList = healthReportMapper.selectHealthReportList(healthReport);
+        //使用多线程的方式
+        // 自定义线程池
+        ThreadPoolExecutor customExecutor = new ThreadPoolExecutor(
+                threads,             // 核心线程数
+                5 * threads,                        // 最大线程数
+                60L,                       // 线程空闲存活时间
+                TimeUnit.SECONDS,           // 存活时间单位
+                new LinkedBlockingQueue<>(10000),  // 阻塞队列容量
+                new ThreadPoolExecutor.CallerRunsPolicy() // 拒绝策略：由调用线程处理任务
+        );
+        // 保存所有批次任务
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+        for (HealthReport report : healthReportList) {
+            //2、获取任务结果
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                try {
+                    AsyncResponse asyncReturn = zpAIManager.getAsyncReturn(report.getTaskId());
+                    report.setTaskStatus(asyncReturn.getTaskStatus());
+                    report.setReportReturn(StringUtils.getCharacterBetween("{", "}", asyncReturn.getMessage()));
+                    report.setUseTokens(asyncReturn.getTotalTokens());
+                    report.setUpdateTime(new Date());
+                    report.setUseModel(asyncReturn.getModel());
+                    report.setAccomplishTime(new Date());
+                    healthReportMapper.updateHealthReport(report);
+                } catch (Exception e) {
+                    // TODO 需要完成如果出现错误应该怎么办
+                    log.error("获取生成健康报告失败：{}", e.getMessage());
+                }
+            }, customExecutor);
+            futures.add(future);
+        }
         //3、保存任务信息
+        // 等待所有批次完成操作
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        // 关闭线程池
+        customExecutor.shutdown();
     }
 }

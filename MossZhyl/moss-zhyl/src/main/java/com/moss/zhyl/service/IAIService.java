@@ -20,7 +20,8 @@ public interface IAIService {
      * method: GetAIGenerateHealthReportResult
      * date: 2024/11/1 15:11
      * param:
+     * @param threads 线程数
      * return: void
      **/
-    public void GetAIGenerateHealthReportResult();
+    public void GetAIGenerateHealthReportResult(Integer threads);
 }
