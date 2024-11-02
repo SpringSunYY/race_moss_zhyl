@@ -1,34 +1,54 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moss.zhyl.mapper.UserInfoMapper">
-    
+
     <resultMap type="UserInfo" id="UserInfoResult">
-        <result property="userInfoId"    column="user_info_id"    />
-        <result property="userInfoName"    column="user_info_name"    />
-        <result property="contactPhone"    column="contact_phone"    />
-        <result property="userInfoProfile"    column="user_info_profile"    />
-        <result property="userInfoRole"    column="user_info_role"    />
-        <result property="idCard"    column="id_card"    />
-        <result property="education"    column="education"    />
-        <result property="occupation"    column="occupation"    />
-        <result property="addressId"    column="address_id"    />
-        <result property="areaDetail"    column="area_detail"    />
-        <result property="wxOpenid"    column="wx_openid"    />
-        <result property="miniOpenid"    column="mini_openid"    />
-        <result property="remark"    column="remark"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="delFlag"    column="del_flag"    />
-        <result property="sex"    column="sex"    />
-        <result property="password"    column="password"    />
+        <result property="userInfoId" column="user_info_id"/>
+        <result property="userInfoName" column="user_info_name"/>
+        <result property="contactPhone" column="contact_phone"/>
+        <result property="userInfoProfile" column="user_info_profile"/>
+        <result property="userInfoRole" column="user_info_role"/>
+        <result property="idCard" column="id_card"/>
+        <result property="education" column="education"/>
+        <result property="occupation" column="occupation"/>
+        <result property="addressId" column="address_id"/>
+        <result property="areaDetail" column="area_detail"/>
+        <result property="wxOpenid" column="wx_openid"/>
+        <result property="miniOpenid" column="mini_openid"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="sex" column="sex"/>
+        <result property="password" column="password"/>
     </resultMap>
 
     <sql id="selectUserInfoVo">
-        select user_info_id, user_info_name, contact_phone, user_info_profile, user_info_role, sex, password, id_card, education, occupation, address_id, area_detail, wx_openid, mini_openid,remark, create_by, update_by, create_time, update_time, del_flag from yl_user_info
+        select user_info_id,
+               user_info_name,
+               contact_phone,
+               user_info_profile,
+               user_info_role,
+               sex,
+               password,
+               id_card,
+               education,
+               occupation,
+               address_id,
+               area_detail,
+               wx_openid,
+               mini_openid,
+               remark,
+               create_by,
+               update_by,
+               create_time,
+               update_time,
+               del_flag
+        from yl_user_info
     </sql>
 
     <select id="selectUserInfoList" parameterType="UserInfo" resultMap="UserInfoResult">
@@ -40,15 +60,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                     #{id}
                 </foreach>
             </if>
-            <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
+            <if test="userInfoId != null ">and user_info_id = #{userInfoId}</if>
             <if test="userInfoName != null  and userInfoName != ''">
                 and user_info_name like concat('%',#{userInfoName},'%')
             </if>
-            <if test="contactPhone != null  and contactPhone != ''"> and contact_phone like concat('%', #{contactPhone}, '%')</if>
-            <if test="userInfoProfile != null  and userInfoProfile != ''"> and user_info_profile like concat('%', #{userInfoProfile}, '%')</if>
-            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
-            <if test="userInfoRole != null  and userInfoRole != ''"> and user_info_role = #{userInfoRole}</if>
-            <if test="password != null  and password != ''"> and password = #{password}</if>
+            <if test="contactPhone != null  and contactPhone != ''">and contact_phone like concat('%', #{contactPhone},
+                '%')
+            </if>
+            <if test="userInfoProfile != null  and userInfoProfile != ''">and user_info_profile like concat('%',
+                #{userInfoProfile}, '%')
+            </if>
+            <if test="sex != null  and sex != ''">and sex = #{sex}</if>
+            <if test="userInfoRole != null  and userInfoRole != ''">and user_info_role = #{userInfoRole}</if>
+            <if test="password != null  and password != ''">and password = #{password}</if>
             <if test="education != null ">and education = #{education}</if>
             <if test="occupation != null  and occupation != ''">and occupation = #{occupation}</if>
             <if test="addressId != null ">and
@@ -73,7 +97,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
         order by create_time desc
     </select>
-    
+
     <select id="selectUserInfoByUserInfoId" parameterType="Long" resultMap="UserInfoResult">
         <include refid="selectUserInfoVo"/>
         where user_info_id = #{userInfoId}
@@ -86,7 +110,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectUserInfoVo"/>
         where id_card=#{idCard} and del_flag = #{delFlag}
     </select>
-    <select id="selectUserInfoCount"  parameterType="UserInfo" resultType="java.lang.Long">
+    <select id="selectUserInfoCount" parameterType="UserInfo" resultType="java.lang.Long">
         select count(user_info_id) from yl_user_info
         <where>
             <if test="userInfoIds !=null and userInfoIds.length>0">
@@ -131,6 +155,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="delFlag != null  and delFlag != ''">and del_flag = #{delFlag}</if>
         </where>
     </select>
+    <select id="staticByCreateTimeCounts" resultType="com.moss.zhyl.domain.statics.ro.StaticRo"
+            parameterType="UserInfo">
+        WITH RECURSIVE date_range AS (
+        SELECT DATE(#{params.beginCreateTime}) AS date
+        UNION ALL
+        SELECT DATE_ADD(date, INTERVAL 1 DAY)
+        FROM date_range
+        WHERE DATE_ADD(date, INTERVAL 1 DAY) &lt;= DATE(#{params.endCreateTime})
+        )
+        SELECT date_range.date AS name,
+        COALESCE(user_counts.total_created, 0) AS total
+        FROM date_range
+        LEFT JOIN (
+        SELECT DATE(create_time) AS create_date,
+        COUNT(*) AS total_created
+        FROM yl_user_info
+        WHERE create_time BETWEEN #{params.beginCreateTime} AND #{params.endCreateTime}
+        <if test="delFlag != null and delFlag == '0'">
+            AND del_flag = #{delFlag}
+        </if>
+        <if test="userInfoRole != null and userInfoRole == 'elderly'">
+            AND user_info_role = #{userInfoRole}
+        </if>
+        GROUP BY DATE(create_time)
+        ) AS user_counts ON date_range.date = user_counts.create_date
+        ORDER BY date_range.date;
+    </select>
+
 
     <insert id="insertUserInfo" parameterType="UserInfo">
         insert into yl_user_info
@@ -208,7 +260,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <delete id="deleteUserInfoByUserInfoId" parameterType="Long">
-        update yl_user_info set del_flag='1' where user_info_id = #{userInfoId}
+        update yl_user_info
+        set del_flag='1'
+        where user_info_id = #{userInfoId}
     </delete>
 
     <delete id="deleteUserInfoByUserInfoIds" parameterType="String">

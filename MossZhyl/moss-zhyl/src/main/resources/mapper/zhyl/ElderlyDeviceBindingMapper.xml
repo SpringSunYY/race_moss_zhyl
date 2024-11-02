@@ -77,6 +77,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
         </where>
     </select>
+    <select id="staticByCreateTimeCounts" resultType="com.moss.zhyl.domain.statics.ro.StaticRo" parameterType="ElderlyDeviceBinding">
+        WITH RECURSIVE date_range AS (SELECT DATE(#{params.beginCreateTime}) AS date
+        UNION ALL
+        SELECT DATE_ADD(date, INTERVAL 1 DAY)
+        FROM date_range
+        WHERE DATE_ADD(date, INTERVAL 1 DAY) &lt;= DATE(#{params.endCreateTime}))
+        SELECT date_range.date AS name,
+        COALESCE(binding_counts.total_created, 0) AS total
+        FROM date_range
+        LEFT JOIN (SELECT DATE(create_time) AS create_date,
+        COUNT(*) AS total_created
+        FROM yl_elderly_device_binding
+        WHERE create_time BETWEEN #{params.beginCreateTime} AND #{params.endCreateTime}
+        <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
+        <if test="deviceId != null "> and device_id = #{deviceId}</if>
+        <if test="deviceType != null  and deviceType != ''"> and device_type = #{deviceType}</if>
+        <if test="deviceImei != null  and deviceImei != ''"> and device_imei like concat('%', #{deviceImei}, '%')</if>
+        <if test="deviceStatus != null  and deviceStatus != ''"> and device_status = #{deviceStatus}</if>
+        <if test="bindingStatus != null  and bindingStatus != ''"> and binding_status = #{bindingStatus}</if>
+        GROUP BY DATE(create_time)) AS binding_counts ON date_range.date = binding_counts.create_date
+        ORDER BY date_range.date;
+    </select>
 
     <insert id="insertElderlyDeviceBinding" parameterType="ElderlyDeviceBinding">
         insert into yl_elderly_device_binding

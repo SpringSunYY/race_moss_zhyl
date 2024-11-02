@@ -2,7 +2,9 @@ package com.moss.zhyl.mapper;
 
 import java.util.List;
 
+import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
 import com.moss.zhyl.domain.ElderlyDeviceBinding;
+import com.moss.zhyl.domain.statics.ro.StaticRo;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -82,4 +84,16 @@ public interface ElderlyDeviceBindingMapper {
      * return: java.lang.Long
      **/
     Long selectElderlyDeviceBindingCounts(ElderlyDeviceBinding binding);
+
+
+    /**
+     * description: 根据创建时间查询每日创建总数
+     * author: YY
+     * method: staticByCreateTimeCounts
+     * date: 2024/11/2 14:57
+     * param:
+     * @param: elderlyDeviceBinding
+     * return: java.util.List<com.moss.zhyl.domain.statics.ro.StaticRo>
+     **/
+    List<StaticRo> staticByCreateTimeCounts(ElderlyDeviceBinding elderlyDeviceBinding);
 }

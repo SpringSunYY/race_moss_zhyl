@@ -8,7 +8,7 @@ import com.moss.zhyl.domain.enums.DelFlagEnum;
 import com.moss.zhyl.domain.enums.DeviceUploadingDataCommandEnum;
 import com.moss.zhyl.domain.enums.ProcessingStatusEnum;
 import com.moss.zhyl.domain.enums.UserInfoRoleEnum;
-import com.moss.zhyl.domain.statics.CountStatics;
+import com.moss.zhyl.domain.statics.vo.CountStaticVo;
 import com.moss.zhyl.mapper.DeviceUploadingDataMapper;
 import com.moss.zhyl.mapper.ElderlyDeviceBindingMapper;
 import com.moss.zhyl.mapper.UserInfoMapper;
@@ -38,8 +38,8 @@ public class StaticsServiceImpl implements IStaticsService {
     private ElderlyDeviceBindingMapper elderlyDeviceBindingMapper;
 
     @Override
-    public CountStatics getCounts() {
-        CountStatics countStatics = new CountStatics();
+    public CountStaticVo getCounts() {
+        CountStaticVo countStatics = new CountStaticVo();
         UserInfo elderly = new UserInfo();
         elderly.setDelFlag(DelFlagEnum.DEL_FLAG_0.getValue());
         elderly.setUserInfoRole(UserInfoRoleEnum.ELDERLY.getValue());

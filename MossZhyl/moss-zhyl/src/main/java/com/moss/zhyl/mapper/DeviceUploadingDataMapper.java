@@ -3,6 +3,8 @@ package com.moss.zhyl.mapper;
 import java.util.List;
 
 import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
+import com.moss.zhyl.domain.UserInfo;
+import com.moss.zhyl.domain.statics.ro.StaticRo;
 
 /**
  * 设备上传数据Mapper接口
@@ -81,4 +83,15 @@ public interface DeviceUploadingDataMapper {
      * return: java.lang.Long
      **/
     Long selectDeviceUploadingDataCount(DeviceUploadingData deviceUploadingData);
+
+    /**
+     * description: 根据创建时间查询每日创建总数
+     * author: YY
+     * method: staticByCreateTimeCounts
+     * date: 2024/11/2 14:57
+     * param:
+     * @param: deviceUploadingData
+     * return: java.util.List<com.moss.zhyl.domain.statics.ro.StaticRo>
+     **/
+    List<StaticRo> staticByCreateTimeCounts(DeviceUploadingData deviceUploadingData);
 }

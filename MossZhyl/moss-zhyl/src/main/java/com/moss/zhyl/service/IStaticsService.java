@@ -1,6 +1,6 @@
 package com.moss.zhyl.service;
 
-import com.moss.zhyl.domain.statics.CountStatics;
+import com.moss.zhyl.domain.statics.vo.CountStaticVo;
 
 /**
  * Project: MossZhyl
@@ -19,5 +19,5 @@ public interface IStaticsService {
      * param:
      * return: com.moss.zhyl.domain.statics.CountStatics
      **/
-    public CountStatics getCounts();
+    public CountStaticVo getCounts();
 }
