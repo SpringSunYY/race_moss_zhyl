@@ -8,7 +8,9 @@ import com.moss.zhyl.domain.enums.DelFlagEnum;
 import com.moss.zhyl.domain.enums.DeviceUploadingDataCommandEnum;
 import com.moss.zhyl.domain.enums.ProcessingStatusEnum;
 import com.moss.zhyl.domain.enums.UserInfoRoleEnum;
+import com.moss.zhyl.domain.statics.ro.StaticRo;
 import com.moss.zhyl.domain.statics.vo.CountStaticVo;
+import com.moss.zhyl.domain.statics.vo.LineStaticVo;
 import com.moss.zhyl.mapper.DeviceUploadingDataMapper;
 import com.moss.zhyl.mapper.ElderlyDeviceBindingMapper;
 import com.moss.zhyl.mapper.UserInfoMapper;
@@ -17,7 +19,10 @@ import com.moss.zhyl.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Project: MossZhyl
@@ -64,5 +69,97 @@ public class StaticsServiceImpl implements IStaticsService {
         Long deviceCounts=elderlyDeviceBindingMapper.selectElderlyDeviceBindingCounts(binding);
         countStatics.setDeviceCounts(deviceCounts);
         return countStatics;
+    }
+
+    @Override
+    public LineStaticVo getUserinfoFamilyStaticByCreateTimeCounts(UserInfo userInfo) {
+        LineStaticVo lineStaticVo = new LineStaticVo();
+        List<String> names = new ArrayList<>();
+        List<Long> totals = new ArrayList<>();
+
+        //查询条件写死
+        userInfo.setDelFlag(DelFlagEnum.DEL_FLAG_0.getValue());
+        userInfo.setUserInfoRole(UserInfoRoleEnum.ELDERLY_FAMILY.getValue());
+        Map<String, Object> params = new HashMap<>();
+        // TODO 时间写死
+        params.put("beginCreateTime", "2024-11-07");
+        params.put("endCreateTime", "2024-11-16");
+        userInfo.setParams(params);
+        List<StaticRo> staticRos = userInfoMapper.staticByCreateTimeCounts(userInfo);
+        for (StaticRo staticRo : staticRos) {
+            names.add(staticRo.getName());
+            totals.add(staticRo.getTotal());
+            System.err.println(staticRo);
+        }
+        lineStaticVo.setNames(names);
+        lineStaticVo.setTotals(totals);
+        return lineStaticVo;
+    }
+
+    @Override
+    public LineStaticVo getUserinfoElderlyStaticByCreateTimeCounts(UserInfo userInfo) {
+        LineStaticVo lineStaticVo = new LineStaticVo();
+        List<String> names = new ArrayList<>();
+        List<Long> totals = new ArrayList<>();
+
+        //查询条件写死
+        userInfo.setDelFlag(DelFlagEnum.DEL_FLAG_0.getValue());
+        userInfo.setUserInfoRole(UserInfoRoleEnum.ELDERLY.getValue());
+        Map<String, Object> params = new HashMap<>();
+        // TODO 时间写死
+        params.put("beginCreateTime", "2024-11-07");
+        params.put("endCreateTime", "2024-11-16");
+        userInfo.setParams(params);
+        List<StaticRo> staticRos = userInfoMapper.staticByCreateTimeCounts(userInfo);
+        for (StaticRo staticRo : staticRos) {
+            names.add(staticRo.getName());
+            totals.add(staticRo.getTotal());
+        }
+        lineStaticVo.setNames(names);
+        lineStaticVo.setTotals(totals);
+        return lineStaticVo;
+    }
+
+    @Override
+    public LineStaticVo getUploadingDateStaticByCreateTimeCounts(DeviceUploadingData deviceUploadingData) {
+        LineStaticVo lineStaticVo = new LineStaticVo();
+        List<String> names = new ArrayList<>();
+        List<Long> totals = new ArrayList<>();
+
+        deviceUploadingData.setCommand(DeviceUploadingDataCommandEnum.DEVICE_UPLOADING_DATA_COMMAND_WARNING.getValue());
+        deviceUploadingData.setDelFlag(DelFlagEnum.DEL_FLAG_0.getValue());
+        Map<String, Object> params = new HashMap<>();
+        params.put("beginCreateTime", "2024-10-22");
+        params.put("endCreateTime", "2024-10-29");
+        deviceUploadingData.setParams(params);
+        List<StaticRo> staticRos = deviceUploadingDataMapper.staticByCreateTimeCounts(deviceUploadingData);
+        for (StaticRo staticRo : staticRos) {
+            names.add(staticRo.getName());
+            totals.add(staticRo.getTotal());
+        }
+        lineStaticVo.setNames(names);
+        lineStaticVo.setTotals(totals);
+        return lineStaticVo;
+    }
+
+    @Override
+    public LineStaticVo getBindingStaticByCreateTimeCounts(ElderlyDeviceBinding elderlyDeviceBinding) {
+        LineStaticVo lineStaticVo = new LineStaticVo();
+        List<String> names = new ArrayList<>();
+        List<Long> totals = new ArrayList<>();
+
+        elderlyDeviceBinding.setDelFlag(DelFlagEnum.DEL_FLAG_0.getValue());
+        Map<String, Object> params = new HashMap<>();
+        params.put("beginCreateTime", "2024-10-22");
+        params.put("endCreateTime", "2024-10-30");
+        elderlyDeviceBinding.setParams(params);
+        List<StaticRo> staticRos = elderlyDeviceBindingMapper.staticByCreateTimeCounts(elderlyDeviceBinding);
+        for (StaticRo staticRo : staticRos) {
+            names.add(staticRo.getName());
+            totals.add(staticRo.getTotal());
+        }
+        lineStaticVo.setNames(names);
+        lineStaticVo.setTotals(totals);
+        return lineStaticVo;
     }
 }

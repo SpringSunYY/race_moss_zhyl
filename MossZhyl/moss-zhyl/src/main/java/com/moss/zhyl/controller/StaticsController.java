@@ -2,6 +2,9 @@ package com.moss.zhyl.controller;
 
 import com.moss.common.core.controller.BaseController;
 import com.moss.common.core.domain.AjaxResult;
+import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
+import com.moss.zhyl.domain.ElderlyDeviceBinding;
+import com.moss.zhyl.domain.UserInfo;
 import com.moss.zhyl.service.IStaticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +26,27 @@ public class StaticsController extends BaseController {
     private IStaticsService staticsService;
 
     @GetMapping(value = "/getCounts")
-    public AjaxResult getCounts()
-    {
+    public AjaxResult getCounts() {
         return success(staticsService.getCounts());
+    }
+
+    @GetMapping("/getUserinfoFamilyStaticByCreateTimeCounts")
+    public AjaxResult getUserinfoFamilyStaticByCreateTimeCounts(UserInfo userInfo) {
+        return success(staticsService.getUserinfoFamilyStaticByCreateTimeCounts(userInfo));
+    }
+
+    @GetMapping("/getUserinfoElderlyStaticByCreateTimeCounts")
+    public AjaxResult getUserinfoElderlyStaticByCreateTimeCounts(UserInfo userInfo) {
+        return success(staticsService.getUserinfoElderlyStaticByCreateTimeCounts(userInfo));
+    }
+
+    @GetMapping("/getUploadingDateStaticByCreateTimeCounts")
+    public AjaxResult getUploadingDateStaticByCreateTimeCounts(DeviceUploadingData deviceUploadingData) {
+        return success(staticsService.getUploadingDateStaticByCreateTimeCounts(deviceUploadingData));
+    }
+
+    @GetMapping("/getBindingStaticByCreateTimeCounts")
+    public AjaxResult getBindingStaticByCreateTimeCounts(ElderlyDeviceBinding elderlyDeviceBinding) {
+        return success(staticsService.getBindingStaticByCreateTimeCounts(elderlyDeviceBinding));
     }
 }

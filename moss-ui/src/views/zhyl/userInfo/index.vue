@@ -681,7 +681,6 @@ export default {
     //添加家属
     addElderlyFamilyList() {
       try {
-        console.log('当前 form:', this.form);
         if (!this.form.elderlyFamilyList) {
           this.$set(this.form, 'elderlyFamilyList', []);
         }

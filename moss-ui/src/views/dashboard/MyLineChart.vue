@@ -1,9 +1,10 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <div :class="className" :style="{height:height,width:width}"/>
 </template>
 
 <script>
 import * as echarts from 'echarts'
+
 require('echarts/theme/macarons') // echarts theme
 import resize from './mixins/resize'
 
@@ -30,7 +31,7 @@ export default {
       type: Object,
       required: true
     },
-    name:{
+    name: {
       type: String,
       default: '',
       required: false
@@ -67,10 +68,10 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     },
-    setOptions({ names,totals } = {}) {
+    setOptions({names, totals} = {}) {
       this.chart.setOption({
         xAxis: {
-          type:'category',
+          type: 'category',
           data: names,
           boundaryGap: false,
           axisTick: {
@@ -78,8 +79,8 @@ export default {
           }
         },
         grid: {
-          left: 10,
-          right: 10,
+          left: '5%',  // 增加左侧空白
+          right: '5%', // 增加右侧空白
           bottom: 20,
           top: 30,
           containLabel: true
