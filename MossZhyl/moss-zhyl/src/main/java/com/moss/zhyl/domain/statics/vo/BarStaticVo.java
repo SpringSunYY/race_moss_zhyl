@@ -12,7 +12,6 @@ import java.util.List;
  */
 public class BarStaticVo {
    private List<String> names;
-
     private List<Long> totals;
 
     public List<String> getNames() {

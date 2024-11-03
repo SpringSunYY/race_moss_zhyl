@@ -76,17 +76,17 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="解绑时间">
-        <el-date-picker
-          v-model="daterangeUnbindTime"
-          style="width: 240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
-      </el-form-item>
+<!--      <el-form-item label="解绑时间">-->
+<!--        <el-date-picker-->
+<!--          v-model="daterangeUnbindTime"-->
+<!--          style="width: 240px"-->
+<!--          value-format="yyyy-MM-dd"-->
+<!--          type="daterange"-->
+<!--          range-separator="-"-->
+<!--          start-placeholder="开始日期"-->
+<!--          end-placeholder="结束日期"-->
+<!--        ></el-date-picker>-->
+<!--      </el-form-item>-->
       <el-form-item label="绑定状态" prop="bindingStatus">
         <el-select v-model="queryParams.bindingStatus" placeholder="请选择绑定状态" clearable>
           <el-option
@@ -124,14 +124,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="修改人" prop="updateBy">
-        <el-input
-          v-model="queryParams.updateBy"
-          placeholder="请输入修改人"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="修改人" prop="updateBy">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.updateBy"-->
+<!--          placeholder="请输入修改人"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item label="创建时间">
         <el-date-picker
           v-model="daterangeCreateTime"
@@ -143,17 +143,17 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="修改时间">
-        <el-date-picker
-          v-model="daterangeUpdateTime"
-          style="width: 240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
-      </el-form-item>
+<!--      <el-form-item label="修改时间">-->
+<!--        <el-date-picker-->
+<!--          v-model="daterangeUpdateTime"-->
+<!--          style="width: 240px"-->
+<!--          value-format="yyyy-MM-dd"-->
+<!--          type="daterange"-->
+<!--          range-separator="-"-->
+<!--          start-placeholder="开始日期"-->
+<!--          end-placeholder="结束日期"-->
+<!--        ></el-date-picker>-->
+<!--      </el-form-item>-->
       <!--      <el-form-item label="删除" prop="delFlag">-->
       <!--        <el-select v-model="queryParams.delFlag" placeholder="请选择删除" clearable>-->
       <!--          <el-option-->
@@ -225,6 +225,8 @@
       <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="bindingId"/>
       <el-table-column label="长者" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible"
                        prop="userInfoName"/>
+      <el-table-column label="设备品牌" :show-overflow-tooltip="true" align="center" v-if="columns[16].visible"
+                       prop="brandName"/>
       <el-table-column label="设备" :show-overflow-tooltip="true" align="center" v-if="columns[2].visible"
                        prop="deviceName"/>
       <el-table-column label="设备类型" :show-overflow-tooltip="true" align="center" v-if="columns[3].visible"
@@ -478,6 +480,7 @@ export default {
         {key: 13, label: '创建时间', visible: false},
         {key: 14, label: '修改时间', visible: false},
         {key: 15, label: '删除', visible: false},
+        {key: 16, label: '设备品牌', visible: true},
       ],
       // 遮罩层
       loading: true,
@@ -722,6 +725,9 @@ export default {
       const bindingId = row.bindingId || this.ids
       getElderlyDeviceBinding(bindingId).then(response => {
         this.form = response.data;
+        this.getElderlyUserInfoList()
+        this.getUserServiceList()
+        this.getDeviceList()
         this.open = true;
         this.title = "修改长者设备绑定";
       });

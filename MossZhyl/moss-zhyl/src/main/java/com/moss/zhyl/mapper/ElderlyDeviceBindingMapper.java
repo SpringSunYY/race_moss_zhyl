@@ -96,4 +96,15 @@ public interface ElderlyDeviceBindingMapper {
      * return: java.util.List<com.moss.zhyl.domain.statics.ro.StaticRo>
      **/
     List<StaticRo> staticByCreateTimeCounts(ElderlyDeviceBinding elderlyDeviceBinding);
+
+    /**
+     * description: 获取设备每种类型总数
+     * author: YY
+     * method: getDeviceByDeviceTypeCount
+     * date: 2024/11/3 19:36
+     * param:
+     * @param: elderlyDeviceBinding
+     * return: java.util.List<com.moss.zhyl.domain.statics.ro.StaticRo>
+     **/
+    public List<StaticRo> getDeviceByDeviceTypeCount(ElderlyDeviceBinding elderlyDeviceBinding);
 }

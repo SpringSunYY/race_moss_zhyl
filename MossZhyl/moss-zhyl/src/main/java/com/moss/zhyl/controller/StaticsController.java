@@ -49,4 +49,14 @@ public class StaticsController extends BaseController {
     public AjaxResult getBindingStaticByCreateTimeCounts(ElderlyDeviceBinding elderlyDeviceBinding) {
         return success(staticsService.getBindingStaticByCreateTimeCounts(elderlyDeviceBinding));
     }
+
+    @GetMapping("/getUserInfoElderlyAge")
+    public AjaxResult getUserInfoElderlyAge(UserInfo userInfo) {
+        return success(staticsService.getUserInfoAge(userInfo));
+    }
+
+    @GetMapping("/getDeviceByDeviceTypeCount")
+    public AjaxResult getDeviceByDeviceTypeCount(ElderlyDeviceBinding elderlyDeviceBinding) {
+        return success(staticsService.getDeviceByDeviceTypeCount(elderlyDeviceBinding));
+    }
 }

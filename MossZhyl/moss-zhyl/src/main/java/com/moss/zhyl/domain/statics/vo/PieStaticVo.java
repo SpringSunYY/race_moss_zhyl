@@ -11,10 +11,9 @@ import java.util.List;
  * @Version 1.0
  */
 public class PieStaticVo {
-    private List<String> names;
 
-    private List<Date> dates;
-    public static class Date
+    private List<Data> datas;
+    public static class Data
     {
         private String name;
         private Long value;
@@ -36,21 +35,11 @@ public class PieStaticVo {
         }
     }
 
-    public List<String> getNames() {
-        return names;
+    public List<Data> getDatas() {
+        return datas;
     }
 
-    public void setNames(List<String> names) {
-        this.names = names;
+    public void setDatas(List<Data> datas) {
+        this.datas = datas;
     }
-
-    public List<Date> getDates() {
-        return dates;
-    }
-
-    public void setDates(List<Date> dates) {
-        this.dates = dates;
-    }
-
-
 }

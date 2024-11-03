@@ -749,23 +749,24 @@ CREATE TABLE `yl_device` (
 
 #### 长者设备绑定表：yl_elderly_device_binding
 
-| 字段名           | 数据类型 | 长度 | 是否为空 | 外键           | 备注                     |
-| ---------------- | -------- | ---- | -------- | -------------- | ------------------------ |
-| `binding_id`     | bigint   |      | 否       |                | 编号                     |
-| `user_info_id`   | bigint   |      | 否       | `user_info_id` | 长者(用户表user_info_id) |
-| `device_id`      | bigint   |      | 否       | `device_id`    | 设备（设备表device_id）  |
-| `device_type`    | varchar  | 64   | 否       | `device_type`  | 设备类型                 |
-| `device_imei`    | varchar  | 255  | 否       |                | 设备IMEI号               |
-| `device_status`  | char     | 1    | 否       |                | 设备状态                 |
-| `bind_time`      | datetime |      | 否       |                | 绑定时间                 |
-| `unbind_time`    | datetime |      | 是       |                | 解绑时间                 |
-| `binding_status` | char     | 1    | 否       |                | 绑定状态                 |
-| `user_id`        | bigint   |      | 否       |                | 服务人员                 |
-| `create_by`      | varchar  | 50   | 否       |                | 创建人                   |
-| `update_by`      | varchar  | 50   | 是       |                | 修改人                   |
-| `create_time`    | datetime |      | 否       |                | 创建时间                 |
-| `update_time`    | datetime |      | 是       |                | 修改时间                 |
-| `del_flag`       | char     | 1    | 否       |                | 删除                     |
+| 字段名           | 数据类型 | 长度 | 是否为空 | 外键           | 备注                           |
+| ---------------- | -------- | ---- | -------- | -------------- | ------------------------------ |
+| `binding_id`     | bigint   |      | 否       |                | 编号                           |
+| `user_info_id`   | bigint   |      | 否       | `user_info_id` | 长者(用户表user_info_id)       |
+| `brand_id`       | bigint   |      | 否       | `brand_id`     | 设备品牌（设备品牌表brand_id） |
+| `device_id`      | bigint   |      | 否       | `device_id`    | 设备（设备表device_id）        |
+| `device_type`    | varchar  | 64   | 否       | `device_type`  | 设备类型                       |
+| `device_imei`    | varchar  | 255  | 否       |                | 设备IMEI号                     |
+| `device_status`  | char     | 1    | 否       |                | 设备状态                       |
+| `bind_time`      | datetime |      | 否       |                | 绑定时间                       |
+| `unbind_time`    | datetime |      | 是       |                | 解绑时间                       |
+| `binding_status` | char     | 1    | 否       |                | 绑定状态                       |
+| `user_id`        | bigint   |      | 否       |                | 服务人员                       |
+| `create_by`      | varchar  | 50   | 否       |                | 创建人                         |
+| `update_by`      | varchar  | 50   | 是       |                | 修改人                         |
+| `create_time`    | datetime |      | 否       |                | 创建时间                       |
+| `update_time`    | datetime |      | 是       |                | 修改时间                       |
+| `del_flag`       | char     | 1    | 否       |                | 删除                           |
 
 绑定状态：0绑定，1解绑
 
@@ -779,14 +780,15 @@ CREATE TABLE `yl_device` (
 CREATE TABLE `yl_elderly_device_binding` (
     `binding_id` bigint NOT NULL COMMENT '编号',
     `user_info_id` bigint NOT NULL COMMENT '长者(用户表user_info_id)',
+    `brand_id` bigint NOT NULL COMMENT '设备品牌（设备品牌表brand_id）',
     `device_id` bigint NOT NULL COMMENT '设备（设备表device_id）',
     `device_type` varchar(64) NOT NULL COMMENT '设备类型',
     `device_imei` varchar(255) NOT NULL COMMENT '设备IMEI号',
-    `device_status` char(1)  NOT NULL COMMENT '设备状态'
+    `device_status` char(1) NOT NULL COMMENT '设备状态',
     `bind_time` datetime NOT NULL COMMENT '绑定时间',
     `unbind_time` datetime DEFAULT NULL COMMENT '解绑时间',
     `binding_status` char(1) NOT NULL COMMENT '绑定状态',
-    `user_id` BIGINT NOT NULL COMMENT '服务人员（sys_user:user_id）',
+    `user_id` bigint NOT NULL COMMENT '服务人员',
     `create_by` varchar(50) NOT NULL COMMENT '创建人',
     `update_by` varchar(50) DEFAULT NULL COMMENT '修改人',
     `create_time` datetime NOT NULL COMMENT '创建时间',
@@ -794,8 +796,9 @@ CREATE TABLE `yl_elderly_device_binding` (
     `del_flag` char(1) NOT NULL COMMENT '删除',
     PRIMARY KEY (`binding_id`),
     FOREIGN KEY (`user_info_id`) REFERENCES `yl_user_info`(`user_info_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`brand_id`) REFERENCES `yl_device_brand`(`brand_id`) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (`device_id`) REFERENCES `yl_device`(`device_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (`user_info_id`) REFERENCES `yl_user_info`(`user_info_id`)
+    FOREIGN KEY (`device_type`) REFERENCES `yl_device_type`(`device_type`) ON DELETE SET NULL ON UPDATE CASCADE
 ) COMMENT='长者设备绑定表';
 
 ```

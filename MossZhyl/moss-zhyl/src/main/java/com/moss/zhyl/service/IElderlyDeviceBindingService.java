@@ -2,6 +2,7 @@ package com.moss.zhyl.service;
 
 import java.util.List;
 import com.moss.zhyl.domain.ElderlyDeviceBinding;
+import com.moss.zhyl.domain.statics.ro.StaticRo;
 
 /**
  * 长者设备绑定Service接口

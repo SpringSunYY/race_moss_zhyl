@@ -35,3 +35,19 @@ export function getBindingStaticByCreateTimeCounts(query) {
     params: query
   })
 }
+//获取年龄分布
+export function getUserInfoElderlyAge(query) {
+  return request({
+    url: '/zhyl/statics/getUserInfoElderlyAge',
+    method: 'get',
+    params: query
+  })
+}
+//获取各种设备类型总数
+export function getDeviceByDeviceTypeCount(query) {
+  return request({
+    url: '/zhyl/statics/getDeviceByDeviceTypeCount',
+    method: 'get',
+    params: query
+  })
+}

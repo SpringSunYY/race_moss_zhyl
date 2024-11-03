@@ -12,14 +12,16 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span style="font-size: 24px">预警消息</span>
-            <el-button style="float: right; padding: 3px 0" type="text"  >
+            <el-button style="float: right; padding: 3px 0" type="text">
               <router-link :to="'/alarm/warning'" class="link-type">
                 <span>查看更多</span>
-              </router-link></el-button>
+              </router-link>
+            </el-button>
           </div>
           <ul class="infinite-list" style="overflow: auto; max-height: 300px">
             <div style="position: sticky; top: 0; background: white; z-index: 1;">
-              <el-row :gutter="30" style="width: 100%; font-weight: bold; font-size: 12px; color: #606266; text-align: center;">
+              <el-row :gutter="30"
+                      style="width: 100%; font-weight: bold; font-size: 12px; color: #606266; text-align: center;">
                 <el-col :span="3">
                   <h3 style="font-weight: bold">序号</h3>
                 </el-col>
@@ -59,10 +61,14 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span style="font-size: 24px">长者年纪分布</span>
-            <el-button style="float: right; padding: 3px 0" type="text">查看更多</el-button>
+            <el-button style="float: right; padding: 3px 0" type="text">
+              <router-link :to="'/userInfoManage/userInfo'" class="link-type">
+                <span>查看更多</span>
+              </router-link>
+            </el-button>
           </div>
           <div class="chart-wrapper">
-            <bar-chart/>
+            <my-only-bar-chart bar-name="长者年龄分布" :bar-data="ageDistributionChartData"/>
           </div>
         </el-card>
       </el-col>
@@ -70,7 +76,7 @@
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="24">
         <div class="chart-wrapper" style="height: 500px ">
-          <my-pie-chart style="padding-top: 30px"/>
+          <my-pie-chart :pie-data="deviceTypeChartData" pie-name="设备类型" style="padding-top: 30px"/>
         </div>
       </el-col>
     </el-row>
@@ -87,16 +93,21 @@ import PieChart from './dashboard/PieChart'
 import BarChart from './dashboard/BarChart'
 import MyLineChart from "@/views/dashboard/MyLineChart.vue";
 import {
-  getBindingStaticByCreateTimeCounts, getUploadingDateStaticByCreateTimeCounts,
+  getBindingStaticByCreateTimeCounts,
+  getDeviceByDeviceTypeCount,
+  getUploadingDateStaticByCreateTimeCounts,
+  getUserInfoElderlyAge,
   getUserinfoElderlyStaticByCreateTimeCounts,
   getUserinfoFamilyStaticByCreateTimeCounts
 } from "@/api/zhyl/statics";
 import MyPieChart from "@/views/dashboard/MyPieChart.vue";
 import {listDeviceUploadingData} from "@/api/zhyl/deviceUploadingData";
+import MyOnlyBarChart from "@/views/dashboard/MyOnlyBarChart.vue";
 
 export default {
   name: 'Index',
   components: {
+    MyOnlyBarChart,
     MyPieChart,
     MyLineChart,
     PanelGroup,
@@ -147,7 +158,11 @@ export default {
         updateTime: null,
         delFlag: '0'
       },
-      sosList: []
+      sosList: [],
+      // 年龄分布
+      ageDistributionChartData: {},
+      //设备类型
+      deviceTypeChartData: []
     }
   },
   created() {
@@ -156,8 +171,20 @@ export default {
     this.getBindingLineChartData()
     this.getElderlyLineChartData()
     this.getSosList()
+    this.getAgeDistributionChartData()
+    this.getDeviceTypeChartData()
   },
   methods: {
+    getDeviceTypeChartData() {
+      getDeviceByDeviceTypeCount().then(res=>{
+        this.deviceTypeChartData = res.data.datas
+      })
+    },
+    getAgeDistributionChartData() {
+      getUserInfoElderlyAge().then(res => {
+        this.ageDistributionChartData = res.data
+      })
+    },
     getSosList() {
       listDeviceUploadingData(this.sosQueryParams).then(response => {
         this.sosList = response.rows;

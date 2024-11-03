@@ -22,11 +22,27 @@ export default {
     height: {
       type: String,
       default: '500px'
+    },
+    pieData: {
+      type: Array,
+      required: true
+    },
+    pieName: {
+      type: String,
+      required: true
     }
   },
   data() {
     return {
       chart: null
+    }
+  },
+  watch: {
+    pieData: {
+      deep: true,
+      handler(val) {
+        this.initChart()
+      }
     }
   },
   mounted() {
@@ -86,7 +102,7 @@ export default {
         },
         series: [
           {
-            name: 'Nightingale Chart',
+            name: this.pieName,
             type: 'pie',
             radius: [20, 150],
             center: ['40%', '50%'], // 饼图的位置同样使用百分比
@@ -109,28 +125,7 @@ export default {
               position: 'outside',
               formatter: '{b}: {c} ({d}%)'
             },
-            data: [
-              {value: 40, name: 'rose 1'},
-              {value: 38, name: 'rose 2'},
-              {value: 32, name: 'rose 3'},
-              {value: 30, name: 'rose 4'},
-              {value: 28, name: 'rose 5'},
-              {value: 26, name: 'rose 6'},
-              {value: 22, name: 'rose 7'},
-              {value: 18, name: 'rose 8'},
-              {value: 15, name: 'rose 9'},
-              {value: 12, name: 'rose 10'},
-              {value: 40, name: 'rose 11'},
-              {value: 38, name: 'rose 12'},
-              {value: 32, name: 'rose 13'},
-              {value: 30, name: 'rose 14'},
-              {value: 28, name: 'rose 15'},
-              {value: 26, name: 'rose 16'},
-              {value: 22, name: 'rose 17'},
-              {value: 18, name: 'rose 18'},
-              {value: 15, name: 'rose 19'},
-              {value: 12, name: 'rose 110'}
-            ]
+            data:this.pieData
           }
         ]
       }
