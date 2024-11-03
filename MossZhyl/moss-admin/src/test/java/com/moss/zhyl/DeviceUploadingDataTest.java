@@ -87,15 +87,17 @@ public class DeviceUploadingDataTest {
         Map<Float, Integer> temperatureCount = new HashMap<>();
 
         DeviceUploadingData deviceUploadingData = new DeviceUploadingData();
+        deviceUploadingData.setCreateTime(new Date());
         HashMap<String, Object> params = new HashMap<>();
-        params.put("beginCreateTime", "2024-10-30");
-        params.put("endCreateTime", "2024-10-31");
+        params.put("beginCreateTime", "2024-10-20");
+        params.put("endCreateTime", "2024-10-30");
         deviceUploadingData.setCommand(DEVICE_UPLOADING_DATA_COMMAND_HEALTH.getValue());
         deviceUploadingData.setParams(params);
 
         List<DeviceUploadingData> uploadingDataList = deviceUploadingDataService.selectDeviceUploadingDataListByDays(deviceUploadingData);
 
         for (DeviceUploadingData uploadingData : uploadingDataList) {
+            System.err.println(uploadingData);
             HealthArgument healthArgument = new HealthArgument().jsonFormatObject(uploadingData.getArgument());
             int heartRate = healthArgument.getHeartRate();
             int dbp = healthArgument.getDbp();

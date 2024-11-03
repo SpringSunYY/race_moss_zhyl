@@ -72,24 +72,24 @@ public class StaticsServiceImpl implements IStaticsService {
     }
 
     @Override
-    public LineStaticVo getUserinfoFamilyStaticByCreateTimeCounts(UserInfo userInfo) {
+    public LineStaticVo getUserinfoFamilyStaticByCreateTimeCounts(UserInfo family) {
         LineStaticVo lineStaticVo = new LineStaticVo();
         List<String> names = new ArrayList<>();
         List<Long> totals = new ArrayList<>();
 
         //查询条件写死
-        userInfo.setDelFlag(DelFlagEnum.DEL_FLAG_0.getValue());
-        userInfo.setUserInfoRole(UserInfoRoleEnum.ELDERLY_FAMILY.getValue());
+        family.setDelFlag(DelFlagEnum.DEL_FLAG_0.getValue());
+        family.setUserInfoRole(UserInfoRoleEnum.ELDERLY_FAMILY.getValue());
         Map<String, Object> params = new HashMap<>();
         // TODO 时间写死
-        params.put("beginCreateTime", "2024-11-07");
+        params.put("beginCreateTime", "2024-11-08");
         params.put("endCreateTime", "2024-11-16");
-        userInfo.setParams(params);
-        List<StaticRo> staticRos = userInfoMapper.staticByCreateTimeCounts(userInfo);
+        family.setParams(params);
+        System.err.println(family);
+        List<StaticRo> staticRos = userInfoMapper.staticByCreateTimeCounts(family);
         for (StaticRo staticRo : staticRos) {
             names.add(staticRo.getName());
             totals.add(staticRo.getTotal());
-            System.err.println(staticRo);
         }
         lineStaticVo.setNames(names);
         lineStaticVo.setTotals(totals);
@@ -129,9 +129,10 @@ public class StaticsServiceImpl implements IStaticsService {
         deviceUploadingData.setCommand(DeviceUploadingDataCommandEnum.DEVICE_UPLOADING_DATA_COMMAND_WARNING.getValue());
         deviceUploadingData.setDelFlag(DelFlagEnum.DEL_FLAG_0.getValue());
         Map<String, Object> params = new HashMap<>();
-        params.put("beginCreateTime", "2024-10-22");
-        params.put("endCreateTime", "2024-10-29");
+        params.put("beginCreateTime", "2024-10-24");
+        params.put("endCreateTime", "2024-11-03");
         deviceUploadingData.setParams(params);
+        deviceUploadingData.setDelFlag(DelFlagEnum.DEL_FLAG_0.getValue());
         List<StaticRo> staticRos = deviceUploadingDataMapper.staticByCreateTimeCounts(deviceUploadingData);
         for (StaticRo staticRo : staticRos) {
             names.add(staticRo.getName());

@@ -7,20 +7,70 @@
       <my-line-chart :chart-data="lineChartData" :name="lineChartName"/>
     </el-row>
 
+    <el-row :gutter="32" style="margin-bottom: 32px">
+      <el-col :xs="24" :sm="24" :lg="12">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span style="font-size: 24px">预警消息</span>
+            <el-button style="float: right; padding: 3px 0" type="text"  >
+              <router-link :to="'/alarm/warning'" class="link-type">
+                <span>查看更多</span>
+              </router-link></el-button>
+          </div>
+          <ul class="infinite-list" style="overflow: auto; max-height: 300px">
+            <div style="position: sticky; top: 0; background: white; z-index: 1;">
+              <el-row :gutter="30" style="width: 100%; font-weight: bold; font-size: 12px; color: #606266; text-align: center;">
+                <el-col :span="3">
+                  <h3 style="font-weight: bold">序号</h3>
+                </el-col>
+                <el-col :span="7">
+                  <h3 style="font-weight: bold">长者</h3>
+                </el-col>
+                <el-col :span="7">
+                  <h3 style="font-weight: bold">设备</h3>
+                </el-col>
+                <el-col :span="7">
+                  <h3 style="font-weight: bold">时间</h3>
+                </el-col>
+              </el-row>
+            </div>
+            <div v-for="(sos, index) in sosList" :key="index" class="infinite-list-item">
+              <el-row :gutter="24" style="width: 100%;text-align: center;">
+                <el-col :span="3">
+                  <h4>
+                    <span>{{ index + 1 }}</span>
+                  </h4>
+                </el-col>
+                <el-col :span="7">
+                  <h4>{{ sos.userInfoName }}</h4>
+                </el-col>
+                <el-col :span="7">
+                  <h4>{{ sos.deviceId }}</h4>
+                </el-col>
+                <el-col :span="7">
+                  <h4>{{ sos.createTime }}</h4>
+                </el-col>
+              </el-row>
+            </div>
+          </ul>
+        </el-card>
+      </el-col>
+      <el-col :xs="24" :sm="24" :lg="12">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span style="font-size: 24px">长者年纪分布</span>
+            <el-button style="float: right; padding: 3px 0" type="text">查看更多</el-button>
+          </div>
+          <div class="chart-wrapper">
+            <bar-chart/>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
     <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <raddar-chart/>
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <pie-chart/>
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <bar-chart/>
+      <el-col :xs="24" :sm="24" :lg="24">
+        <div class="chart-wrapper" style="height: 500px ">
+          <my-pie-chart style="padding-top: 30px"/>
         </div>
       </el-col>
     </el-row>
@@ -41,10 +91,13 @@ import {
   getUserinfoElderlyStaticByCreateTimeCounts,
   getUserinfoFamilyStaticByCreateTimeCounts
 } from "@/api/zhyl/statics";
+import MyPieChart from "@/views/dashboard/MyPieChart.vue";
+import {listDeviceUploadingData} from "@/api/zhyl/deviceUploadingData";
 
 export default {
   name: 'Index',
   components: {
+    MyPieChart,
     MyLineChart,
     PanelGroup,
     LineChart,
@@ -76,7 +129,25 @@ export default {
       elderlyLineChartData: {},
       sosLineChartData: {},
       deviceLineChartData: {},
-      lineChartName: '长者信息统计'
+      lineChartName: '长者信息统计',
+      //预警
+      // 查询参数
+      sosQueryParams: {
+        pageNum: 1,
+        pageSize: 100,
+        dataId: null,
+        deviceId: null,
+        type: null,
+        command: 'warning',
+        deviceType: null,
+        userInfoId: null,
+        warningType: null,
+        processingStatus: '0',
+        createTime: null,
+        updateTime: null,
+        delFlag: '0'
+      },
+      sosList: []
     }
   },
   created() {
@@ -84,8 +155,15 @@ export default {
     this.getSosLineChartData()
     this.getBindingLineChartData()
     this.getElderlyLineChartData()
+    this.getSosList()
   },
   methods: {
+    getSosList() {
+      listDeviceUploadingData(this.sosQueryParams).then(response => {
+        this.sosList = response.rows;
+      });
+    },
+    // region
     handleSetLineChartData(type) {
       if (type === 'familyLineChartData') {
         this.lineChartData = this.familyLineChartData
@@ -126,6 +204,7 @@ export default {
         this.sosLineChartData = res.data
       })
     }
+    // endregion
   }
 }
 </script>
@@ -147,5 +226,29 @@ export default {
   .chart-wrapper {
     padding: 8px;
   }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  position: absolute;
+  margin-left: 46px;
+  background-color: #2272d5;
+  border-radius: 3px;
+}
+
+/* Firefox 独有的滚动条圆角处理 */
+@-moz-document url-prefix() {
+  .infinite-list {
+    scrollbar-width: thin;
+    scrollbar-color: #2272d5 #f1f1f1;
+    border-radius: 3px;
+  }
+}
+
+.box-card {
+  height: 400px;
 }
 </style>

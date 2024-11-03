@@ -146,11 +146,14 @@
             <if test="miniOpenid != null  and miniOpenid != ''">and mini_openid = #{miniOpenid}</if>
             <if test="createBy != null  and createBy != ''">and create_by like concat('%', #{createBy}, '%')</if>
             <if test="updateBy != null  and updateBy != ''">and update_by like concat('%', #{updateBy}, '%')</if>
+            <if test="createTime != null ">and DATE(create_time) = DATE(#{createTime})</if>
             <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
-                and create_time between #{params.beginCreateTime} and #{params.endCreateTime}
+                and DATE_FORMAT(create_time,'%Y-%m-%d') between #{params.beginCreateTime} and
+                #{params.endCreateTime}
             </if>
             <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''">
-                and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}
+                and DATE_FORMAT(update_time,'%Y-%m-%d') between #{params.beginCreateTime} and
+                #{params.endCreateTime}
             </if>
             <if test="delFlag != null  and delFlag != ''">and del_flag = #{delFlag}</if>
         </where>
@@ -171,11 +174,11 @@
         SELECT DATE(create_time) AS create_date,
         COUNT(*) AS total_created
         FROM yl_user_info
-        WHERE create_time BETWEEN #{params.beginCreateTime} AND #{params.endCreateTime}
-        <if test="delFlag != null and delFlag == '0'">
+        WHERE DATE_FORMAT(create_time,'%Y-%m-%d') BETWEEN #{params.beginCreateTime} AND #{params.endCreateTime}
+        <if test="delFlag != null and delFlag == ''">
             AND del_flag = #{delFlag}
         </if>
-        <if test="userInfoRole != null and userInfoRole == 'elderly'">
+        <if test="userInfoRole != null and userInfoRole != ''">
             AND user_info_role = #{userInfoRole}
         </if>
         GROUP BY DATE(create_time)

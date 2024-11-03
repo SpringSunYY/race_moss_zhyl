@@ -50,8 +50,8 @@
           >
             <el-date-picker clearable
                             v-model="tableColumnValues[index].value"
-                            type="date"
-                            value-format="yyyy-MM-dd"
+                            type="datetime"
+                            value-format="yyyy-MM-dd HH:mm:ss"
                             placeholder="请选择日期"
             >
             </el-date-picker>

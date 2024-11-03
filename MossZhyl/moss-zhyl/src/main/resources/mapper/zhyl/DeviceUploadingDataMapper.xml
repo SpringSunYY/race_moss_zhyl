@@ -84,10 +84,12 @@
             </if>
             <if test="createTime != null ">and DATE(create_time) = DATE(#{createTime})</if>
             <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
-                and create_time &gt;= DATE(#{params.beginCreateTime}) and create_time &lt;= DATE(#{params.endCreateTime})
+                and DATE_FORMAT(create_time,'%Y-%m-%d') between #{params.beginCreateTime} and
+                #{params.endCreateTime}
             </if>
             <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''">
-                and update_time &gt;= DATE(#{params.beginUpdateTime}) and update_time &lt;= DATE(#{params.endUpdateTime})
+                and DATE_FORMAT(update_time,'%Y-%m-%d') between #{params.beginCreateTime} and
+                #{params.endCreateTime}
             </if>
             <if test="delFlag != null  and delFlag != ''">and del_flag = #{delFlag}</if>
         </where>
@@ -109,12 +111,12 @@
             </if>
             <if test="createTime != null ">and DATE(create_time) = DATE(#{createTime})</if>
             <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
-                and create_time &gt;= DATE(#{params.beginCreateTime}) and create_time &lt;=
-                DATE(#{params.endCreateTime})
+                and DATE_FORMAT(create_time,'%Y-%m-%d') between #{params.beginCreateTime} and
+                #{params.endCreateTime}
             </if>
             <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''">
-                and update_time &gt;= DATE(#{params.beginUpdateTime}) and update_time &lt;=
-                DATE(#{params.endUpdateTime})
+                and DATE_FORMAT(update_time,'%Y-%m-%d') between #{params.beginCreateTime} and
+                #{params.endCreateTime}
             </if>
             <if test="delFlag != null  and delFlag != ''">and del_flag = #{delFlag}</if>
         </where>
@@ -131,7 +133,7 @@
         LEFT JOIN (SELECT DATE(create_time) AS create_date,
         COUNT(*) AS total_created
         FROM yl_device_uploading_data
-        WHERE create_time BETWEEN #{params.beginCreateTime} AND #{params.endCreateTime}
+        WHERE DATE_FORMAT(create_time,'%Y-%m-%d') BETWEEN #{params.beginCreateTime} AND #{params.endCreateTime}
         <if test="type != null  and type != ''">and type = #{type}</if>
         <if test="command != null  and command != ''">and command = #{command}</if>
         <if test="deviceType != null  and deviceType != ''">and device_type = #{deviceType}</if>

@@ -72,8 +72,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
             <if test="updateBy != null  and updateBy != ''"> and update_by = #{updateBy}</if>
-            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
-            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+            <if test="createTime != null ">and DATE(create_time) = DATE(#{createTime})</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
+                and DATE_FORMAT(create_time,'%Y-%m-%d') between #{params.beginCreateTime} and
+                #{params.endCreateTime}
+            </if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''">
+                and DATE_FORMAT(update_time,'%Y-%m-%d') between #{params.beginCreateTime} and
+                #{params.endCreateTime}
+            </if>
             <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
         </where>
     </select>
@@ -89,13 +96,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         LEFT JOIN (SELECT DATE(create_time) AS create_date,
         COUNT(*) AS total_created
         FROM yl_elderly_device_binding
-        WHERE create_time BETWEEN #{params.beginCreateTime} AND #{params.endCreateTime}
-        <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
-        <if test="deviceId != null "> and device_id = #{deviceId}</if>
-        <if test="deviceType != null  and deviceType != ''"> and device_type = #{deviceType}</if>
-        <if test="deviceImei != null  and deviceImei != ''"> and device_imei like concat('%', #{deviceImei}, '%')</if>
-        <if test="deviceStatus != null  and deviceStatus != ''"> and device_status = #{deviceStatus}</if>
-        <if test="bindingStatus != null  and bindingStatus != ''"> and binding_status = #{bindingStatus}</if>
+        WHERE DATE_FORMAT(create_time,'%Y-%m-%d') BETWEEN #{params.beginCreateTime} AND #{params.endCreateTime}
+        <if test="userInfoId != null ">and user_info_id = #{userInfoId}</if>
+        <if test="deviceId != null ">and device_id = #{deviceId}</if>
+        <if test="deviceType != null  and deviceType != ''">and device_type = #{deviceType}</if>
+        <if test="deviceImei != null  and deviceImei != ''">and device_imei like concat('%', #{deviceImei}, '%')</if>
+        <if test="deviceStatus != null  and deviceStatus != ''">and device_status = #{deviceStatus}</if>
+        <if test="bindingStatus != null  and bindingStatus != ''">and binding_status = #{bindingStatus}</if>
         GROUP BY DATE(create_time)) AS binding_counts ON date_range.date = binding_counts.create_date
         ORDER BY date_range.date;
     </select>
