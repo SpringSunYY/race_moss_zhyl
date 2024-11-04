@@ -14,7 +14,9 @@
             "autoclose" : true,
             "delay" : 0
         },
-        "modules" : {},
+        "modules" : {
+            "OAuth" : {}
+        },
         "distribute" : {
             "android" : {
                 "permissions" : [
@@ -36,12 +38,20 @@
                 ]
             },
             "ios" : {},
-            "sdkConfigs" : {}
+            "sdkConfigs" : {
+                "oauth" : {
+                    "weixin" : {
+                        "appid" : "wx86cc55772a55d5c0",
+                        "UniversalLinks" : "",
+                        "appsercret": "3d4dda998417e947574838f65438f498"
+                    }
+                }
+            }
         }
     },
     "quickapp" : {},
     "mp-weixin" : {
-        "appid" : "wx9d5196a57dff7321",
+        "appid" : "wx86cc55772a55d5c0",
         "setting" : {
             "urlCheck" : false,
             "es6" : false,

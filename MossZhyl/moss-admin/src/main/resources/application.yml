@@ -130,3 +130,9 @@ xss:
 
 ai:
   apiKey: 53f666e3ff44785f39658b136eb5ade7.V03f5rH2ogNgfV7Y
+
+# 微信小程序配置
+wx:
+  minApp:
+    appId: wx86cc55772a55d5c0
+    appSecret: 3d4dda998417e947574838f65438f498

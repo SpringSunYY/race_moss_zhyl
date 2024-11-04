@@ -96,8 +96,8 @@ public class UserInfo extends BaseEntity {
     /**
      * 小程序openid
      */
-    @Excel(name = "小程序openid")
-    private String miniOpenid;
+    @Excel(name = "小程序unionid")
+    private String wxUnionid;
 
     /**
      * 删除
@@ -220,12 +220,12 @@ public class UserInfo extends BaseEntity {
         return wxOpenid;
     }
 
-    public void setMiniOpenid(String miniOpenid) {
-        this.miniOpenid = miniOpenid;
+    public String getWxUnionid() {
+        return wxUnionid;
     }
 
-    public String getMiniOpenid() {
-        return miniOpenid;
+    public void setWxUnionid(String wxUnionid) {
+        this.wxUnionid = wxUnionid;
     }
 
     public void setDelFlag(String delFlag) {
@@ -250,7 +250,7 @@ public class UserInfo extends BaseEntity {
                 .append("addressId", getAddressId())
                 .append("areaDetail", getAreaDetail())
                 .append("wxOpenid", getWxOpenid())
-                .append("miniOpenid", getMiniOpenid())
+                .append("wxUnionid", getWxUnionid())
                 .append("createBy", getCreateBy())
                 .append("updateBy", getUpdateBy())
                 .append("createTime", getCreateTime())

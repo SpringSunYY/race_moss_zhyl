@@ -2,11 +2,10 @@ package com.moss.web.controller.system;
 
 import java.util.List;
 import java.util.Set;
+
+import com.moss.zhyl.wx.WxLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.moss.common.constant.Constants;
 import com.moss.common.core.domain.AjaxResult;
 import com.moss.common.core.domain.entity.SysMenu;
@@ -33,6 +32,9 @@ public class SysLoginController
 
     @Autowired
     private SysPermissionService permissionService;
+
+    @Autowired
+    private WxLoginService wxLoginService;
 
     /**
      * 登录方法
@@ -82,5 +84,14 @@ public class SysLoginController
         Long userId = SecurityUtils.getUserId();
         List<SysMenu> menus = menuService.selectMenuTreeByUserId(userId);
         return AjaxResult.success(menuService.buildMenus(menus));
+    }
+
+    @GetMapping("/login/miniProgramLogin")
+    public AjaxResult miniProgramLogin(@RequestParam("code") String code) {
+        AjaxResult ajax = AjaxResult.success();
+        // 生成令牌
+        String token = wxLoginService.miniProgramLogin(code);
+        ajax.put(Constants.TOKEN, token);
+        return ajax;
     }
 }

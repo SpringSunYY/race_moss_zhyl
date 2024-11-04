@@ -16,7 +16,7 @@
         <result property="addressId" column="address_id"/>
         <result property="areaDetail" column="area_detail"/>
         <result property="wxOpenid" column="wx_openid"/>
-        <result property="miniOpenid" column="mini_openid"/>
+        <result property="wxUnionid" column="wx_unionid"/>
         <result property="remark" column="remark"/>
         <result property="createBy" column="create_by"/>
         <result property="updateBy" column="update_by"/>
@@ -41,7 +41,7 @@
                address_id,
                area_detail,
                wx_openid,
-               mini_openid,
+               wx_unionid,
                remark,
                create_by,
                update_by,
@@ -84,7 +84,7 @@
                 ))
             </if>
             <if test="wxOpenid != null  and wxOpenid != ''">and wx_openid = #{wxOpenid}</if>
-            <if test="miniOpenid != null  and miniOpenid != ''">and mini_openid = #{miniOpenid}</if>
+            <if test="wxUnionid != null  and wxUnionid != ''">and wx_unionid = #{wxUnionid}</if>
             <if test="createBy != null  and createBy != ''">and create_by like concat('%', #{createBy}, '%')</if>
             <if test="updateBy != null  and updateBy != ''">and update_by like concat('%', #{updateBy}, '%')</if>
             <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
@@ -143,7 +143,7 @@
                 ))
             </if>
             <if test="wxOpenid != null  and wxOpenid != ''">and wx_openid = #{wxOpenid}</if>
-            <if test="miniOpenid != null  and miniOpenid != ''">and mini_openid = #{miniOpenid}</if>
+            <if test="wxUnionid != null  and wxUnionid != ''">and wx_unionid = #{wxUnionid}</if>
             <if test="createBy != null  and createBy != ''">and create_by like concat('%', #{createBy}, '%')</if>
             <if test="updateBy != null  and updateBy != ''">and update_by like concat('%', #{updateBy}, '%')</if>
             <if test="createTime != null ">and DATE(create_time) = DATE(#{createTime})</if>
@@ -203,7 +203,7 @@
             <if test="addressId != null">address_id,</if>
             <if test="areaDetail != null">area_detail,</if>
             <if test="wxOpenid != null">wx_openid,</if>
-            <if test="miniOpenid != null">mini_openid,</if>
+            <if test="wxUnionid != null">wx_unionid,</if>
             <if test="createBy != null and createBy != ''">create_by,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="createTime != null">create_time,</if>
@@ -225,7 +225,7 @@
             <if test="addressId != null">#{addressId},</if>
             <if test="areaDetail != null">#{areaDetail},</if>
             <if test="wxOpenid != null">#{wxOpenid},</if>
-            <if test="miniOpenid != null">#{miniOpenid},</if>
+            <if test="wxUnionid != null">#{wxUnionid},</if>
             <if test="createBy != null and createBy != ''">#{createBy},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -250,7 +250,7 @@
             <if test="addressId != null">address_id = #{addressId},</if>
             <if test="areaDetail != null">area_detail = #{areaDetail},</if>
             <if test="wxOpenid != null">wx_openid = #{wxOpenid},</if>
-            <if test="miniOpenid != null">mini_openid = #{miniOpenid},</if>
+            <if test="wxUnionid != null">wx_unionid = #{wxUnionid},</if>
             <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>

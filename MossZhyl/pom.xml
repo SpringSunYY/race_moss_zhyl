@@ -32,6 +32,8 @@
         <velocity.version>2.3</velocity.version>
         <jwt.version>0.9.1</jwt.version>
         <zp.ai.version>release-V4-2.3.0</zp.ai.version>
+        <lombox.version>1.18.24</lombox.version>
+        <hutool.version>5.8.15</hutool.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -151,7 +153,12 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <optional>true</optional>
-                <version>1.18.24</version>
+                <version>${lombox.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
             </dependency>
 
             <!-- 定时任务-->
