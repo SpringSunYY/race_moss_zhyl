@@ -4,6 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.moss.common.exception.ServiceException;
+import com.moss.zhyl.service.IUserInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,9 @@ public class WxLoginServiceImpl implements WxLoginService {
     //微信小程序密钥
     @Value("${wx.minApp.appSecret}")
     private String appSecret;
+
+    @Autowired
+    private IUserInfoService userInfoService;
 
     /**
      * 小程序一键登录

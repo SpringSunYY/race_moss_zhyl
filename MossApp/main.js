@@ -8,6 +8,8 @@ import ImageUpload from "./components/image-upload/index.vue"
 import FileUpload from "./components/file-upload/index.vue"
 import DictTag from "@/components/dict-tag/index.vue";
 import * as myUtils from "@/utils/myUtils.js";
+import uView from "uview-ui";
+Vue.use(uView);
 Vue.use(plugins)
 
 Vue.config.productionTip = false

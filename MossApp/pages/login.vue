@@ -3,7 +3,7 @@
     <view class="logo-content align-center justify-center flex">
       <image style="width: 100rpx;height: 100rpx;" :src="globalConfig.appInfo.logo" mode="widthFix">
       </image>
-      <text class="title">若依移动端登录</text>
+      <text class="title">moss-智慧养老登录</text>
     </view>
     <view class="login-form-content">
       <view class="input-item flex align-center">
@@ -37,8 +37,8 @@
 
     <view class="userinfo">
       <block>
-        <button v-if="canIUseGetUserProfile" @click="getUserProfile"> 获取头像昵称</button>
-        <button v-else open-type="getUserInfo" @click="getUserInfo"> 获取用户信息</button>
+        <u-button v-if="canIUseGetUserProfile" @click="getUserProfile"> 获取头像昵称</u-button>
+        <u-button v-else open-type="getUserInfo" @click="getUserInfo" shape="circle" size="large" icon="map" type="primary" text="获取用户信息"></u-button>
       </block>
       <block>
         <!--        <image @click="bindViewTap" class="userinfo-avatar" :src="userInfo.avatarUrl" mode="cover"></image>-->
@@ -212,9 +212,14 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>>
 page {
   background-color: #ffffff;
+}
+
+.custom-style {
+  color: #ff0000;
+  width: 400rpx;
 }
 
 .normal-login-container {
