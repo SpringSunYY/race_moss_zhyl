@@ -1,11 +1,10 @@
 <template>
   <view class="normal-login-container">
     <view class="logo-content align-center justify-center flex">
-      <image style="width: 100rpx;height: 100rpx;" :src="globalConfig.appInfo.logo" mode="widthFix">
-      </image>
+      <image style="width: 100rpx;height: 100rpx;" :src="globalConfig.appInfo.logo" mode="widthFix"></image>
       <text class="title">moss-智慧养老登录</text>
     </view>
-    <view class="login-form-content">
+    <view class="login-form-content" v-if="!isWxLogin">
       <view class="input-item flex align-center">
         <view class="iconfont icon-user icon"></view>
         <input v-model="loginForm.username" class="input" type="text" placeholder="请输入账号" maxlength="30"/>
@@ -28,23 +27,32 @@
         <text class="text-grey1">没有账号？</text>
         <text @click="handleUserRegister" class="text-blue">立即注册</text>
       </view>
-      <view class="xieyi text-center">
-        <text class="text-grey1">登录即代表同意</text>
-        <text @click="handleUserAgrement" class="text-blue">《用户协议》</text>
-        <text @click="handlePrivacy" class="text-blue">《隐私协议》</text>
+    </view>
+
+    <view class="userinfo" v-if="isWxLogin">
+      <block>
+        <u-button v-if="userInfo.nickName===undefined||userInfo.nickName===null" open-type="getUserInfo"
+                  @click="getUserInfo" shape="circle"
+                  size="large"
+                  :loading="isGetWxLoading"
+                  loadingText="获取中"
+                  type="primary" text="获取头像昵称"
+                  class="custom-button"></u-button>
+      </block>
+      <block v-if="userInfo.nickName!=null">
+        <image class="userinfo-avatar" :src="userInfo.avatarUrl" mode="cover"></image>
+        <text class="userinfo-nickname">用户名：{{ userInfo.nickName }}</text>
+        <button @click="wxLogin"> 登录</button>
+      </block>
+      <view class="reg text-center">
+        <text @click="handleUserRegister" class="text-blue">账号登录</text>
       </view>
     </view>
 
-    <view class="userinfo">
-      <block>
-        <u-button v-if="canIUseGetUserProfile" @click="getUserProfile"> 获取头像昵称</u-button>
-        <u-button v-else open-type="getUserInfo" @click="getUserInfo" shape="circle" size="large" icon="map" type="primary" text="获取用户信息"></u-button>
-      </block>
-      <block>
-        <!--        <image @click="bindViewTap" class="userinfo-avatar" :src="userInfo.avatarUrl" mode="cover"></image>-->
-        <button v-if="userInfo.nickName!=null" @click="wxLogin"> 登录</button>
-        <text class="userinfo-nickname">用户名：{{ userInfo.nickName }}</text>
-      </block>
+    <view class="footer">
+      <text class="text-grey1">登录即代表同意</text>
+      <text @click="handleUserAgrement" class="text-blue">《用户协议》</text>
+      <text @click="handlePrivacy" class="text-blue">《隐私协议》</text>
     </view>
   </view>
 </template>
@@ -54,11 +62,13 @@ import {getCodeImg} from '@/api/login'
 import {miniProgramLogin} from "../api/login";
 
 export default {
+  options: {
+    styleIsolation: 'shared'
+  },
   data() {
     return {
       codeUrl: "",
       captchaEnabled: true,
-      // 用户注册开关
       register: false,
       globalConfig: getApp().globalData.config,
       loginForm: {
@@ -70,22 +80,25 @@ export default {
       userInfo: {},
       hasUserInfo: false,
       canIUseGetUserProfile: false,
-
+      //是否微信登录
+      isWxLogin: true,
+      isGetWxLoading: false
     }
   },
   created() {
     this.getCode()
   },
-  onLoad() {
-  },
   methods: {
     getUserInfo() {
+      this.isGetWxLoading = true;
       return new Promise((resolve, reject) => {
         uni.getUserProfile({
           lang: 'zh_CN',
           desc: '用户登录', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，
           success: (res) => {
-            console.log(res, 'resss')
+            this.isGetWxLoading = false;
+            this.$modal.showToast('获取成功')
+            console.log(res.userInfo.avatarUrl, 'resss')
             resolve(res.userInfo)
             this.userInfo = res.userInfo
           },
@@ -212,65 +225,103 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>>
-page {
-  background-color: #ffffff;
-}
-
-.custom-style {
-  color: #ff0000;
-  width: 400rpx;
+<style lang="scss" scoped>
+::v-deep .custom-button {
+  width: 200px !important; /* 强制应用此样式 */
+  height: 60px !important; /* 强制应用此样式 */
+  font-size: 20px !important; /* 强制应用此样式 */
+  padding: 0 !important; /* 强制去掉内边距 */
 }
 
 .normal-login-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* 设置容器高度为视口高度 */
+}
+
+.footer {
+  margin-top: auto; /* 将 footer 推到容器底部 */
+  text-align: center;
+  color: #333;
+  margin-bottom: 20rpx; /* 底部留白 */
+}
+
+.login-form-content {
+  flex: 1; /* 填充剩余空间 */
+  text-align: center;
+  margin: 20px auto;
+  margin-top: 15%;
+  width: 80%;
+}
+
+.normal-login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
+  background-color: #ffffff;
+  padding: 20px;
 
   .logo-content {
-    width: 100%;
-    font-size: 21px;
-    text-align: center;
-    padding-top: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
 
-    image {
+    .logo {
+      width: 100rpx;
+      height: 100rpx;
       border-radius: 4px;
     }
 
     .title {
-      margin-left: 10px;
+      font-size: 21px;
+      margin-top: 10px;
+      text-align: center;
     }
   }
 
   .login-form-content {
-    text-align: center;
-    margin: 20px auto;
-    margin-top: 15%;
     width: 80%;
+    text-align: center;
 
     .input-item {
-      margin: 20px auto;
+      display: flex;
+      align-items: center;
       background-color: #f5f6f7;
       height: 45px;
       border-radius: 20px;
+      margin: 10px auto;
 
       .icon {
         font-size: 38rpx;
-        margin-left: 10px;
         color: #999;
+        margin-left: 10px;
       }
 
       .input {
         width: 100%;
         font-size: 14px;
-        line-height: 20px;
-        text-align: left;
         padding-left: 15px;
       }
 
+      .login-code {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+
+        .login-code-img {
+          width: 100rpx;
+          height: 38px;
+          cursor: pointer;
+        }
+      }
     }
 
     .login-btn {
-      margin-top: 40px;
+      margin-top: 20px;
       height: 45px;
+      width: 100%;
     }
 
     .reg {
@@ -281,19 +332,22 @@ page {
       color: #333;
       margin-top: 20px;
     }
+  }
 
-    .login-code {
-      height: 38px;
-      float: right;
+  .userinfo {
+    text-align: center;
+    margin-top: 300rpx;
 
-      .login-code-img {
-        height: 38px;
-        position: absolute;
-        margin-left: 10px;
-        width: 200rpx;
-      }
+    .userinfo-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+    }
+
+    .userinfo-nickname {
+      display: block;
+      margin-top: 10px;
     }
   }
 }
-
 </style>
