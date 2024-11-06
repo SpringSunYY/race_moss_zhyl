@@ -1,10 +1,13 @@
 <template>
   <view class="normal-login-container">
+    <!-- Logo和标题 -->
     <view class="logo-content align-center justify-center flex">
       <image style="width: 100rpx;height: 100rpx;" :src="globalConfig.appInfo.logo" mode="widthFix"></image>
       <text class="title">moss-智慧养老登录</text>
     </view>
-    <view class="login-form-content" v-if="!isWxLogin">
+
+    <!-- 登录表单 -->
+    <view class="login-form-content" v-if="!isWxLogin" style="margin-top: 100rpx">
       <view class="input-item flex align-center">
         <view class="iconfont icon-user icon"></view>
         <input v-model="loginForm.username" class="input" type="text" placeholder="请输入账号" maxlength="30"/>
@@ -13,13 +16,17 @@
         <view class="iconfont icon-password icon"></view>
         <input v-model="loginForm.password" type="password" class="input" placeholder="请输入密码" maxlength="20"/>
       </view>
-      <view class="input-item flex align-center" style="width: 60%;margin: 0px;" v-if="captchaEnabled">
+
+      <!-- 验证码输入框和图片 -->
+      <view class="input-item flex align-center" style="width: 100%; margin-bottom: 20px;" v-if="captchaEnabled">
         <view class="iconfont icon-code icon"></view>
-        <input v-model="loginForm.code" type="number" class="input" placeholder="请输入验证码" maxlength="4"/>
-        <view class="login-code">
-          <image :src="codeUrl" @click="getCode" class="login-code-img"></image>
+        <input v-model="loginForm.code" type="number" class="input captcha-input" placeholder="请输入验证码"
+               maxlength="4"/>
+        <view class="login-code" @click="getCode">
+          <image :src="codeUrl" class="login-code-img"></image>
         </view>
       </view>
+
       <view class="action-btn">
         <button @click="handleLogin" class="login-btn cu-btn block bg-blue lg round">登录</button>
       </view>
@@ -29,26 +36,28 @@
       </view>
     </view>
 
-    <view class="userinfo" v-if="isWxLogin">
-      <block>
-        <u-button v-if="userInfo.nickName===undefined||userInfo.nickName===null" open-type="getUserInfo"
-                  @click="getUserInfo" shape="circle"
-                  size="large"
-                  :loading="isGetWxLoading"
-                  loadingText="获取中"
-                  type="primary" text="获取头像昵称"
-                  class="custom-button"></u-button>
-      </block>
-      <block v-if="userInfo.nickName!=null">
-        <image class="userinfo-avatar" :src="userInfo.avatarUrl" mode="cover"></image>
-        <text class="userinfo-nickname">用户名：{{ userInfo.nickName }}</text>
-        <button @click="wxLogin"> 登录</button>
-      </block>
-      <view class="reg text-center">
-        <text @click="handleUserRegister" class="text-blue">账号登录</text>
+    <!-- 微信登录 -->
+    <view class="login-form-content" v-if="isWxLogin" style="padding-top: 400rpx">
+      <view v-if="userInfo.nickName === undefined || userInfo.nickName === null" class="action-btn">
+        <button @click="getUserInfo" class="login-btn cu-btn block bg-blue lg round">获取微信信息</button>
       </view>
+      <block v-if="userInfo.nickName != null">
+        <view class="userinfo-content">
+          <image class="userinfo-avatar" :src="userInfo.avatarUrl" mode="cover"></image>
+          <text class="userinfo-nickname">用户名：{{ userInfo.nickName }}</text>
+        </view>
+        <view class="action-btn">
+          <button @click="wxLogin" class="login-btn cu-btn block bg-blue lg round">登录</button>
+        </view>
+      </block>
     </view>
 
+    <!-- 切换登录方式 -->
+    <view class="reg text-center">
+      <text @click="handleChangeLogin" class="text-blue">{{ isWxLogin ? '账号登录' : '微信登录' }}</text>
+    </view>
+
+    <!-- 底部协议 -->
     <view class="footer">
       <text class="text-grey1">登录即代表同意</text>
       <text @click="handleUserAgrement" class="text-blue">《用户协议》</text>
@@ -62,9 +71,7 @@ import {getCodeImg} from '@/api/login'
 import {miniProgramLogin} from "../api/login";
 
 export default {
-  options: {
-    styleIsolation: 'shared'
-  },
+  options: {styleIsolation: 'shared'},
   data() {
     return {
       codeUrl: "",
@@ -80,7 +87,7 @@ export default {
       userInfo: {},
       hasUserInfo: false,
       canIUseGetUserProfile: false,
-      //是否微信登录
+      // 是否微信登录
       isWxLogin: true,
       isGetWxLoading: false
     }
@@ -89,17 +96,28 @@ export default {
     this.getCode()
   },
   methods: {
+    handleChangeLogin() {
+      this.isWxLogin = !this.isWxLogin
+    },
     getUserInfo() {
-      this.isGetWxLoading = true;
+      this.$modal.loading("获取中，请耐心等待...")
+      if (this.isGetWxLoading) {
+        return
+      }
+      this.isGetWxLoading = true
       return new Promise((resolve, reject) => {
         uni.getUserProfile({
           lang: 'zh_CN',
-          desc: '用户登录', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，
+          desc: '用户登录', // 声明获取用户个人信息后的用途
           success: (res) => {
             this.isGetWxLoading = false;
-            this.$modal.showToast('获取成功')
-            console.log(res.userInfo.avatarUrl, 'resss')
+            uni.showToast({
+              position:'top',
+              icon: 'none',
+              title: '获取成功'
+            })
             resolve(res.userInfo)
+            console.log(res.userInfo)
             this.userInfo = res.userInfo
           },
           fail: (err) => {
@@ -109,29 +127,13 @@ export default {
       })
     },
 
-    getUserProfile() {
-      // 推荐使用 wx.getUserProfile 获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认
-      // 开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
-      wx.getUserProfile({
-        desc: '用于完善会员资料', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
-        success: (res) => {
-          this.setData({
-            userInfo: res.userInfo,
-            hasUserInfo: true
-          })
-        }
-      })
-    },
-
-    async getLogin() {
+    getLogin() {
       return new Promise((resolve, reject) => {
         uni.login({
           success(res) {
-            console.log(res, '成功')
             resolve(res)
           },
           fail: (err) => {
-            console.log(err, 'logoer')
             reject(err)
           }
         })
@@ -143,22 +145,18 @@ export default {
       uni.getProvider({
         service: 'oauth',
         success: async function (res) {
-          //支持微信、qq和微博等
           if (~res.provider.indexOf('weixin')) {
             let loginRes = await that.getLogin();
-            console.log('登录信息', loginRes)
             miniProgramLogin(loginRes.code).then(res => {
               uni.showToast({
-                    icon: 'none',
-                    title: '登录成功'
-                  }
-              )
-              console.log(res, res)
+                position:'top',
+                icon: 'none',
+                title: '登录成功'
+              })
             })
           }
         },
         fail: function (err) {
-          uni.hideLoading();
           uni.showToast({
             icon: 'none',
             title: err
@@ -166,21 +164,21 @@ export default {
         }
       })
     },
-    // 用户注册
+
     handleUserRegister() {
       this.$tab.redirectTo(`/pages/register`)
     },
-    // 隐私协议
+
     handlePrivacy() {
       let site = this.globalConfig.appInfo.agreements[0]
       this.$tab.navigateTo(`/pages/common/webview/index?title=${site.title}&url=${site.url}`)
     },
-    // 用户协议
+
     handleUserAgrement() {
       let site = this.globalConfig.appInfo.agreements[1]
       this.$tab.navigateTo(`/pages/common/webview/index?title=${site.title}&url=${site.url}`)
     },
-    // 获取图形验证码
+
     getCode() {
       getCodeImg().then(res => {
         this.captchaEnabled = res.captchaEnabled === undefined ? true : res.captchaEnabled
@@ -190,7 +188,7 @@ export default {
         }
       })
     },
-    // 登录方法
+
     async handleLogin() {
       if (this.loginForm.username === "") {
         this.$modal.msgError("请输入您的账号")
@@ -203,7 +201,7 @@ export default {
         this.pwdLogin()
       }
     },
-    // 密码登录
+
     async pwdLogin() {
       this.$store.dispatch('Login', this.loginForm).then(() => {
         this.$modal.closeLoading()
@@ -214,9 +212,8 @@ export default {
         }
       })
     },
-    // 登录成功后，处理函数
+
     loginSuccess(result) {
-      // 设置用户信息
       this.$store.dispatch('GetInfo').then(res => {
         this.$tab.reLaunch('/pages/index')
       })
@@ -226,128 +223,111 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .custom-button {
-  width: 200px !important; /* 强制应用此样式 */
-  height: 60px !important; /* 强制应用此样式 */
-  font-size: 20px !important; /* 强制应用此样式 */
-  padding: 0 !important; /* 强制去掉内边距 */
-}
-
 .normal-login-container {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* 设置容器高度为视口高度 */
+  height: 100vh;
+  justify-content: space-between;
 }
 
-.footer {
-  margin-top: auto; /* 将 footer 推到容器底部 */
+.logo-content {
+  width: 100%;
+  font-size: 21px;
   text-align: center;
-  color: #333;
-  margin-bottom: 20rpx; /* 底部留白 */
+  padding-top: 15%;
+
+  image {
+    border-radius: 4px;
+  }
+
+  .title {
+    margin-left: 10px;
+  }
+}
+
+.title {
+  margin-top: 10px;
+  font-size: 18px;
 }
 
 .login-form-content {
-  flex: 1; /* 填充剩余空间 */
-  text-align: center;
-  margin: 20px auto;
-  margin-top: 15%;
   width: 80%;
+  margin: 0 auto;
 }
 
-.normal-login-container {
+.input-item {
+  margin-bottom: 20px;
+  background-color: #f5f6f7;
+  height: 45px;
+  border-radius: 20px;
+  padding: 0 10px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  width: 100%;
-  background-color: #ffffff;
+}
+
+.input {
+  flex: 1;
+  padding-left: 15px;
+  font-size: 14px;
+}
+
+.captcha-input {
+  width: 70%; /* 控制输入框的宽度 */
+}
+
+.login-code {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.login-code-img {
+  width: 120px;
+  height: 45px;
+  border-radius: 8px;
+}
+
+.login-btn {
+  margin-top: 20px;
+  height: 45px;
+}
+
+.reg {
+  margin-top: 15px;
+}
+
+.userinfo-content {
+  text-align: center;
+  margin-bottom: 20rpx;
+}
+
+.userinfo-avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  font-size: 16px;
+  color: #333;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
   padding: 20px;
+  font-size: 14px;
+}
 
-  .logo-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 30px;
+.text-blue {
+  color: #409EFF;
+}
 
-    .logo {
-      width: 100rpx;
-      height: 100rpx;
-      border-radius: 4px;
-    }
+.text-grey1 {
+  color: #888;
+}
 
-    .title {
-      font-size: 21px;
-      margin-top: 10px;
-      text-align: center;
-    }
-  }
-
-  .login-form-content {
-    width: 80%;
-    text-align: center;
-
-    .input-item {
-      display: flex;
-      align-items: center;
-      background-color: #f5f6f7;
-      height: 45px;
-      border-radius: 20px;
-      margin: 10px auto;
-
-      .icon {
-        font-size: 38rpx;
-        color: #999;
-        margin-left: 10px;
-      }
-
-      .input {
-        width: 100%;
-        font-size: 14px;
-        padding-left: 15px;
-      }
-
-      .login-code {
-        display: flex;
-        align-items: center;
-        margin-left: auto;
-
-        .login-code-img {
-          width: 100rpx;
-          height: 38px;
-          cursor: pointer;
-        }
-      }
-    }
-
-    .login-btn {
-      margin-top: 20px;
-      height: 45px;
-      width: 100%;
-    }
-
-    .reg {
-      margin-top: 15px;
-    }
-
-    .xieyi {
-      color: #333;
-      margin-top: 20px;
-    }
-  }
-
-  .userinfo {
-    text-align: center;
-    margin-top: 300rpx;
-
-    .userinfo-avatar {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-    }
-
-    .userinfo-nickname {
-      display: block;
-      margin-top: 10px;
-    }
-  }
+.text-center {
+  text-align: center;
 }
 </style>
