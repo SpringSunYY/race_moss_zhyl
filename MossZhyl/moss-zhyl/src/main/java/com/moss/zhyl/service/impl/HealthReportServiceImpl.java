@@ -5,7 +5,7 @@ import java.util.List;
 import com.moss.common.utils.DateUtils;
 import com.moss.common.utils.SecurityUtils;
 import com.moss.common.utils.StringUtils;
-import com.moss.zhyl.domain.UserInfo;
+import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.zhyl.domain.enums.DelFlagEnum;
 import com.moss.zhyl.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;

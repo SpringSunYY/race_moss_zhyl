@@ -3,6 +3,7 @@ package com.moss.zhyl.service.impl;
 import java.util.List;
 
 import com.moss.common.core.domain.entity.SysUser;
+import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.common.exception.ServiceException;
 import com.moss.common.utils.DateUtils;
 import com.moss.common.utils.SecurityUtils;
@@ -10,9 +11,7 @@ import com.moss.common.utils.StringUtils;
 import com.moss.common.utils.uuid.IdUtils;
 import com.moss.system.service.ISysUserService;
 import com.moss.zhyl.domain.*;
-import com.moss.zhyl.domain.enums.BindingStatusEnum;
 import com.moss.zhyl.domain.enums.DelFlagEnum;
-import com.moss.zhyl.domain.enums.DeviceBindingStatusEnum;
 import com.moss.zhyl.domain.enums.DeviceStatusEnum;
 import com.moss.zhyl.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +20,6 @@ import com.moss.zhyl.mapper.ElderlyDeviceBindingMapper;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.moss.common.constant.PermissionsConstants.ZHYL_ELDERLY_DEVICE_BINDING_LOOK_DELETE;
-import static com.moss.zhyl.domain.enums.BindingStatusEnum.BINDING_STATUS_ENUM_0;
-import static com.moss.zhyl.domain.enums.DeviceBindingStatusEnum.DEVICE_BINDING_STATUS_0;
-import static com.moss.zhyl.domain.enums.DeviceBindingStatusEnum.DEVICE_BINDING_STATUS_1;
 
 /**
  * 长者设备绑定Service业务层处理

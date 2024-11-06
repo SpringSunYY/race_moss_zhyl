@@ -4,7 +4,7 @@ import com.moss.common.core.controller.BaseController;
 import com.moss.common.core.domain.AjaxResult;
 import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
 import com.moss.zhyl.domain.ElderlyDeviceBinding;
-import com.moss.zhyl.domain.UserInfo;
+import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.zhyl.service.IStaticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

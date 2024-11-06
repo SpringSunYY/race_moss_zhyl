@@ -86,12 +86,4 @@ public class SysLoginController
         return AjaxResult.success(menuService.buildMenus(menus));
     }
 
-    @GetMapping("/login/miniProgramLogin")
-    public AjaxResult miniProgramLogin(@RequestParam("code") String code) {
-        AjaxResult ajax = AjaxResult.success();
-        // 生成令牌
-        String token = wxLoginService.miniProgramLogin(code);
-        ajax.put(Constants.TOKEN, token);
-        return ajax;
-    }
 }

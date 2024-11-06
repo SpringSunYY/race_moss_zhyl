@@ -2,7 +2,7 @@ package com.moss.zhyl.mapper;
 
 import java.util.List;
 
-import com.moss.zhyl.domain.UserInfo;
+import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.zhyl.domain.statics.ro.StaticRo;
 import org.apache.ibatis.annotations.Param;
 
@@ -72,7 +72,7 @@ public interface UserInfoMapper {
      * date: 2024/11/1 22:22
      * param:
      * @param: userInfo
-     * return: java.util.List<com.moss.zhyl.domain.UserInfo>
+     * return: java.util.List<com.moss.common.core.domain.entity.UserInfo>
      **/
     Long selectUserInfoCount(UserInfo userInfo);
 

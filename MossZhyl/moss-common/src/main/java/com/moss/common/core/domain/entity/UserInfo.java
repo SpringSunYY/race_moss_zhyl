@@ -1,4 +1,4 @@
-package com.moss.zhyl.domain;
+package com.moss.common.core.domain.entity;
 
 import com.moss.common.xss.Xss;
 import org.apache.commons.lang3.builder.ToStringBuilder;

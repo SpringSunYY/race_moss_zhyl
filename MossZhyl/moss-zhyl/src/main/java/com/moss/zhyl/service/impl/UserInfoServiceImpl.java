@@ -8,9 +8,8 @@ import com.moss.common.utils.uuid.IdUtils;
 import com.moss.system.service.ISysConfigService;
 import com.moss.zhyl.domain.Elderly;
 import com.moss.zhyl.domain.ElderlyFamily;
-import com.moss.zhyl.domain.UserInfo;
+import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.zhyl.domain.dto.UserInfoElderlyDto;
-import com.moss.zhyl.domain.enums.DelFlagEnum;
 import com.moss.zhyl.mapper.UserInfoMapper;
 import com.moss.zhyl.service.IElderlyFamilyService;
 import com.moss.zhyl.service.IElderlyService;
@@ -254,5 +253,10 @@ public class UserInfoServiceImpl implements IUserInfoService {
         //清除密码信息
         userInfo.setPassword(null);
         return userInfo;
+    }
+
+    @Override
+    public UserInfo selectUserInfoByUnionIdOrOpenId(String unionId, String openId) {
+        return null;
     }
 }

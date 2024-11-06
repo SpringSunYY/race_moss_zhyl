@@ -2,7 +2,7 @@ package com.moss.zhyl.service;
 
 import java.util.List;
 
-import com.moss.zhyl.domain.UserInfo;
+import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.zhyl.domain.dto.UserInfoElderlyDto;
 
 /**
@@ -78,7 +78,7 @@ public interface IUserInfoService {
      * @date: 2024/10/24 23:02
      * @param:
      * @param: contactPhone
-     * @return: com.moss.zhyl.domain.UserInfo
+     * @return: com.moss.common.core.domain.entity.UserInfo
      **/
     public UserInfo selectUserInfoByPhone(String contactPhone);
 
@@ -89,7 +89,7 @@ public interface IUserInfoService {
      * @date: 2024/10/24 23:03
      * @param:
      * @param: idCard
-     * @return: com.moss.zhyl.domain.UserInfo
+     * @return: com.moss.common.core.domain.entity.UserInfo
      **/
     public UserInfo selectUserInfoByIdCard(String idCard);
 
@@ -100,7 +100,17 @@ public interface IUserInfoService {
      * @date: 2024/10/25 11:15
      * @param:
      * @param: userInfoId
-     * @return: com.moss.zhyl.domain.UserInfo
+     * @return: com.moss.common.core.domain.entity.UserInfo
      **/
     UserInfo selectUserInfoByUserInfoIdResultUserInfo(Long userInfoId);
+
+    /**
+     * description: 根据unionId和openId查询用户
+     * author: YY
+     * method: selectUserInfoByUnionIdOrOpenId
+     * date: 2024/11/6 20:38
+     * param:
+     * return: com.moss.common.core.domain.entity.UserInfo
+     **/
+    UserInfo selectUserInfoByUnionIdOrOpenId(String unionId,String openId);
 }

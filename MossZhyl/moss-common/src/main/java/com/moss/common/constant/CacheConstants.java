@@ -12,6 +12,8 @@ public class CacheConstants
      */
     public static final String LOGIN_TOKEN_KEY = "login_tokens:";
 
+    public static final String LOGIN_USER_INFO_TOKEN_KEY = "login_user_info_tokens:";
+
     /**
      * 验证码 redis key
      */

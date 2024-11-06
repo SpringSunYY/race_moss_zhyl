@@ -5,11 +5,11 @@ export function login(username, password, code, uuid) {
     const data = {
         username,
         password,
-        code,
-        uuid
+        // code,
+        // uuid
     }
     return request({
-        'url': '/login',
+        'url': '/app/login',
         headers: {
             isToken: false
         },
@@ -33,7 +33,7 @@ export function register(data) {
 // 获取用户详细信息
 export function getInfo() {
     return request({
-        'url': '/getInfo',
+        'url': '/app/userInfo',
         'method': 'get'
     })
 }

@@ -79,8 +79,8 @@ export default {
       register: false,
       globalConfig: getApp().globalData.config,
       loginForm: {
-        username: "admin",
-        password: "admin123",
+        username: "52262419710321121X",
+        password: "123456",
         code: "",
         uuid: ''
       },

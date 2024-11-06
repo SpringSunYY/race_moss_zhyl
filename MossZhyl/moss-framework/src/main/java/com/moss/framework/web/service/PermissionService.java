@@ -1,6 +1,8 @@
 package com.moss.framework.web.service;
 
 import java.util.Set;
+
+import com.moss.common.core.domain.model.LoginUserInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import com.moss.common.constant.Constants;
@@ -155,5 +157,26 @@ public class PermissionService
     private boolean hasPermissions(Set<String> permissions, String permission)
     {
         return permissions.contains(Constants.ALL_PERMISSION) || permissions.contains(StringUtils.trim(permission));
+    }
+
+
+    /**
+     * 判断用户是否拥有某个角色 平台用户
+     *
+     * @param role 角色字符串
+     * @return 用户是否具备某角色
+     */
+    public boolean hasUserRole(String role)
+    {
+        if (StringUtils.isEmpty(role))
+        {
+            return false;
+        }
+        LoginUserInfo loginUser = SecurityUtils.getLoginUserInfo();
+        if (StringUtils.isNull(loginUser) || StringUtils.isEmpty(loginUser.getRole()))
+        {
+            return false;
+        }
+        return loginUser.getRole().equals(role);
     }
 }

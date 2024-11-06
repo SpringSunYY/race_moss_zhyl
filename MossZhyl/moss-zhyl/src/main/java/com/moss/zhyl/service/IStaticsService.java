@@ -2,7 +2,7 @@ package com.moss.zhyl.service;
 
 import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
 import com.moss.zhyl.domain.ElderlyDeviceBinding;
-import com.moss.zhyl.domain.UserInfo;
+import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.zhyl.domain.statics.vo.BarStaticVo;
 import com.moss.zhyl.domain.statics.vo.CountStaticVo;
 import com.moss.zhyl.domain.statics.vo.LineStaticVo;

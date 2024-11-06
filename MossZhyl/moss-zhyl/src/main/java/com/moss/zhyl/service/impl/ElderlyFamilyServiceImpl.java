@@ -3,12 +3,10 @@ package com.moss.zhyl.service.impl;
 import java.util.List;
 
 import com.moss.common.exception.ServiceException;
-import com.moss.common.utils.DateUtils;
 import com.moss.common.utils.SecurityUtils;
 import com.moss.common.utils.StringUtils;
 import com.moss.common.utils.uuid.IdUtils;
-import com.moss.zhyl.domain.Elderly;
-import com.moss.zhyl.domain.UserInfo;
+import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.zhyl.domain.dto.UserInfoElderlyDto;
 import com.moss.zhyl.domain.enums.UserInfoRoleEnum;
 import com.moss.zhyl.service.IUserInfoService;

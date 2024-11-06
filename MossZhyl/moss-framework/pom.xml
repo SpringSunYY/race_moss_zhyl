@@ -58,6 +58,10 @@
             <groupId>com.moss</groupId>
             <artifactId>moss-system</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.moss</groupId>
+            <artifactId>moss-zhyl</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

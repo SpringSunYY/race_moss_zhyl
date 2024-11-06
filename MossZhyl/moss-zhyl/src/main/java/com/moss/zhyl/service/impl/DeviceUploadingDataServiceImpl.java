@@ -11,7 +11,7 @@ import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
 import com.moss.zhyl.domain.DeviceUploadingData.ElderlyHealthData;
 import com.moss.zhyl.domain.DeviceUploadingData.argument.HealthArgument;
 import com.moss.zhyl.domain.ElderlyDeviceBinding;
-import com.moss.zhyl.domain.UserInfo;
+import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.zhyl.domain.dto.UserInfoElderlyDto;
 import com.moss.zhyl.domain.enums.DelFlagEnum;
 import com.moss.zhyl.domain.enums.DisabilityStatusEnum;

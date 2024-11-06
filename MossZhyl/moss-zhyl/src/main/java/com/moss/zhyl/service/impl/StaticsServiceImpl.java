@@ -1,12 +1,11 @@
 package com.moss.zhyl.service.impl;
 
-import com.github.pagehelper.PageInfo;
 import com.moss.common.utils.CalculateUtils;
 import com.moss.common.utils.StringUtils;
 import com.moss.zhyl.domain.DeviceType;
 import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
 import com.moss.zhyl.domain.ElderlyDeviceBinding;
-import com.moss.zhyl.domain.UserInfo;
+import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.zhyl.domain.enums.DelFlagEnum;
 import com.moss.zhyl.domain.enums.DeviceUploadingDataCommandEnum;
 import com.moss.zhyl.domain.enums.ProcessingStatusEnum;
@@ -21,7 +20,6 @@ import com.moss.zhyl.mapper.DeviceUploadingDataMapper;
 import com.moss.zhyl.mapper.ElderlyDeviceBindingMapper;
 import com.moss.zhyl.mapper.UserInfoMapper;
 import com.moss.zhyl.service.IStaticsService;
-import com.moss.zhyl.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

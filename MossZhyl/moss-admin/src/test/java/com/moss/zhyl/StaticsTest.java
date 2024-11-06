@@ -2,7 +2,7 @@ package com.moss.zhyl;
 
 import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
 import com.moss.zhyl.domain.ElderlyDeviceBinding;
-import com.moss.zhyl.domain.UserInfo;
+import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.zhyl.domain.statics.ro.StaticRo;
 import com.moss.zhyl.mapper.DeviceUploadingDataMapper;
 import com.moss.zhyl.mapper.ElderlyDeviceBindingMapper;

@@ -5,7 +5,7 @@ import com.moss.common.utils.uuid.IdUtils;
 import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
 import com.moss.zhyl.domain.DeviceUploadingData.ElderlyHealthData;
 import com.moss.zhyl.domain.HealthReport;
-import com.moss.zhyl.domain.UserInfo;
+import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.zhyl.domain.enums.DelFlagEnum;
 import com.moss.zhyl.domain.enums.DeviceUploadingDataCommandEnum;
 import com.moss.zhyl.domain.enums.HealthReportTypeEnum;

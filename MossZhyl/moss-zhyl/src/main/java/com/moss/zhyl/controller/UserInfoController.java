@@ -19,7 +19,7 @@ import com.moss.common.annotation.Log;
 import com.moss.common.core.controller.BaseController;
 import com.moss.common.core.domain.AjaxResult;
 import com.moss.common.enums.BusinessType;
-import com.moss.zhyl.domain.UserInfo;
+import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.zhyl.service.IUserInfoService;
 import com.moss.common.utils.poi.ExcelUtil;
 import com.moss.common.core.page.TableDataInfo;

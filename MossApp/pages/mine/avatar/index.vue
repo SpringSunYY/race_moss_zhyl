@@ -40,12 +40,12 @@
   import config from '@/config'
   import store from "@/store"
   import { uploadAvatar } from "@/api/system/user"
-  
+
   const baseUrl = config.baseUrl
 	let sysInfo = uni.getSystemInfoSync()
 	let SCREEN_WIDTH = sysInfo.screenWidth
 	let PAGE_X, // 手按下的x位置
-		PAGE_Y, // 手按下y的位置 
+		PAGE_Y, // 手按下y的位置
 		PR = sysInfo.pixelRatio, // dpi
 		T_PAGE_X, // 手移动的时候x的位置
 		T_PAGE_Y, // 手移动的时候Y的位置
@@ -68,7 +68,7 @@
 		 */
 		data() {
 			return {
-				imageSrc: store.getters.avatar,
+				imageSrc: store.getters.userInfoProfile,
 				isShowImg: false,
 				// 初始化的宽高
 				cropperInitW: SCREEN_WIDTH,

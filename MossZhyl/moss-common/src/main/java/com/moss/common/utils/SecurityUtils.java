@@ -3,6 +3,8 @@ package com.moss.common.utils;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.moss.common.core.domain.model.LoginUserInfo;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -174,5 +176,21 @@ public class SecurityUtils
         return roles.stream().filter(StringUtils::hasText)
                 .anyMatch(x -> Constants.SUPER_ADMIN.equals(x) || PatternMatchUtils.simpleMatch(x, role));
     }
+
+    /**
+     * 获取用户信息
+     **/
+    public static LoginUserInfo getLoginUserInfo()
+    {
+        try
+        {
+            return (LoginUserInfo) getAuthentication().getPrincipal();
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException("获取APP用户信息异常", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
 
 }

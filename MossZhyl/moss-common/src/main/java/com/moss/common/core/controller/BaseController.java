@@ -3,6 +3,8 @@ package com.moss.common.core.controller;
 import java.beans.PropertyEditorSupport;
 import java.util.Date;
 import java.util.List;
+
+import com.moss.common.core.domain.model.LoginUserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.WebDataBinder;
@@ -199,4 +201,13 @@ public class BaseController
     {
         return getLoginUser().getUsername();
     }
+
+    /**
+     * 获取APP用户缓存信息
+     */
+    public LoginUserInfo getLoginUserInfo()
+    {
+        return SecurityUtils.getLoginUserInfo();
+    }
+
 }
