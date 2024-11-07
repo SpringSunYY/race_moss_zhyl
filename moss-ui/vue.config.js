@@ -1,6 +1,6 @@
 'use strict'
 const path = require('path')
-
+const webpack = require('webpack');
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
@@ -67,6 +67,10 @@ module.exports = {
         algorithm: 'gzip',                             // 使用gzip压缩
         minRatio: 0.8,                                 // 压缩比例，小于 80% 的文件不会被压缩
         deleteOriginalAssets: false                    // 压缩后删除原文件
+      }),
+      new webpack.ProvidePlugin({
+        'window.Quill': 'quill/dist/quill.js',
+        'Quill': 'quill/dist/quill.js',
       })
     ],
   },

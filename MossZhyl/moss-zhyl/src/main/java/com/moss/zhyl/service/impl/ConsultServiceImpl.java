@@ -2,6 +2,9 @@ package com.moss.zhyl.service.impl;
 
 import java.util.List;
 import com.moss.common.utils.DateUtils;
+import com.moss.common.utils.SecurityUtils;
+import com.moss.common.utils.uuid.IdUtils;
+import com.moss.zhyl.domain.enums.DelFlagEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.moss.zhyl.mapper.ConsultMapper;
@@ -53,6 +56,9 @@ public class ConsultServiceImpl implements IConsultService
     @Override
     public int insertConsult(Consult consult)
     {
+        consult.setConsultId(IdUtils.snowflakeId());
+        consult.setDelFlag(DelFlagEnum.DEL_FLAG_0.getValue());
+        consult.setCreateBy(SecurityUtils.getUsername());
         consult.setCreateTime(DateUtils.getNowDate());
         return consultMapper.insertConsult(consult);
     }
@@ -66,6 +72,7 @@ public class ConsultServiceImpl implements IConsultService
     @Override
     public int updateConsult(Consult consult)
     {
+        consult.setUpdateBy(SecurityUtils.getUsername());
         return consultMapper.updateConsult(consult);
     }
 

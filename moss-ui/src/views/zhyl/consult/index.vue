@@ -141,7 +141,7 @@
     />
 
     <!-- 添加或修改咨询对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="标题" prop="consultTitle">
           <el-input v-model="form.consultTitle" placeholder="请输入标题" />
