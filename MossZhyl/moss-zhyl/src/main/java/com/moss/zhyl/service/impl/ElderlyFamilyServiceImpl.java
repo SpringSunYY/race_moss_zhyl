@@ -8,7 +8,7 @@ import com.moss.common.utils.StringUtils;
 import com.moss.common.utils.uuid.IdUtils;
 import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.zhyl.domain.dto.UserInfoElderlyDto;
-import com.moss.zhyl.domain.enums.UserInfoRoleEnum;
+import com.moss.common.enums.UserInfoRoleEnum;
 import com.moss.zhyl.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

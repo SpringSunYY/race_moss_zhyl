@@ -1,4 +1,4 @@
-package com.moss.zhyl.domain.enums;
+package com.moss.common.enums;
 
 import com.moss.common.utils.StringUtils;
 
@@ -18,7 +18,8 @@ import java.util.stream.Collectors;
 public enum UserInfoRoleEnum {
 
     ELDERLY("长者", "elderly"),
-    ELDERLY_FAMILY("家属", "elderly_family");
+    ELDERLY_FAMILY("家属", "elderly_family"),
+    NO_BINDING_USER_INFO("没有绑定的用户", "no_binding_user_info");
 
     private final String text;
     private final String value;

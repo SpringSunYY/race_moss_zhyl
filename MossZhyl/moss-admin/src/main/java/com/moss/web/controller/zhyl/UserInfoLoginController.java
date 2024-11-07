@@ -7,7 +7,6 @@ import com.moss.common.core.domain.AjaxResult;
 import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.common.core.domain.model.LoginUserInfo;
 import com.moss.framework.web.service.UserInfoLoginService;
-import com.moss.zhyl.wx.WxLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +25,7 @@ public class UserInfoLoginController extends BaseController {
     @Autowired
     private UserInfoLoginService userInfoLoginService;
 
-    @Autowired
-    private WxLoginService wxLoginService;
+
     @PostMapping("/login")
     public AjaxResult login(@RequestBody LoginUserInfo loginUserInfo) {
         AjaxResult ajax = AjaxResult.success();
@@ -51,7 +49,7 @@ public class UserInfoLoginController extends BaseController {
     public AjaxResult miniProgramLogin(@RequestParam("code") String code) {
         AjaxResult ajax = AjaxResult.success();
         // 生成令牌
-        String token = wxLoginService.miniProgramLogin(code);
+        String token = userInfoLoginService.miniProgramLogin(code);
         ajax.put(Constants.TOKEN, token);
         return ajax;
     }

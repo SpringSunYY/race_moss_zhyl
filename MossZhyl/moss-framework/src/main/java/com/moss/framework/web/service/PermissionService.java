@@ -2,6 +2,7 @@ package com.moss.framework.web.service;
 
 import java.util.Set;
 
+import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.common.core.domain.model.LoginUserInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -172,11 +173,11 @@ public class PermissionService
         {
             return false;
         }
-        LoginUserInfo loginUser = SecurityUtils.getLoginUserInfo();
-        if (StringUtils.isNull(loginUser) || StringUtils.isEmpty(loginUser.getRole()))
+        UserInfo userInfo = SecurityUtils.getUserInfo();
+        if (StringUtils.isNull(userInfo) || StringUtils.isEmpty(userInfo.getUserInfoRole()))
         {
             return false;
         }
-        return loginUser.getRole().equals(role);
+        return userInfo.getUserInfoRole().equals(role);
     }
 }

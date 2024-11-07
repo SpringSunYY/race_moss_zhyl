@@ -71,6 +71,7 @@ public interface UserInfoMapper {
      * method: selectUserInfoCount
      * date: 2024/11/1 22:22
      * param:
+     *
      * @param: userInfo
      * return: java.util.List<com.moss.common.core.domain.entity.UserInfo>
      **/
@@ -82,8 +83,22 @@ public interface UserInfoMapper {
      * method: staticByCreateTimeCounts
      * date: 2024/11/2 14:57
      * param:
+     *
      * @param: userInfo
      * return: java.util.List<com.moss.zhyl.domain.statics.ro.StaticRo>
      **/
     List<StaticRo> staticByCreateTimeCounts(UserInfo userInfo);
+
+    /**
+     * description: 根据unionId和openId查询用户
+     * author: YY
+     * method: selectUserInfoByUnionIdOrOpenId
+     * date: 2024/11/7 8:48
+     * param:
+     *
+     * @param: unionId
+     * @param: openId
+     * return: com.moss.common.core.domain.entity.UserInfo
+     **/
+    UserInfo selectUserInfoByUnionIdOrOpenId(@Param("unionId") String unionId, @Param("openId") String openId);
 }

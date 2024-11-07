@@ -27,11 +27,6 @@ public class LoginUserInfo implements UserDetails {
     private Long userInfoId;
 
     /**
-     * 用户角色
-     */
-    private String role;
-
-    /**
      * 用户唯一标识
      */
     private String token;
@@ -72,6 +67,10 @@ public class LoginUserInfo implements UserDetails {
     private String password;
 
     public LoginUserInfo() {
+    }
+
+    public LoginUserInfo(UserInfo userInfo) {
+        this.userInfo=userInfo;
     }
 
     public LoginUserInfo(Long userInfoId, UserInfo userInfo) {
@@ -118,14 +117,6 @@ public class LoginUserInfo implements UserDetails {
     @Override
     public String getPassword() {
         return password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public void setPassword(String password) {

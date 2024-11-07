@@ -9,7 +9,7 @@ import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.zhyl.domain.enums.DelFlagEnum;
 import com.moss.zhyl.domain.enums.DeviceUploadingDataCommandEnum;
 import com.moss.zhyl.domain.enums.ProcessingStatusEnum;
-import com.moss.zhyl.domain.enums.UserInfoRoleEnum;
+import com.moss.common.enums.UserInfoRoleEnum;
 import com.moss.zhyl.domain.statics.ro.StaticRo;
 import com.moss.zhyl.domain.statics.vo.BarStaticVo;
 import com.moss.zhyl.domain.statics.vo.CountStaticVo;

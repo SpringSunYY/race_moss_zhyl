@@ -132,12 +132,11 @@ public class UserInfoTokenService {
      * @param loginUserInfo 登录信息
      */
     public void refreshToken(LoginUserInfo loginUserInfo) {
-        loginUserInfo.setRole(loginUserInfo.getRole());
         loginUserInfo.setLoginTime(System.currentTimeMillis());
         loginUserInfo.setExpireTime(loginUserInfo.getLoginTime() + expireTime * MILLIS_MINUTE);
         // 根据uuid将loginUser缓存
         String userKey = getTokenKey(loginUserInfo.getToken());
-        System.err.println("刷新令牌"+loginUserInfo);
+//        System.err.println("刷新令牌"+loginUserInfo);
         redisCache.setCacheObject(userKey, loginUserInfo, expireTime, TimeUnit.MINUTES);
     }
 

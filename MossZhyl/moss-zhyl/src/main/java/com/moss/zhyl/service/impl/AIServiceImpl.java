@@ -9,7 +9,7 @@ import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.zhyl.domain.enums.DelFlagEnum;
 import com.moss.zhyl.domain.enums.DeviceUploadingDataCommandEnum;
 import com.moss.zhyl.domain.enums.HealthReportTypeEnum;
-import com.moss.zhyl.domain.enums.UserInfoRoleEnum;
+import com.moss.common.enums.UserInfoRoleEnum;
 import com.moss.zhyl.mapper.HealthReportMapper;
 import com.moss.zhyl.mapper.UserInfoMapper;
 import com.moss.zhyl.service.IAIService;

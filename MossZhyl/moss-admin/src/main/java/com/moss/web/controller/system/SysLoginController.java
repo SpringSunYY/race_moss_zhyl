@@ -3,7 +3,6 @@ package com.moss.web.controller.system;
 import java.util.List;
 import java.util.Set;
 
-import com.moss.zhyl.wx.WxLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.moss.common.constant.Constants;
@@ -33,8 +32,6 @@ public class SysLoginController
     @Autowired
     private SysPermissionService permissionService;
 
-    @Autowired
-    private WxLoginService wxLoginService;
 
     /**
      * 登录方法

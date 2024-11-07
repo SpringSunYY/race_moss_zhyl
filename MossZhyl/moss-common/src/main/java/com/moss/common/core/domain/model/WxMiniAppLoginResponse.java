@@ -1,4 +1,4 @@
-package com.moss.zhyl.wx;
+package com.moss.common.core.domain.model;
 
 import lombok.Data;
 

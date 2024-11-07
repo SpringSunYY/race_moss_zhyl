@@ -185,6 +185,17 @@
         ) AS user_counts ON date_range.date = user_counts.create_date
         ORDER BY date_range.date;
     </select>
+    <select id="selectUserInfoByUnionIdOrOpenId" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        <where>
+        <if test="openId !=null and openId != ''">
+            or wx_openid = #{openId}
+        </if>
+        <if test="unionId !=null and unionId != ''">
+            or wx_unionid = #{unionId}
+        </if>
+        </where>
+    </select>
 
 
     <insert id="insertUserInfo" parameterType="UserInfo">

@@ -25,7 +25,7 @@ import static com.moss.common.constant.ConfigConstants.YL_USER_INFO_INIT_PASSWOR
 import static com.moss.common.constant.PermissionsConstants.ZHYL_USERINFO_UPDATE_PASSWORD;
 import static com.moss.common.constant.PermissionsConstants.ZHYL_USER_INFO_LOOK_DELETE;
 import static com.moss.zhyl.domain.enums.DelFlagEnum.DEL_FLAG_0;
-import static com.moss.zhyl.domain.enums.UserInfoRoleEnum.ELDERLY_FAMILY;
+import static com.moss.common.enums.UserInfoRoleEnum.ELDERLY_FAMILY;
 
 /**
  * 用户信息Service业务层处理
@@ -257,6 +257,6 @@ public class UserInfoServiceImpl implements IUserInfoService {
 
     @Override
     public UserInfo selectUserInfoByUnionIdOrOpenId(String unionId, String openId) {
-        return null;
+        return userInfoMapper.selectUserInfoByUnionIdOrOpenId(unionId, openId);
     }
 }

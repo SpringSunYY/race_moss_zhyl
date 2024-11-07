@@ -15,7 +15,7 @@ import com.moss.zhyl.mapper.ElderlyMapper;
 import com.moss.zhyl.domain.Elderly;
 import com.moss.zhyl.service.IElderlyService;
 
-import static com.moss.zhyl.domain.enums.UserInfoRoleEnum.ELDERLY;
+import static com.moss.common.enums.UserInfoRoleEnum.ELDERLY;
 
 /**
  * 长者信息Service业务层处理

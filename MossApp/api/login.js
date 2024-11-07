@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 // 登录方法
-export function login(username, password, code, uuid) {
+export function login(username, password) {
     const data = {
         username,
         password,
@@ -61,7 +61,7 @@ export function getCodeImg() {
 //小程序微信登录
 export function miniProgramLogin(code) {
     return request({
-        'url': '/login/miniProgramLogin',
+        'url': '/app/login/miniProgramLogin',
         'method': 'get',
         headers: {
             isToken: false

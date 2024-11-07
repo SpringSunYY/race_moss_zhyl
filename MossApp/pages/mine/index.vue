@@ -86,6 +86,9 @@
         version: getApp().globalData.config.appInfo.version
       }
     },
+    created() {
+      console.log(this.$store.state.user)
+    },
     computed: {
       avatar() {
         return this.$store.state.user.avatar

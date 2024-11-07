@@ -147,13 +147,7 @@ export default {
         success: async function (res) {
           if (~res.provider.indexOf('weixin')) {
             let loginRes = await that.getLogin();
-            miniProgramLogin(loginRes.code).then(res => {
-              uni.showToast({
-                position:'top',
-                icon: 'none',
-                title: '登录成功'
-              })
-            })
+            that.miniProgramLogin(loginRes.code)
           }
         },
         fail: function (err) {
@@ -162,6 +156,14 @@ export default {
             title: err
           })
         }
+      })
+    },
+    async miniProgramLogin(code){
+      this.$store.dispatch('MiniProgramLogin', code).then(() => {
+        this.$modal.closeLoading()
+        this.loginSuccess()
+      }).catch(() => {
+
       })
     },
 
