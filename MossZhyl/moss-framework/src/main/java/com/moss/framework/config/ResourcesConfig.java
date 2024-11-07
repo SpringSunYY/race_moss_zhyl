@@ -18,7 +18,7 @@ import com.moss.framework.interceptor.RepeatSubmitInterceptor;
 /**
  * 通用配置
  * 
- * @author ruoyi
+ * @author YY
  */
 @Configuration
 public class ResourcesConfig implements WebMvcConfigurer

@@ -78,8 +78,8 @@ export default {
       register: false,
       globalConfig: getApp().globalData.config,
       loginForm: {
-        username: "",
-        password: "",
+        username: "52262419710321121X",
+        password: "123456",
         code: "",
         uuid: "",
       },
@@ -129,6 +129,12 @@ export default {
             this.userInfo = res.userInfo
           },
           fail: (err) => {
+            this.isGetWxLoading = false;
+            uni.showToast({
+              position: 'top',
+              icon: 'none',
+              title: '获取失败'
+            })
             reject(err)
           }
         })

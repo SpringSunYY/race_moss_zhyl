@@ -10,7 +10,7 @@ import com.moss.framework.web.domain.Server;
 /**
  * 服务器监控
  * 
- * @author ruoyi
+ * @author YY
  */
 @RestController
 @RequestMapping("/monitor/server")

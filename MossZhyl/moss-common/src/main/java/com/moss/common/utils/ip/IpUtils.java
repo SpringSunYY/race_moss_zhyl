@@ -9,7 +9,7 @@ import com.moss.common.utils.StringUtils;
 /**
  * 获取IP方法
  * 
- * @author ruoyi
+ * @author YY
  */
 public class IpUtils
 {

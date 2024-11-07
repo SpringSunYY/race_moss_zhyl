@@ -5,7 +5,7 @@ import com.moss.common.utils.DateUtils;
 import com.moss.common.utils.StringUtils;
 
 /**
- * @author ruoyi 序列生成类
+ * @author YY 序列生成类
  */
 public class Seq
 {

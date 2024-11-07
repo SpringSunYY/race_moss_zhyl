@@ -6,7 +6,7 @@ import com.moss.system.domain.SysPost;
 /**
  * 岗位信息 数据层
  * 
- * @author ruoyi
+ * @author YY
  */
 public interface SysPostMapper
 {

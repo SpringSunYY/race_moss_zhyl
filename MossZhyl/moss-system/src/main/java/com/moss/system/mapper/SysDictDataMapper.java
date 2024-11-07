@@ -7,7 +7,7 @@ import com.moss.common.core.domain.entity.SysDictData;
 /**
  * 字典表 数据层
  * 
- * @author ruoyi
+ * @author YY
  */
 public interface SysDictDataMapper
 {

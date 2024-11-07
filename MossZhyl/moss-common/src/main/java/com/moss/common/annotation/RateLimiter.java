@@ -11,7 +11,7 @@ import com.moss.common.enums.LimitType;
 /**
  * 限流注解
  * 
- * @author ruoyi
+ * @author YY
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

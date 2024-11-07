@@ -3,7 +3,7 @@ package com.moss.common.enums;
 /**
  * 限流类型
  *
- * @author ruoyi
+ * @author YY
  */
 
 public enum LimitType

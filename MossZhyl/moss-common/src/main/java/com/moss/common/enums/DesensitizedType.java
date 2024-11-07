@@ -6,7 +6,7 @@ import com.moss.common.utils.DesensitizedUtil;
 /**
  * 脱敏类型
  *
- * @author ruoyi
+ * @author YY
  */
 public enum DesensitizedType
 {

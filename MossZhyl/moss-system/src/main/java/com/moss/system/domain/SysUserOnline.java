@@ -3,7 +3,7 @@ package com.moss.system.domain;
 /**
  * 当前在线会话
  * 
- * @author ruoyi
+ * @author YY
  */
 public class SysUserOnline
 {

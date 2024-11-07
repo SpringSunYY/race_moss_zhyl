@@ -5,7 +5,7 @@ import com.moss.common.utils.Arith;
 /**
  * 內存相关信息
  * 
- * @author ruoyi
+ * @author YY
  */
 public class Mem
 {

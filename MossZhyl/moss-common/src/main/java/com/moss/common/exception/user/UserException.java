@@ -5,7 +5,7 @@ import com.moss.common.exception.base.BaseException;
 /**
  * 用户信息异常类
  * 
- * @author ruoyi
+ * @author YY
  */
 public class UserException extends BaseException
 {

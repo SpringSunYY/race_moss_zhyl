@@ -3,7 +3,7 @@ package com.moss.common.exception.user;
 /**
  * 黑名单IP异常类
  * 
- * @author ruoyi
+ * @author YY
  */
 public class BlackListException extends UserException
 {

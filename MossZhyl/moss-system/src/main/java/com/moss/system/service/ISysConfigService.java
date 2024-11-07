@@ -6,7 +6,7 @@ import com.moss.system.domain.SysConfig;
 /**
  * 参数配置 服务层
  * 
- * @author ruoyi
+ * @author YY
  */
 public interface ISysConfigService
 {

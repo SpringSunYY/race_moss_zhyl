@@ -27,7 +27,7 @@
 
     <view class="content-section">
       <view class="mine-actions grid col-4 text-center">
-        <view class="action-item" @click="handleJiaoLiuQun">
+        <view class="action-item"  @click="handleJiaoLiuQun">
           <view class="iconfont icon-friendfill text-pink icon"></view>
           <text class="text">交流群</text>
         </view>

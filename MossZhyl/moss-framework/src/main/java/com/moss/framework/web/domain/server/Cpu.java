@@ -5,7 +5,7 @@ import com.moss.common.utils.Arith;
 /**
  * CPU相关信息
  * 
- * @author ruoyi
+ * @author YY
  */
 public class Cpu
 {

@@ -21,7 +21,7 @@ import com.moss.quartz.domain.SysJob;
 /**
  * 定时任务工具类
  * 
- * @author ruoyi
+ * @author YY
  *
  */
 public class ScheduleUtils

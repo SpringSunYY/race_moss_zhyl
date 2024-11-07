@@ -30,7 +30,7 @@ import com.moss.quartz.util.ScheduleUtils;
 /**
  * 调度任务信息操作处理
  * 
- * @author ruoyi
+ * @author YY
  */
 @RestController
 @RequestMapping("/monitor/job")

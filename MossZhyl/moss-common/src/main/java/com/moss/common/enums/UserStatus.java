@@ -3,7 +3,7 @@ package com.moss.common.enums;
 /**
  * 用户状态
  * 
- * @author ruoyi
+ * @author YY
  */
 public enum UserStatus
 {

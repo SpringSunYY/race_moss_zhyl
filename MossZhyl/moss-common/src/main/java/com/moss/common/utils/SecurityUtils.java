@@ -19,7 +19,7 @@ import com.moss.common.exception.ServiceException;
 /**
  * 安全服务工具类
  *
- * @author ruoyi
+ * @author YY
  */
 public class SecurityUtils {
 

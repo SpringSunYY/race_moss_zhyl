@@ -27,7 +27,7 @@ import com.moss.framework.web.service.TokenService;
 /**
  * token过滤器 验证token有效性
  *
- * @author ruoyi
+ * @author YY
  */
 @Component
 @Log
@@ -44,6 +44,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         if (request.getRequestURI().contains(Constants.APP_URI)) {
             log.info("前台接口请求:" + request.getRequestURI());
             LoginUserInfo loginUserInfo = userInfoTokenService.getLoginUserInfo(request);
+//            System.out.println("loginUserInfo = " + loginUserInfo);
             if (StringUtils.isNotNull(loginUserInfo) && StringUtils.isNull(SecurityUtils.getAuthentication())) {
                 userInfoTokenService.verifyToken(loginUserInfo);
                 auth(loginUserInfo, loginUserInfo.getAuthorities(), request);

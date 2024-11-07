@@ -14,7 +14,7 @@ import com.moss.system.service.ISysConfigService;
 /**
  * 注册验证
  * 
- * @author ruoyi
+ * @author YY
  */
 @RestController
 public class SysRegisterController extends BaseController

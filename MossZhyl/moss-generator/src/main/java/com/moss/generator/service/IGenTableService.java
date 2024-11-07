@@ -9,7 +9,7 @@ import com.moss.generator.domain.GenTable;
 /**
  * 业务 服务层
  *
- * @author ruoyi
+ * @author YY
  */
 public interface IGenTableService {
     /**

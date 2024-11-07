@@ -16,7 +16,7 @@ import com.moss.framework.security.context.AuthenticationContextHolder;
 /**
  * 登录密码方法
  * 
- * @author ruoyi
+ * @author YY
  */
 @Component
 public class SysPasswordService

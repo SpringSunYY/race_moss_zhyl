@@ -14,7 +14,7 @@ import com.moss.system.service.ISysRoleService;
 /**
  * 用户权限处理
  * 
- * @author ruoyi
+ * @author YY
  */
 @Component
 public class SysPermissionService

@@ -52,6 +52,7 @@
 
 <script>
 import {updateUserProfile} from "@/api/system/user"
+import {getCode} from "../../../api/system/zhyl/userInfo";
 
 export default {
   data() {
@@ -88,28 +89,33 @@ export default {
     }
   },
   onReady() {
-    this.$refs.form.setRules(this.rules)
+    // this.$refs.form.setRules(this.rules)
   },
   methods: {
     codeChange(text) {
       this.codeValue = text;
     },
     getCode() {
-      if (this.$refs.uCode.canGetCode) {
-        // 模拟向后端请求验证码
-        uni.showLoading({
-          title: '正在获取验证码'
-        })
-        setTimeout(() => {
-          uni.hideLoading();
-          // 这里此提示会被this.start()方法中的提示覆盖
-          uni.$u.toast('验证码已发送');
-          // 通知验证码组件内部开始倒计时
-          this.$refs.uCode.start();
-        }, 2000);
-      } else {
-        uni.$u.toast('倒计时结束后再发送');
-      }
+      this.$refs.form.validateField('phonenumber') // 校验手机号码字段
+          .then(() => {
+            // 如果校验通过，调用发送验证码接口
+            getCode(this.user.phonenumber)
+                .then(response => {
+                  if (response.code === 200) {
+                    this.$refs.uCode.start(); // 开始倒计时
+                    this.$modal.msgSuccess("验证码已发送");
+                  } else {
+                    this.$modal.msgError(response.msg);
+                  }
+                })
+                .catch(() => {
+                  this.$modal.msgError("验证码发送失败，请重试");
+                });
+          })
+          .catch(error => {
+            // 如果校验不通过，显示错误信息
+            this.$modal.msgError(error.message || "手机号校验失败");
+          });
     },
     change(e) {
       console.log('change', e);

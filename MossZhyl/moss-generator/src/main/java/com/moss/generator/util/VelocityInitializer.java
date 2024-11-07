@@ -7,7 +7,7 @@ import com.moss.common.constant.Constants;
 /**
  * VelocityEngine工厂
  * 
- * @author ruoyi
+ * @author YY
  */
 public class VelocityInitializer
 {

@@ -11,7 +11,7 @@ import com.moss.common.core.domain.entity.SysMenu;
 /**
  * Treeselect树结构实体类
  * 
- * @author ruoyi
+ * @author YY
  */
 public class TreeSelect implements Serializable
 {

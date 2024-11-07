@@ -16,7 +16,7 @@ import com.moss.framework.security.context.PermissionContextHolder;
 /**
  * RuoYi首创 自定义权限实现，ss取自SpringSecurity首字母
  * 
- * @author ruoyi
+ * @author YY
  */
 @Service("ss")
 public class PermissionService
@@ -179,5 +179,33 @@ public class PermissionService
             return false;
         }
         return userInfo.getUserInfoRole().equals(role);
+    }
+
+    /**
+     * 验证用户是否具有以下任意一个角色
+     *
+     * @param roles 以 ROLE_NAMES_DELIMETER 为分隔符的角色列表
+     * @return 用户是否具有以下任意一个角色
+     */
+    public boolean hasUserAnyRole(String roles)
+    {
+        if (StringUtils.isEmpty(roles))
+        {
+            return false;
+        }
+        UserInfo userInfo = SecurityUtils.getUserInfo();
+        if (StringUtils.isNull(userInfo) || StringUtils.isEmpty(userInfo.getUserInfoRole()))
+        {
+            return false;
+        }
+        for (String role : roles.split(Constants.ROLE_DELIMETER))
+        {
+            System.out.println("role = " + role);
+            if (hasUserRole(role))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
