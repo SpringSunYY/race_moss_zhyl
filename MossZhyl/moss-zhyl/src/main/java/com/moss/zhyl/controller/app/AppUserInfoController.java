@@ -42,7 +42,7 @@ public class AppUserInfoController extends BaseController {
     /**
      * 查询用户信息列表
      */
-    @PreAuthorize("@ss.hasUserAnyRole('no_binding_user_info,elderly')")
+    @PreAuthorize("@ss.hasUserAnyRole('no_binding_user_info')")
     @GetMapping("/code")
     public AjaxResult code(String phoneNumber) {
         if (StrUtil.isEmpty(phoneNumber)) {
@@ -52,8 +52,30 @@ public class AppUserInfoController extends BaseController {
         String captcha = CalculateUtils.generateNumericCaptcha(CAPTCHA_LENGTH);
         System.err.println(captcha);
         //保存验证码信息
-        redisCache.setCacheObject(CAPTCHA_CODE_NO_USER_ROLE_KEY + phoneNumber, captcha, 60, TimeUnit.SECONDS);
+        redisCache.setCacheObject(CAPTCHA_CODE_NO_USER_ROLE_KEY + phoneNumber, captcha, 60 * 5, TimeUnit.SECONDS);
         // TODO 短信
         return new AjaxResult(200, "获取成功！！！");
+    }
+
+    /**
+     * 绑定用户
+     *
+     * @param phoneNumber
+     * @param captcha
+     * @param idCard
+     * @return
+     */
+    @PreAuthorize("@ss.hasUserAnyRole('no_binding_user_info')")
+    @GetMapping("/binding")
+    public AjaxResult binding(String phoneNumber, String captcha, String idCard) {
+        if (StrUtil.isEmpty(phoneNumber) || StrUtil.isEmpty(captcha) || StrUtil.isEmpty(idCard)) {
+            return new AjaxResult(500, "手机号、验证码、身份证号不能为空！！！");
+        }
+        //获取验证码
+        String cache = redisCache.getCacheObject(CAPTCHA_CODE_NO_USER_ROLE_KEY + phoneNumber);
+        if (!CalculateUtils.validateCode(captcha, cache, CAPTCHA_LENGTH)) {
+            return new AjaxResult(500, "验证码错误！！！");
+        }
+        return success(userInfoService.bindingByUnionid(phoneNumber, captcha, idCard));
     }
 }

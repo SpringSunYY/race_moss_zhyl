@@ -12,8 +12,8 @@
           ></u-input>
         </uni-forms-item>
 
-        <uni-forms-item label="手机号码" name="phonenumber">
-          <uni-easyinput v-model="user.phonenumber" placeholder="请输入手机号码"/>
+        <uni-forms-item label="手机号码" name="phoneNumber">
+          <uni-easyinput v-model="user.phoneNumber" placeholder="请输入手机号码"/>
         </uni-forms-item>
 
         <uni-forms-item label="验证码" name="code">
@@ -52,14 +52,14 @@
 
 <script>
 import {updateUserProfile} from "@/api/system/user"
-import {getCode} from "../../../api/system/zhyl/userInfo";
+import {binding, getCode} from "../../../api/system/zhyl/userInfo";
 
 export default {
   data() {
     return {
       user: {
         idCard: "",
-        phonenumber: "",
+        phoneNumber: "",
         code: "",
       },
       codeValue: '',
@@ -70,7 +70,7 @@ export default {
             errorMessage: '身份证号不能为空'
           }]
         },
-        phonenumber: {
+        phoneNumber: {
           rules: [{
             required: true,
             errorMessage: '手机号码不能为空'
@@ -96,10 +96,10 @@ export default {
       this.codeValue = text;
     },
     getCode() {
-      this.$refs.form.validateField('phonenumber') // 校验手机号码字段
+      this.$refs.form.validateField('phoneNumber') // 校验手机号码字段
           .then(() => {
             // 如果校验通过，调用发送验证码接口
-            getCode(this.user.phonenumber)
+            getCode(this.user.phoneNumber)
                 .then(response => {
                   if (response.code === 200) {
                     this.$refs.uCode.start(); // 开始倒计时
@@ -121,9 +121,10 @@ export default {
       console.log('change', e);
     },
     submit() {
-      this.$refs.form.validate().then(() => {
-        updateUserProfile(this.user).then(() => {
-          this.$modal.msgSuccess("修改成功")
+      binding(this.user.phoneNumber, this.user.code, this.user.idCard).then(() => {
+        this.$modal.msgSuccess("绑定成功，请重新登录")
+        this.$store.dispatch('LogOut').then(() => {
+          this.$tab.reLaunch('/pages/index')
         })
       })
     }

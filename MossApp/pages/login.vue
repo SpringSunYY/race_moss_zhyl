@@ -99,7 +99,7 @@ export default {
         success: (res) => {
           console.log(res);
           // 判断是否小程序环境
-          this.showWxLogin = res.host.env === "WeChat";
+          this.showWxLogin = res.hostName === "WeChat";
           this.isWxLogin = this.showWxLogin; // 默认微信登录方式
         },
       });

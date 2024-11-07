@@ -27,7 +27,7 @@
 
     <view class="content-section">
       <view class="mine-actions grid col-4 text-center">
-        <view class="action-item"  @click="handleJiaoLiuQun">
+        <view class="action-item" @click="handleJiaoLiuQun">
           <view class="iconfont icon-friendfill text-pink icon"></view>
           <text class="text">交流群</text>
         </view>
@@ -46,8 +46,8 @@
       </view>
 
       <view class="menu-list">
-        <view class="list-cell list-cell-arrow" @click="handleToBindingUser">
-          <view class="menu-item-box">
+        <view class="list-cell list-cell-arrow" v-if="checkRole(['no_binding_user_info'])" @click="handleToBindingUser">
+          <view class="menu-item-box" >
             <view class="iconfont icon-user menu-icon"></view>
             <view>绑定身份</view>
           </view>
@@ -84,6 +84,8 @@
 
 <script>
 
+import {checkRole} from "../../utils/permission";
+
 export default {
     data() {
       return {
@@ -103,6 +105,7 @@ export default {
       }
     },
     methods: {
+      checkRole,
       handleToBindingUser() {
         this.$tab.navigateTo('/pages/mine/info/binding')
       },

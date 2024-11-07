@@ -1,10 +1,9 @@
 import config from '@/config'
 import storage from '@/utils/storage'
 import constant from '@/utils/constant'
-import {login, logout, getInfo} from '@/api/login'
-import {getToken, setToken, removeToken} from '@/utils/auth'
+import {getInfo, login, logout} from '@/api/login'
+import {getToken, removeToken, setToken} from '@/utils/auth'
 import {miniProgramLogin} from "../../api/login";
-import code from "uview-ui/libs/config/props/code";
 
 const baseUrl = config.baseUrl
 
@@ -84,6 +83,7 @@ const user = {
                     const username = (user == null || user.userInfoName === "" || user.userInfoName == null) ? "" : user.userInfoName
                     if (user.userInfoRole && user.userInfoRole !== "") {
                         //app之后只会有一种角色
+                        commit('SET_ROLES', [user.userInfoRole])
                         commit('SET_ROLE', user.userInfoRole)
                         commit('SET_PERMISSIONS', res.permissions)
                     } else {

@@ -143,7 +143,7 @@ public class UserInfoServiceImpl implements IUserInfoService {
         BeanUtils.copyProperties(userInfoElderlyDto, userInfo);
         //如果是家属直接添加
         if (userInfo.getUserInfoRole().equals(ELDERLY_FAMILY.getValue())) {
-             userInfoMapper.insertUserInfo(userInfo);
+            userInfoMapper.insertUserInfo(userInfo);
             //插入家属关联信息
             return elderlyFamilyService.insertElderlyFamilyByUserInfoElderlyDto(userInfoElderlyDto);
         }
@@ -258,5 +258,23 @@ public class UserInfoServiceImpl implements IUserInfoService {
     @Override
     public UserInfo selectUserInfoByUnionIdOrOpenId(String unionId, String openId) {
         return userInfoMapper.selectUserInfoByUnionIdOrOpenId(unionId, openId);
+    }
+
+    @Override
+    public int bindingByUnionid(String phoneNumber, String captcha, String idCard) {
+        UserInfo userInfo = userInfoMapper.selectUserInfoByIdCard(idCard, DEL_FLAG_0.getValue());
+        if (StringUtils.isNull(userInfo)) {
+            throw new ServiceException("未查询到用户信息");
+        }
+        if (StringUtils.isEmpty(userInfo.getContactPhone()) && phoneNumber.equals(userInfo.getContactPhone())) {
+            throw new ServiceException("该身份证已绑定手机号");
+        }
+        if (StringUtils.isNotEmpty(userInfo.getWxUnionid()) || StringUtils.isNotEmpty(userInfo.getWxOpenid())) {
+            throw new ServiceException("该用户已绑定微信");
+        }
+        UserInfo loginUser = SecurityUtils.getUserInfo();
+        userInfo.setWxUnionid(loginUser.getWxUnionid());
+        userInfo.setWxOpenid(loginUser.getWxOpenid());
+        return userInfoMapper.updateUserInfo(userInfo);
     }
 }

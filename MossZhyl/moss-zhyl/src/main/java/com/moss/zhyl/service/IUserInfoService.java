@@ -2,6 +2,7 @@ package com.moss.zhyl.service;
 
 import java.util.List;
 
+import com.moss.common.core.domain.AjaxResult;
 import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.zhyl.domain.dto.UserInfoElderlyDto;
 
@@ -113,4 +114,17 @@ public interface IUserInfoService {
      * return: com.moss.common.core.domain.entity.UserInfo
      **/
     UserInfo selectUserInfoByUnionIdOrOpenId(String unionId,String openId);
+
+    /**
+     * description: 绑定用户信息，相关微信
+     * author: YY
+     * method: bindingByUnionid
+     * date: 2024/11/7 17:09
+     * param:
+     * @param: phoneNumber
+     * @param: captcha
+     * @param: idCard
+     * return: int
+     **/
+    int bindingByUnionid(String phoneNumber, String captcha, String idCard);
 }

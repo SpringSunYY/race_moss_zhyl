@@ -200,7 +200,6 @@ public class PermissionService
         }
         for (String role : roles.split(Constants.ROLE_DELIMETER))
         {
-            System.out.println("role = " + role);
             if (hasUserRole(role))
             {
                 return true;

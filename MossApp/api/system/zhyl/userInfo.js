@@ -11,3 +11,16 @@ export function getCode(phoneNumber) {
         }
     })
 }
+
+export function binding(phoneNumber, captcha, idCard) {
+    return request({
+        'url': '/app/zhyl/userInfo/binding',
+        method: 'get',
+        timeout: 20000,
+        params: {
+            phoneNumber: phoneNumber,
+            captcha: captcha,
+            idCard: idCard
+        }
+    })
+}
