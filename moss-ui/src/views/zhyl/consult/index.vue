@@ -35,14 +35,35 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="删除" prop="delFlag">
-        <el-input
-          v-model="queryParams.delFlag"
-          placeholder="请输入删除"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <!--      <el-form-item label="修改人" prop="updateBy">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.updateBy"-->
+      <!--          placeholder="请输入修改人"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <el-form-item label="创建时间">
+        <el-date-picker
+          v-model="daterangeCreateTime"
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
       </el-form-item>
+      <!--      <el-form-item label="删除" prop="delFlag">-->
+      <!--        <el-select v-model="queryParams.delFlag" placeholder="请选择删除" clearable>-->
+      <!--          <el-option-->
+      <!--            v-for="dict in dict.type.yl_del_flag"-->
+      <!--            :key="dict.value"-->
+      <!--            :label="dict.label"-->
+      <!--            :value="dict.value"-->
+      <!--          />-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -58,7 +79,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['zhyl:consult:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -69,7 +91,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['zhyl:consult:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -80,7 +103,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['zhyl:consult:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -90,29 +114,51 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['zhyl:consult:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="consultList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="consultId" />
-        <el-table-column label="标题" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible" prop="consultTitle" />
-        <el-table-column label="咨询类型" align="center" v-if="columns[2].visible" prop="consultType">
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column type="expand">
+        <template slot-scope="scope">
+          <h2>{{ scope.row.consultTitle }}</h2>
+          <el-form label-position="left" inline class="demo-table-expand">
+            <div class="ql-container ql-snow" style=" border: none;">
+              <div class="ql-editor" v-html="scope.row.consultContent"/>
+            </div>
+          </el-form>
+        </template>
+      </el-table-column>
+      <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="consultId"/>
+      <el-table-column label="标题" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible"
+                       prop="consultTitle"/>
+      <el-table-column label="咨询类型" align="center" v-if="columns[2].visible" prop="consultType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yl_consult_type" :value="scope.row.consultType"/>
         </template>
       </el-table-column>
-        <el-table-column label="内容" :show-overflow-tooltip="true" align="center" v-if="columns[3].visible" prop="consultContent" />
-        <el-table-column label="排序" :show-overflow-tooltip="true" align="center" v-if="columns[4].visible" prop="sorted" />
-        <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[5].visible" prop="createBy" />
-        <el-table-column label="创建时间" align="center" v-if="columns[6].visible" prop="createTime" width="180">
+      <el-table-column label="内容" :show-overflow-tooltip="true" align="center" v-if="columns[3].visible"
+                       prop="consultContent"/>
+      <el-table-column label="排序" :show-overflow-tooltip="true" align="center" v-if="columns[4].visible"
+                       prop="sorted"/>
+      <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[5].visible"
+                       prop="createBy"/>
+      <el-table-column label="修改人" :show-overflow-tooltip="true" align="center" v-if="columns[6].visible"
+                       prop="updateBy"/>
+      <el-table-column label="创建时间" align="center" v-if="columns[7].visible" prop="createTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="删除" align="center" v-if="columns[8].visible" prop="delFlag">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.yl_del_flag" :value="scope.row.delFlag"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -120,14 +166,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['zhyl:consult:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['zhyl:consult:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -144,7 +192,7 @@
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="标题" prop="consultTitle">
-          <el-input v-model="form.consultTitle" placeholder="请输入标题" />
+          <el-input v-model="form.consultTitle" placeholder="请输入标题"/>
         </el-form-item>
         <el-form-item label="咨询类型" prop="consultType">
           <el-select v-model="form.consultType" placeholder="请选择咨询类型">
@@ -160,10 +208,10 @@
           <editor v-model="form.consultContent" :min-height="192"/>
         </el-form-item>
         <el-form-item label="排序" prop="sorted">
-          <el-input v-model="form.sorted" placeholder="请输入排序" />
+          <el-input v-model="form.sorted" placeholder="请输入排序"/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" placeholder="请输入备注" />
+          <el-input v-model="form.remark" placeholder="请输入备注"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -175,23 +223,25 @@
 </template>
 
 <script>
-import { listConsult, getConsult, delConsult, addConsult, updateConsult } from "@/api/zhyl/consult";
+import {listConsult, getConsult, delConsult, addConsult, updateConsult} from "@/api/zhyl/consult";
 
 export default {
   name: "Consult",
-  dicts: ['yl_consult_type'],
+  dicts: ['yl_consult_type', 'yl_del_flag'],
   data() {
     return {
       //表格展示列
       columns: [
-        { key: 0, label: '编号', visible: true },
-          { key: 1, label: '标题', visible: true },
-          { key: 2, label: '咨询类型', visible: true },
-          { key: 3, label: '内容', visible: true },
-          { key: 4, label: '排序', visible: true },
-          { key: 5, label: '创建人', visible: true },
-          { key: 6, label: '创建时间', visible: true },
-        ],
+        {key: 0, label: '编号', visible: false},
+        {key: 1, label: '标题', visible: true},
+        {key: 2, label: '咨询类型', visible: true},
+        {key: 3, label: '内容', visible: false},
+        {key: 4, label: '排序', visible: false},
+        {key: 5, label: '创建人', visible: true},
+        {key: 6, label: '修改人', visible: false},
+        {key: 7, label: '创建时间', visible: true},
+        {key: 8, label: '删除', visible: false},
+      ],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -221,6 +271,8 @@ export default {
         consultContent: null,
         sorted: null,
         createBy: null,
+        updateBy: null,
+        createTime: null,
         delFlag: null
       },
       // 表单参数
@@ -228,25 +280,25 @@ export default {
       // 表单校验
       rules: {
         consultTitle: [
-          { required: true, message: "标题不能为空", trigger: "blur" }
+          {required: true, message: "标题不能为空", trigger: "blur"}
         ],
         consultType: [
-          { required: true, message: "咨询类型不能为空", trigger: "change" }
+          {required: true, message: "咨询类型不能为空", trigger: "change"}
         ],
         consultContent: [
-          { required: true, message: "内容不能为空", trigger: "blur" }
+          {required: true, message: "内容不能为空", trigger: "blur"}
         ],
         sorted: [
-          { required: true, message: "排序不能为空", trigger: "blur" }
+          {required: true, message: "排序不能为空", trigger: "blur"}
         ],
         createBy: [
-          { required: true, message: "创建人不能为空", trigger: "blur" }
+          {required: true, message: "创建人不能为空", trigger: "blur"}
         ],
         createTime: [
-          { required: true, message: "创建时间不能为空", trigger: "blur" }
+          {required: true, message: "创建时间不能为空", trigger: "blur"}
         ],
         delFlag: [
-          { required: true, message: "删除不能为空", trigger: "blur" }
+          {required: true, message: "删除不能为空", trigger: "change"}
         ]
       }
     };
@@ -304,7 +356,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.consultId)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -346,12 +398,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const consultIds = row.consultId || this.ids;
-      this.$modal.confirm('是否确认删除咨询编号为"' + consultIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除咨询编号为"' + consultIds + '"的数据项？').then(function () {
         return delConsult(consultIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
