@@ -1,0 +1,111 @@
+package com.moss.zhyl.controller.app;
+
+import com.moss.common.annotation.Log;
+import com.moss.common.core.controller.BaseController;
+import com.moss.common.core.domain.AjaxResult;
+import com.moss.common.core.domain.entity.UserInfo;
+import com.moss.common.core.page.TableDataInfo;
+import com.moss.common.enums.BusinessType;
+import com.moss.common.utils.poi.ExcelUtil;
+import com.moss.zhyl.domain.dto.UserInfoElderlyDto;
+import com.moss.zhyl.service.IUserInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+
+/**
+ * 用户信息Controller
+ * 
+ * @author YY
+ * @date 2024-10-23
+ */
+@RestController
+@RequestMapping("/app/zhyl/userInfo")
+public class AppUserInfoController extends BaseController
+{
+    @Autowired
+    private IUserInfoService userInfoService;
+
+    /**
+     * 查询用户信息列表
+     */
+    @PreAuthorize("@ss.hasPermi('zhyl:userInfo:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(UserInfo userInfo)
+    {
+        startPage();
+        List<UserInfo> list = userInfoService.selectUserInfoList(userInfo);
+        return getDataTable(list);
+    }
+
+    /**
+     * 导出用户信息列表
+     */
+    @PreAuthorize("@ss.hasPermi('zhyl:userInfo:export')")
+    @Log(title = "用户信息", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
+    public void export(HttpServletResponse response, UserInfo userInfo)
+    {
+        List<UserInfo> list = userInfoService.selectUserInfoList(userInfo);
+        ExcelUtil<UserInfo> util = new ExcelUtil<UserInfo>(UserInfo.class);
+        util.exportExcel(response, list, "用户信息数据");
+    }
+
+    /**
+     * 获取用户信息详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('zhyl:userInfo:query')")
+    @GetMapping(value = "/{userInfoId}")
+    public AjaxResult getInfo(@PathVariable("userInfoId") Long userInfoId)
+    {
+        return success(userInfoService.selectUserInfoByUserInfoIdResultDto(userInfoId));
+    }
+
+    /**
+     * 新增用户信息
+     */
+    @PreAuthorize("@ss.hasPermi('zhyl:userInfo:add')")
+    @Log(title = "用户信息", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@Validated @RequestBody UserInfoElderlyDto userInfo)
+    {
+        return toAjax(userInfoService.insertUserInfo(userInfo));
+    }
+
+    /**
+     * 修改用户信息
+     */
+    @PreAuthorize("@ss.hasPermi('zhyl:userInfo:edit')")
+    @Log(title = "用户信息", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@Validated @RequestBody UserInfoElderlyDto userInfoElderlyDto)
+    {
+        return toAjax(userInfoService.updateUserInfo(userInfoElderlyDto));
+    }
+
+    /**
+     * 删除用户信息
+     */
+    @PreAuthorize("@ss.hasPermi('zhyl:userInfo:remove')")
+    @Log(title = "用户信息", businessType = BusinessType.DELETE)
+	@DeleteMapping("/{userInfoIds}")
+    public AjaxResult remove(@PathVariable Long[] userInfoIds)
+    {
+        return toAjax(userInfoService.deleteUserInfoByUserInfoIds(userInfoIds));
+    }
+
+    /**
+     * 重置密码
+     */
+    @PreAuthorize("@ss.hasPermi('zhyl:userInfo:updatePassword')")
+    @Log(title = "用户信息管理", businessType = BusinessType.UPDATE)
+    @PutMapping("/resetPwd")
+    public AjaxResult resetPwd(@RequestBody UserInfo user)
+    {
+        return toAjax(userInfoService.resetPwd(user));
+    }
+}

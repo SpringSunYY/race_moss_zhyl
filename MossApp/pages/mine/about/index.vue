@@ -1,9 +1,9 @@
 <template>
   <view class="about-container">
     <view class="header-section text-center">
-      <image style="width: 150rpx;height: 150rpx;" src="/static/logo200.png" mode="widthFix">
+      <image style="width: 150rpx;height: 150rpx;" src="/static/logo.png" mode="widthFix">
       </image>
-      <uni-title type="h2" title="若依移动端"></uni-title>
+      <uni-title type="h2" title="moss-智慧养老"></uni-title>
     </view>
 
     <view class="content-section">
@@ -17,28 +17,28 @@
         <view class="list-cell list-cell-arrow">
           <view class="menu-item-box">
             <view>官方邮箱</view>
-            <view class="text-right">ruoyi@xx.com</view>
+            <view class="text-right">3217778348@qq.com</view>
           </view>
         </view>
         <view class="list-cell list-cell-arrow">
           <view class="menu-item-box">
             <view>服务热线</view>
-            <view class="text-right">400-999-9999</view>
+            <view class="text-right">400-999-xxxx</view>
           </view>
         </view>
         <view class="list-cell list-cell-arrow">
           <view class="menu-item-box">
             <view>公司网站</view>
-            <view class="text-right">
-              <uni-link :href="url" :text="url" showUnderLine="false"></uni-link>
-            </view>
+<!--            <view class="text-right">-->
+<!--              <uni-link :href="url" :text="url" showUnderLine="false"></uni-link>-->
+<!--            </view>-->
           </view>
         </view>
       </view>
     </view>
 
     <view class="copyright">
-      <view>Copyright &copy; 2022 ruoyi.vip All Rights Reserved.</view>
+      <view>Copyright &copy; 2024 LZ All Rights Reserved.</view>
     </view>
   </view>
 </template>

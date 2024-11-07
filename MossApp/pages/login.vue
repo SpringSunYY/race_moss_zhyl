@@ -7,7 +7,7 @@
     </view>
 
     <!-- 登录表单 -->
-    <view class="login-form-content" v-if="!isWxLogin" style="margin-top: 100rpx">
+    <view class="login-form-content" v-if="!isWxLogin || !showWxLogin" style="margin-top: 100rpx">
       <view class="input-item flex align-center">
         <view class="iconfont icon-user icon"></view>
         <input v-model="loginForm.username" class="input" type="text" placeholder="请输入账号" maxlength="30"/>
@@ -37,11 +37,11 @@
     </view>
 
     <!-- 微信登录 -->
-    <view class="login-form-content" v-if="isWxLogin" style="padding-top: 400rpx">
-      <view v-if="userInfo.nickName === undefined || userInfo.nickName === null" class="action-btn">
+    <view class="login-form-content" v-if="isWxLogin && showWxLogin" style="padding-top: 400rpx">
+      <view v-if="!userInfo.nickName" class="action-btn">
         <button @click="getUserInfo" class="login-btn cu-btn block bg-blue lg round">获取微信信息</button>
       </view>
-      <block v-if="userInfo.nickName != null">
+      <block v-if="userInfo.nickName">
         <view class="userinfo-content">
           <image class="userinfo-avatar" :src="userInfo.avatarUrl" mode="cover"></image>
           <text class="userinfo-nickname">用户名：{{ userInfo.nickName }}</text>
@@ -53,7 +53,7 @@
     </view>
 
     <!-- 切换登录方式 -->
-    <view class="reg text-center">
+    <view class="reg text-center" v-if="showWxLogin">
       <text @click="handleChangeLogin" class="text-blue">{{ isWxLogin ? '账号登录' : '微信登录' }}</text>
     </view>
 
@@ -65,13 +65,12 @@
     </view>
   </view>
 </template>
-
 <script>
-import {getCodeImg} from '@/api/login'
-import {miniProgramLogin} from "../api/login";
+
+import {getCodeImg} from "@/api/login";
 
 export default {
-  options: {styleIsolation: 'shared'},
+  options: {styleIsolation: "shared"},
   data() {
     return {
       codeUrl: "",
@@ -79,25 +78,34 @@ export default {
       register: false,
       globalConfig: getApp().globalData.config,
       loginForm: {
-        username: "52262419710321121X",
-        password: "123456",
+        username: "",
+        password: "",
         code: "",
-        uuid: ''
+        uuid: "",
       },
       userInfo: {},
-      hasUserInfo: false,
-      canIUseGetUserProfile: false,
-      // 是否微信登录
-      isWxLogin: true,
-      isGetWxLoading: false
-    }
+      isWxLogin: false,
+      showWxLogin: false, // 控制是否显示微信登录
+      isGetWxLoading: false,
+    };
   },
   created() {
-    this.getCode()
+    this.getCode();
+    this.checkEnvironment(); // 检查环境
   },
   methods: {
+    checkEnvironment() {
+      uni.getSystemInfo({
+        success: (res) => {
+          console.log(res);
+          // 判断是否小程序环境
+          this.showWxLogin = res.host.env === "WeChat";
+          this.isWxLogin = this.showWxLogin; // 默认微信登录方式
+        },
+      });
+    },
     handleChangeLogin() {
-      this.isWxLogin = !this.isWxLogin
+      this.isWxLogin = !this.isWxLogin;
     },
     getUserInfo() {
       this.$modal.loading("获取中，请耐心等待...")
@@ -112,7 +120,7 @@ export default {
           success: (res) => {
             this.isGetWxLoading = false;
             uni.showToast({
-              position:'top',
+              position: 'top',
               icon: 'none',
               title: '获取成功'
             })
@@ -158,7 +166,7 @@ export default {
         }
       })
     },
-    async miniProgramLogin(code){
+    async miniProgramLogin(code) {
       this.$store.dispatch('MiniProgramLogin', code).then(() => {
         this.$modal.closeLoading()
         this.loginSuccess()

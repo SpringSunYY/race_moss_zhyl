@@ -80,7 +80,7 @@ public class UserInfoLoginService {
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid={0}&secret={1}&js_code={2}&grant_type=authorization_code";
         String replaceUrl = url.replace("{0}", appId).replace("{1}", appSecret).replace("{2}", code);
         String res = HttpUtil.get(replaceUrl);
-        System.err.println(res);
+//        System.err.println(res);
         WxMiniAppLoginResponse response = JSONUtil.toBean(res, WxMiniAppLoginResponse.class);
         String errcode = response.getErrcode();
         String errmsg = response.getErrmsg();

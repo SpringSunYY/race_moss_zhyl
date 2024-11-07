@@ -68,7 +68,7 @@
 		 */
 		data() {
 			return {
-				imageSrc: store.getters.userInfoProfile,
+				imageSrc: store.getters.avatar,
 				isShowImg: false,
 				// 初始化的宽高
 				cropperInitW: SCREEN_WIDTH,

@@ -46,12 +46,18 @@
       </view>
 
       <view class="menu-list">
-        <view class="list-cell list-cell-arrow" @click="handleToEditInfo">
+        <view class="list-cell list-cell-arrow" @click="handleToBindingUser">
           <view class="menu-item-box">
             <view class="iconfont icon-user menu-icon"></view>
-            <view>编辑资料</view>
+            <view>绑定身份</view>
           </view>
         </view>
+<!--        <view class="list-cell list-cell-arrow" @click="handleToEditInfo">-->
+<!--          <view class="menu-item-box">-->
+<!--            <view class="iconfont icon-user menu-icon"></view>-->
+<!--            <view>编辑资料</view>-->
+<!--          </view>-->
+<!--        </view>-->
         <view class="list-cell list-cell-arrow" @click="handleHelp">
           <view class="menu-item-box">
             <view class="iconfont icon-help menu-icon"></view>
@@ -77,9 +83,8 @@
 </template>
 
 <script>
-  import storage from '@/utils/storage'
 
-  export default {
+export default {
     data() {
       return {
         name: this.$store.state.user.name,
@@ -98,6 +103,9 @@
       }
     },
     methods: {
+      handleToBindingUser() {
+        this.$tab.navigateTo('/pages/mine/info/binding')
+      },
       handleToInfo() {
         this.$tab.navigateTo('/pages/mine/info/index')
       },

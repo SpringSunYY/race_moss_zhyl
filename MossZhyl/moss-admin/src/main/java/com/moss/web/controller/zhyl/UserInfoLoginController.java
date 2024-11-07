@@ -39,7 +39,7 @@ public class UserInfoLoginController extends BaseController {
     @Anonymous
     public AjaxResult userInfo() {
         UserInfo userInfo = getLoginUserInfo().getUserInfo();
-        System.err.println(userInfo);
+//        System.err.println(userInfo);
         AjaxResult ajax = AjaxResult.success();
         ajax.put("userInfo", userInfo);
         return ajax;
