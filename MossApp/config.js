@@ -5,7 +5,7 @@ module.exports = {
   // 应用信息
   appInfo: {
     // 应用名称
-    name: "ruoyi-app",
+    name: "moss-智慧养老",
     // 应用版本
     version: "1.1.0",
     // 应用logo

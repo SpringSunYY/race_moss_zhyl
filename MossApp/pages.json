@@ -18,7 +18,7 @@
     {
       "path": "pages/index",
       "style": {
-        "navigationBarTitleText": "若依移动端框架",
+        "navigationBarTitleText": "moss智慧养老",
         "navigationStyle": "custom"
       }
     },
