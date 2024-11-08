@@ -72,7 +72,7 @@
         ></u-cell>
       </view>
     </uni-card>
-    <uni-card class="custom-card my-card" margin="0">
+    <uni-card class="custom-card my-card" style="margin-top:10rpx " margin="0">
       <u-notice-bar icon="bell-fill" text="这里是荔枝软件开发工作，你有一份尾款需要支付"></u-notice-bar>
     </uni-card>
     <view class="myDevice">
@@ -91,8 +91,8 @@
         </text>
       </u-cell>
       <u-row>
-        <view class="myDevice-card-container" v-for="i in 2" :key="i" >
-          <u-col span="12">
+        <view class="myDevice-card-container" v-for="i in 2" :key="i">
+          <u-col span="12" justify="space-between" align="center">
             <uni-card class="myDevice-info my-card" margin="5" padding="5px 0px">
               <u-row>
                 <u-col span="10">
@@ -110,6 +110,56 @@
         </view>
       </u-row>
     </view>
+    <view class="consult">
+      <!--      <u-cell-->
+      <!--          title="防诈咨询"-->
+      <!--          isLink-->
+      <!--          title-style="font-size:24px;font-weight:bold"-->
+      <!--          :border="false"-->
+      <!--          url="/pages/componentsB/tag/tag"-->
+      <!--      >-->
+      <!--        <text-->
+      <!--            slot="value"-->
+      <!--            class="u-slot-value"-->
+      <!--            style="font-size: 16px; font-weight: bold; color: rgba(0,0,0,0.42);"-->
+      <!--        >查看跟多咨询-->
+      <!--        </text>-->
+      <!--      </u-cell>-->
+      <uni-section title="咨询" titleFontSize="24px" type="line">
+        <template v-slot:right>
+          <navigator url="/pages/tabBar/extUI/extUI" open-type="switchTab" hover-class="other-navigator-hover"> 查看更多</navigator>
+        </template>
+        <uni-card padding="0" margin="0" spacing="0">
+          <template v-slot:cover>
+            <view class="custom-cover">
+              <image class="cover-image" mode="center" :src="cover">
+              </image>
+              <view class="cover-content">
+                <text class="uni-subtitle uni-white">今日新闻热点</text>
+              </view>
+            </view>
+          </template>
+          <uni-list>
+            <uni-list-item title="今日新闻" showArrow></uni-list-item>
+            <uni-list-item title="今日新闻" showArrow></uni-list-item>
+          </uni-list>
+          <view slot="actions" class="card-actions no-border">
+            <view class="card-actions-item" @click="actionsClick('分享')">
+              <uni-icons type="pengyouquan" size="18" color="#999"></uni-icons>
+              <text class="card-actions-item-text">分享</text>
+            </view>
+            <view class="card-actions-item" @click="actionsClick('点赞')">
+              <uni-icons type="heart" size="18" color="#999"></uni-icons>
+              <text class="card-actions-item-text">点赞</text>
+            </view>
+            <view class="card-actions-item" @click="actionsClick('评论')">
+              <uni-icons type="chatbubble" size="18" color="#999"></uni-icons>
+              <text class="card-actions-item-text">评论</text>
+            </view>
+          </view>
+        </uni-card>
+      </uni-section>
+    </view>
   </view>
 </template>
 
@@ -119,6 +169,13 @@ export default {
   data() {
     return {
       globalConfig: getApp().globalData.config,
+      cover: 'https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/shuijiao.jpg',
+      avatar: 'https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png',
+      extraIcon: {
+        color: '#4cd964',
+        size: '22',
+        type: 'gear-filled'
+      }
     }
   },
   onLoad: function () {
@@ -129,6 +186,15 @@ export default {
     },
     clickDeviceImage() {
       console.log("点击设备图片")
+    },
+    onClick(e) {
+      console.log(e)
+    },
+    actionsClick(text) {
+      uni.showToast({
+        title: text,
+        icon: 'none'
+      })
     }
   },
 }
@@ -150,7 +216,7 @@ export default {
 
 .custom-card {
   /*border: 1px solid #e0e0e0;*/
-  margin-top: 10rpx;
+  margin: 10rpx;
   width: 95%; /* 调整宽度，使卡片更宽 */
   max-width: 800px; /* 限制最大宽度 */
 }
@@ -230,11 +296,73 @@ export default {
 
   .myDevice-card-container {
     width: 100%;
+    //margin: 5rpx auto;
 
     .myDevice-info {
-      width: 100%;
-      margin: 10rpx auto;
+      width: 90%;
     }
+  }
+}
+
+.consult {
+  width: 95%;
+  margin: 0 10rpx;
+
+  .container {
+    overflow: hidden;
+  }
+
+  .custom-cover {
+    flex: 1;
+    flex-direction: row;
+    position: relative;
+  }
+
+  .cover-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    width: 100%;
+    background-color: rgba($color: #000000, $alpha: 0.4);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 15px;
+    font-size: 14px;
+    color: #fff;
+  }
+
+  .card-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    height: 45px;
+    border-top: 1px #eee solid;
+  }
+
+  .card-actions-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .card-actions-item-text {
+    font-size: 12px;
+    color: #666;
+    margin-left: 5px;
+  }
+
+  .cover-image {
+    flex: 1;
+    width: 100%;
+    height: 150px;
+  }
+
+  .no-border {
+    border-width: 0;
   }
 }
 </style>
