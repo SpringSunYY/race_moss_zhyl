@@ -2,15 +2,20 @@
   <view class="content">
     <uni-nav-bar dark :fixed="true" shadow background-color="#007AFF" status-bar
                  title="moss智慧养老"/>
-    <u-row style="margin-top: 15rpx;width: 85%">
-      <u-col span="2">
-        <image style="width: 70rpx;height: 70rpx;margin-left: -40rpx" :src="globalConfig.appInfo.logo" mode="widthFix"></image>
-      </u-col>
-      <u-col span="10">
-        <u-search inputAlign="center" color="#606266" borderColor="#aaaaaa" height="40" style="width: 100%" placeholder="请输入搜索内容" searchIcon="scan"></u-search>
-      </u-col>
-    </u-row>
-    <uni-card class="custom-card" margin="0" style="margin-top: 20rpx">
+    <view style="margin-top: 15rpx;width: 85%">
+      <u-row>
+        <u-col span="2">
+          <image style="width: 70rpx;height: 70rpx;margin-left: -40rpx" :src="globalConfig.appInfo.logo"
+                 mode="widthFix"></image>
+        </u-col>
+        <u-col span="10">
+          <u-search inputAlign="center" color="#606266" borderColor="#aaaaaa" height="40" style="width: 100%"
+                    placeholder="请输入搜索内容" searchIcon="scan" :show-action="true" @search="searchInfo"
+                    @custom="searchInfo"/>
+        </u-col>
+      </u-row>
+    </view>
+    <uni-card class="custom-card my-card" margin="0" style="margin-top: 20rpx">
       <!-- 卡片头部 -->
       <view class="card-header">
         <view class="title">HI, 王某某</view>
@@ -67,7 +72,7 @@
         ></u-cell>
       </view>
     </uni-card>
-    <uni-card class="custom-card" margin="5 0">
+    <uni-card class="custom-card my-card" margin="0">
       <u-notice-bar icon="bell-fill" text="这里是荔枝软件开发工作，你有一份尾款需要支付"></u-notice-bar>
     </uni-card>
     <view class="myDevice">
@@ -82,12 +87,28 @@
             slot="value"
             class="u-slot-value"
             style="font-size: 16px; font-weight: bold; color: rgba(0,0,0,0.42);"
-          >全部设备
+        >全部设备
         </text>
-        <uni-card>
-
-        </uni-card>
       </u-cell>
+      <u-row>
+        <view class="myDevice-card-container" v-for="i in 2" :key="i" >
+          <u-col span="12">
+            <uni-card class="myDevice-info my-card" margin="5" padding="5px 0px">
+              <u-row>
+                <u-col span="10">
+                  <u--image :showLoading="true" src="/static/logo.png" width="120rpx" height="120rpx"
+                            @click="clickDeviceImage"></u--image>
+                  <u--text type="primary" size="24" text="智能手表"></u--text>
+                  <u--text type="info" size="12" text="佩戴 | 剩余电量 95%"></u--text>
+                </u-col>
+                <u-col span="2">
+                  <u-icon name="arrow-right" color="#2979ff" size="40"></u-icon>
+                </u-col>
+              </u-row>
+            </uni-card>
+          </u-col>
+        </view>
+      </u-row>
     </view>
   </view>
 </template>
@@ -101,11 +122,19 @@ export default {
     }
   },
   onLoad: function () {
-  }
+  },
+  methods: {
+    searchInfo(value) {
+      console.log("搜索:" + value)
+    },
+    clickDeviceImage() {
+      console.log("点击设备图片")
+    }
+  },
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .content {
   display: flex;
   flex-direction: column;
@@ -113,12 +142,15 @@ export default {
   justify-content: center;
 }
 
+.my-card {
+  background-color: rgb(255, 255, 255);
+  border-radius: 8px;
+  border-color: rgba(255, 255, 255, 0.87);
+}
+
 .custom-card {
   /*border: 1px solid #e0e0e0;*/
-/*  border-radius: 8px;
-  border-color: rgba(255, 255, 255, 0.17);*/
   margin-top: 10rpx;
-  background-color: rgba(255, 255, 255, 0.13);
   width: 95%; /* 调整宽度，使卡片更宽 */
   max-width: 800px; /* 限制最大宽度 */
 }
@@ -193,7 +225,16 @@ export default {
 }
 
 .myDevice {
-  width: 95%;
+  width: 100%;
   margin: 10px auto;
+
+  .myDevice-card-container {
+    width: 100%;
+
+    .myDevice-info {
+      width: 100%;
+      margin: 10rpx auto;
+    }
+  }
 }
 </style>
