@@ -5,20 +5,20 @@ import com.moss.common.annotation.Log;
 import com.moss.common.core.controller.BaseController;
 import com.moss.common.core.domain.AjaxResult;
 import com.moss.common.core.domain.entity.UserInfo;
-import com.moss.common.core.page.TableDataInfo;
+import com.moss.common.core.domain.model.LoginUser;
 import com.moss.common.core.redis.RedisCache;
 import com.moss.common.enums.BusinessType;
 import com.moss.common.utils.CalculateUtils;
-import com.moss.common.utils.poi.ExcelUtil;
-import com.moss.zhyl.domain.dto.UserInfoElderlyDto;
+import com.moss.common.utils.SecurityUtils;
+import com.moss.zhyl.mapper.UserInfoMapper;
 import com.moss.zhyl.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.moss.common.constant.RedisConstants.CAPTCHA_CODE_NO_USER_ROLE_KEY;
@@ -34,6 +34,9 @@ import static com.moss.common.constant.RedisConstants.CAPTCHA_CODE_NO_USER_ROLE_
 public class AppUserInfoController extends BaseController {
     @Autowired
     private IUserInfoService userInfoService;
+
+    @Autowired
+    private UserInfoMapper userInfoMapper;
 
     @Autowired
     private RedisCache redisCache;
@@ -78,4 +81,26 @@ public class AppUserInfoController extends BaseController {
         }
         return success(userInfoService.bindingByUnionid(phoneNumber, captcha, idCard));
     }
+
+    /**
+     * 重置密码
+     */
+    @PreAuthorize("@ss.hasUserAnyRole('elderly,elderly_family')")
+    @PutMapping("/updatePwd")
+    public AjaxResult updatePwd(String oldPassword, String newPassword) {
+        UserInfo userInfo = userInfoMapper.selectUserInfoByUserInfoId(SecurityUtils.getLoginUserInfo().getUserInfoId());
+        System.err.println(userInfo);
+        String password = userInfo.getPassword();
+        System.out.println("password = " + password);
+        if (!SecurityUtils.matchesPassword(oldPassword, password)) {
+            return error("修改密码失败，旧密码错误");
+        }
+        if (SecurityUtils.matchesPassword(newPassword, password)) {
+            return error("新密码不能与旧密码相同");
+        }
+        newPassword = SecurityUtils.encryptPassword(newPassword);
+        userInfo.setPassword(newPassword);
+        return success(userInfoMapper.updateUserInfo(userInfo));
+    }
+
 }

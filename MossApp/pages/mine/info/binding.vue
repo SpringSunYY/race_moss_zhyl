@@ -52,7 +52,7 @@
 
 <script>
 import {updateUserProfile} from "@/api/system/user"
-import {binding, getCode} from "../../../api/system/zhyl/userInfo";
+import {binding, getCode} from "../../../api/zhyl/userInfo";
 
 export default {
   data() {

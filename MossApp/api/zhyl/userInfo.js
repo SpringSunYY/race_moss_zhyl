@@ -24,3 +24,16 @@ export function binding(phoneNumber, captcha, idCard) {
         }
     })
 }
+
+// 用户密码重置
+export function updateUserPwd(oldPassword, newPassword) {
+    const data = {
+        oldPassword,
+        newPassword
+    }
+    return request({
+        url: '/app/zhyl/userInfo/updatePwd',
+        method: 'put',
+        params: data
+    })
+}

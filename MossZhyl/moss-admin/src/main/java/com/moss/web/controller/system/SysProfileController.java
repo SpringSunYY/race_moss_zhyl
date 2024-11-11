@@ -92,7 +92,7 @@ public class SysProfileController extends BaseController
         LoginUser loginUser = getLoginUser();
         String userName = loginUser.getUsername();
         String password = loginUser.getPassword();
-        if (!SecurityUtils.matchesPassword(oldPassword, password))
+            if (!SecurityUtils.matchesPassword(oldPassword, password))
         {
             return error("修改密码失败，旧密码错误");
         }

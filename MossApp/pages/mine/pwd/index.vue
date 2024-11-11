@@ -16,7 +16,7 @@
 </template>
 
 <script>
-  import { updateUserPwd } from "@/api/system/user"
+  import { updateUserPwd } from "@/api/zhyl/userInfo"
 
   export default {
     data() {

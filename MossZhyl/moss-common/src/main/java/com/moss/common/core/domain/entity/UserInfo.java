@@ -256,6 +256,7 @@ public class UserInfo extends BaseEntity {
                 .append("createTime", getCreateTime())
                 .append("updateTime", getUpdateTime())
                 .append("delFlag", getDelFlag())
+                .append("password",getPassword())
                 .toString();
     }
 }
