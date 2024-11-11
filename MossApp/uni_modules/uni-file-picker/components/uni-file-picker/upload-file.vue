@@ -3,15 +3,15 @@
 		<view v-if="!readonly" class="files-button" @click="choose">
 			<slot></slot>
 		</view>
-		<!-- :class="{'is-text-box':showType === 'list'}" -->
+		<!-- :class="{'is-text-box':showType === 'list.vue'}" -->
 		<view v-if="list.length > 0" class="uni-file-picker__lists is-text-box" :style="borderStyle">
-			<!-- ,'is-list-card':showType === 'list-card' -->
+			<!-- ,'is-list.vue-card':showType === 'list.vue-card' -->
 
 			<view class="uni-file-picker__lists-box" v-for="(item ,index) in list" :key="index" :class="{
 				'files-border':index !== 0 && styles.dividline}"
 			 :style="index !== 0 && styles.dividline &&borderLineStyle">
 				<view class="uni-file-picker__item">
-					<!-- :class="{'is-text-image':showType === 'list'}" -->
+					<!-- :class="{'is-text-image':showType === 'list.vue'}" -->
 					<!-- 	<view class="files__image is-text-image">
 						<image class="header-image" :src="item.logo" mode="aspectFit"></image>
 					</view> -->

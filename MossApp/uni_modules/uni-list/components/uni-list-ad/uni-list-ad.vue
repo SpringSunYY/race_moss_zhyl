@@ -26,7 +26,7 @@
 
 			}
 		},
-		// inject: ['list'],
+		// inject: ['list.vue'],
 		data() {
 			return {
 				isFirstChild: false,

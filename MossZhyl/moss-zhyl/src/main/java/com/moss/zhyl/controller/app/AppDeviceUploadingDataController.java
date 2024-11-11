@@ -2,6 +2,8 @@ package com.moss.zhyl.controller.app;
 
 import com.moss.common.core.controller.BaseController;
 import com.moss.common.core.domain.AjaxResult;
+import com.moss.common.core.page.TableDataInfo;
+import com.moss.common.utils.PageUtils;
 import com.moss.common.utils.SecurityUtils;
 import com.moss.common.utils.StringUtils;
 import com.moss.zhyl.domain.DeviceUploadingData.Argument;
@@ -16,6 +18,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 import static com.moss.zhyl.domain.enums.DeviceUploadingDataCommandEnum.DEVICE_UPLOADING_DATA_COMMAND_HEALTH;
 
@@ -54,4 +58,21 @@ public class AppDeviceUploadingDataController extends BaseController {
         return success(newData);
     }
 
+    /**
+     * 获取自己的健康数据
+     */
+    @PreAuthorize("@ss.hasUserAnyRole('elderly,elderly_family')")
+    @GetMapping("/healthData")
+    public TableDataInfo healthData(DeviceUploadingData deviceUploadingData) {
+        PageUtils.startPage();
+        deviceUploadingData.setUserInfoId(SecurityUtils.getLoginUserInfo().getUserInfoId());
+        deviceUploadingData.setType(DeviceUploadingCommandTypeEnum.UPDATE.getValue());
+        deviceUploadingData.setDelFlag(DelFlagEnum.DEL_FLAG_0.getValue());
+        deviceUploadingData.setCommand(DEVICE_UPLOADING_DATA_COMMAND_HEALTH.getValue());
+        List<DeviceUploadingData> list = deviceUploadingDataMapper.selectDeviceUploadingDataList(deviceUploadingData);
+        for (DeviceUploadingData info : list) {
+            Argument.returnArgumentData(info);
+        }
+        return getDataTable(list);
+    }
 }

@@ -7,7 +7,7 @@
                      :rightText="user.contactPhone"/>
       <uni-list-item showExtraIcon="true" :extraIcon="{type: 'person-filled'}" title="性别"
                      :rightText="user.sex==='0'?'男':'女'"/>
-<!--      <uni-list-item showExtraIcon="true" :extraIcon="{type: 'auth-filled'}" title="岗位" :rightText="1"/>-->
+<!--      <uni-list.vue-item showExtraIcon="true" :extraIcon="{type: 'auth-filled'}" title="岗位" :rightText="1"/>-->
       <uni-list-item showExtraIcon="true" :extraIcon="{type: 'staff-filled'}" title="角色"
                      :rightText="user.userInfoRole"/>
       <uni-list-item showExtraIcon="true" :extraIcon="{type: 'calendar-filled'}" title="创建日期"

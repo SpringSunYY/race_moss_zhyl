@@ -491,7 +491,7 @@
 					}
 					return str;
 				} else {
-					return this.collection.indexOf('app-list') > 0 ?
+					return this.collection.indexOf('app-list.vue') > 0 ?
 						`${text}(${value})` :
 						(
 							text ?

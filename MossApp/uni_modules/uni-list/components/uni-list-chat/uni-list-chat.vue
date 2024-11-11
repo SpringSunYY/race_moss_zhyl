@@ -2,7 +2,7 @@
 	<!-- #ifdef APP-NVUE -->
 	<cell>
 		<!-- #endif -->
-		<view :hover-class="!clickable && !link ? '' : 'uni-list-chat--hover'" class="uni-list-chat" @click.stop="onClick">
+		<view :hover-class="!clickable && !link ? '' : 'uni-list.vue-chat--hover'" class="uni-list-chat" @click.stop="onClick">
 			<view :class="{ 'uni-list--border': border, 'uni-list-chat--first': isFirstChild }"></view>
 			<view class="uni-list-chat__container">
 				<view class="uni-list-chat__header-warp">
@@ -39,7 +39,7 @@
 					<view class="uni-list-chat__content-extra">
 						<slot>
 							<text class="uni-list-chat__content-extra-text">{{ time }}</text>
-							<view v-if="badgeText && badgePositon === 'right'" class="uni-list-chat__badge" :class="[isSingle, badgePositon === 'right' ? 'uni-list-chat--right' : '']">
+							<view v-if="badgeText && badgePositon === 'right'" class="uni-list-chat__badge" :class="[isSingle, badgePositon === 'right' ? 'uni-list.vue-chat--right' : '']">
 								<text class="uni-list-chat__badge-text">{{ badgeText === 'dot' ? '' : badgeText }}</text>
 							</view>
 						</slot>
@@ -129,7 +129,7 @@
 				}
 			}
 		},
-		// inject: ['list'],
+		// inject: ['list.vue'],
 		computed: {
 			isDraft(){
 				return this.note.slice(0,14) == '[uni-im-draft]'
@@ -304,7 +304,7 @@
 		background-color: $background-color;
 	}
 
-	// .uni-list-chat--disabled {
+	// .uni-list.vue-chat--disabled {
 	// 	opacity: 0.3;
 	// }
 

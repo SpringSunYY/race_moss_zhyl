@@ -8,7 +8,7 @@
 		</template>
 		<template v-else>
 			<checkbox-group v-if="multiple" class="checklist-group" :class="{'is-list':mode==='list' || wrap}" @change="chagne">
-				<label class="checklist-box" :class="['is--'+mode,item.selected?'is-checked':'',(disabled || !!item.disabled)?'is-disable':'',index!==0&&mode==='list'?'is-list-border':'']"
+				<label class="checklist-box" :class="['is--'+mode,item.selected?'is-checked':'',(disabled || !!item.disabled)?'is-disable':'',index!==0&&mode==='list'?'is-list.vue-border':'']"
 				 :style="item.styleBackgroud" v-for="(item,index) in dataList" :key="index">
 					<checkbox class="hidden" hidden :disabled="disabled || !!item.disabled" :value="item[map.value]+''" :checked="item.selected" />
 					<view v-if="(mode !=='tag' && mode !== 'list') || ( mode === 'list' && icon === 'left')" class="checkbox__inner"  :style="item.styleIcon">
@@ -22,7 +22,7 @@
 			</checkbox-group>
 			<radio-group v-else class="checklist-group" :class="{'is-list':mode==='list','is-wrap':wrap}" @change="chagne">
 				<!-- -->
-				<label class="checklist-box" :class="['is--'+mode,item.selected?'is-checked':'',(disabled || !!item.disabled)?'is-disable':'',index!==0&&mode==='list'?'is-list-border':'']"
+				<label class="checklist-box" :class="['is--'+mode,item.selected?'is-checked':'',(disabled || !!item.disabled)?'is-disable':'',index!==0&&mode==='list'?'is-list.vue-border':'']"
 				 :style="item.styleBackgroud" v-for="(item,index) in dataList" :key="index">
 					<radio class="hidden" hidden :disabled="disabled || item.disabled" :value="item[map.value]+''" :checked="item.selected" />
 					<view v-if="(mode !=='tag' && mode !== 'list') || ( mode === 'list' && icon === 'left')" class="radio__inner"
@@ -44,9 +44,9 @@
 	 * DataChecklist 数据选择器
 	 * @description 通过数据渲染 checkbox 和 radio
 	 * @tutorial https://ext.dcloud.net.cn/plugin?id=xxx
-	 * @property {String} mode = [default| list | button | tag] 显示模式
+	 * @property {String} mode = [default| list.vue | button | tag] 显示模式
 	 * @value default  	默认横排模式
-	 * @value list		列表模式
+	 * @value list.vue		列表模式
 	 * @value button	按钮模式
 	 * @value tag 		标签模式
 	 * @property {Boolean} multiple = [true|false] 是否多选
@@ -55,7 +55,7 @@
 	 * @property {Number|String} min 最小选择个数 ，multiple为true时生效
 	 * @property {Number|String} max 最大选择个数 ，multiple为true时生效
 	 * @property {Boolean} wrap 是否换行显示
-	 * @property {String} icon = [left|right]  list 列表模式下icon显示位置
+	 * @property {String} icon = [left|right]  list.vue 列表模式下icon显示位置
 	 * @property {Boolean} selectedColor 选中颜色
 	 * @property {Boolean} emptyText 没有数据时显示的文字 ，本地数据无效
 	 * @property {Boolean} selectedTextColor 选中文本颜色，如不填写则自动显示
@@ -405,7 +405,7 @@
 					let selectedColor = this.selectedColor?this.selectedColor:'#2979ff'
 					styles['background-color'] = item.selected?selectedColor:'#fff'
 					styles['border-color'] = item.selected?selectedColor:'#DCDFE6'
-					
+
 					if(!item.selected && item.disabled){
 						styles['background-color'] = '#F2F6FC'
 						styles['border-color'] = item.selected?selectedColor:'#DCDFE6'

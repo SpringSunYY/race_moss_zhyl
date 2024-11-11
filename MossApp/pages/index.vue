@@ -19,7 +19,9 @@
       <!-- 卡片头部 -->
       <view class="card-header">
         <view class="title">HI, {{ userInfo.name }}</view>
-        <view class="extra">查看详细数据 ></view>
+        <view class="extra" @click="toDeviceUploadingDataList">查看详细数据
+          <uni-icons type="forward" color="rgba(0,0,0,0.42)" size="16"></uni-icons>
+        </view>
       </view>
 
       <!-- 卡片内容 -->
@@ -202,6 +204,9 @@ export default {
     this.getHealthData()
   },
   methods: {
+    toDeviceUploadingDataList(){
+      this.$tab.navigateTo('/pages/zhyl/deviceUploadingData/list')
+    },
     getHealthData() {
       newHealthData().then(res => {
         this.healthData = res.data.argumentData
@@ -274,10 +279,11 @@ export default {
 
 .label {
   font-weight: bold;
+  margin-right: 8px;
 }
 
 .status {
-  margin-left: 8px;
+  //margin-left: 8px;
   font-weight: bold;
 }
 

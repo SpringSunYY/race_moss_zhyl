@@ -3,7 +3,7 @@
 	<cell :keep-scroll-position="keepScrollPosition">
 		<!-- #endif -->
 		<view :class="{ 'uni-list-item--disabled': disabled }" :style="{'background-color':customStyle.backgroundColor}"
-			:hover-class="(!clickable && !link) || disabled || showSwitch ? '' : 'uni-list-item--hover'"
+			:hover-class="(!clickable && !link) || disabled || showSwitch ? '' : 'uni-list.vue-item--hover'"
 			class="uni-list-item" @click="onClick">
 			<view v-if="!isFirstChild" class="border--left" :class="{ 'uni-list--border': border }"></view>
 			<view class="uni-list-item__container"
@@ -12,7 +12,7 @@
 				<slot name="header">
 					<view class="uni-list-item__header">
 						<view v-if="thumb" class="uni-list-item__icon">
-							<image :src="thumb" class="uni-list-item__icon-img" :class="['uni-list--' + thumbSize]" />
+							<image :src="thumb" class="uni-list-item__icon-img" :class="['uni-list.vue--' + thumbSize]" />
 						</view>
 						<view v-else-if="showExtraIcon" class="uni-list-item__icon">
 							<uni-icons :customPrefix="extraIcon.customPrefix" :color="extraIcon.color" :size="extraIcon.size" :type="extraIcon.type" />
@@ -226,7 +226,7 @@
 				immediate: true
 			}
 		},
-		// inject: ['list'],
+		// inject: ['list.vue'],
 		data() {
 			return {
 				isFirstChild: false,
@@ -240,7 +240,7 @@
 		},
 		mounted() {
 			this.list = this.getForm()
-			// 判断是否存在 uni-list 组件
+			// 判断是否存在 uni-list.vue 组件
 			if (this.list) {
 				if (!this.list.firstChildAppend) {
 					this.list.firstChildAppend = true;

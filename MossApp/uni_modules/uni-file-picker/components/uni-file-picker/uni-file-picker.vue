@@ -62,15 +62,15 @@
 	 * 	@value false 	取消自动上传
 	 * @property {Number|String}	limit	最大选择个数 ，h5 会自动忽略多选的部分
 	 * @property {String}	title	组件标题，右侧显示上传计数
-	 * @property {String}	mode = [list|grid]	选择文件后的文件列表样式
-	 * 	@value list 	列表显示
+	 * @property {String}	mode = [list.vue|grid]	选择文件后的文件列表样式
+	 * 	@value list.vue 	列表显示
 	 * 	@value grid 	宫格显示
 	 * @property {String}	file-mediatype = [image|video|all]	选择文件类型
 	 * 	@value image	只选择图片
 	 * 	@value video	只选择视频
 	 * 	@value all		选择所有文件
 	 * @property {Array}	file-extname	选择文件后缀，根据 file-mediatype 属性而不同
-	 * @property {Object}	list-style	mode:list 时的样式
+	 * @property {Object}	list-style	mode:list.vue 时的样式
 	 * @property {Object}	image-styles	选择文件后缀，根据 file-mediatype 属性而不同
 	 * @event {Function} select 	选择文件后触发
 	 * @event {Function} progress 文件上传时触发
@@ -129,7 +129,7 @@
 				type: [Number, String],
 				default: 9
 			},
-			// 列表样式 grid | list | list-card
+			// 列表样式 grid | list.vue | list.vue-card
 			mode: {
 				type: String,
 				default: 'grid'

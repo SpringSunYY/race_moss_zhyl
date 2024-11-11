@@ -8,3 +8,12 @@ export function newHealthData(query) {
         params: query
     })
 }
+
+// 查询设备上传数据列表
+export function healthData(query) {
+    return request({
+        url: '/app/zhyl/deviceUploadingData/healthData',
+        method: 'get',
+        params: query
+    })
+}

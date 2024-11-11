@@ -2,11 +2,11 @@
 	<view class="uni-indexed-list" ref="list" id="list">
 		<!-- #ifdef APP-NVUE -->
 		<list class="uni-indexed-list__scroll" scrollable="true" show-scrollbar="false">
-			<cell v-for="(list, idx) in lists" :key="idx" :ref="'uni-indexed-list-' + idx">
+			<cell v-for="(list, idx) in lists" :key="idx" :ref="'uni-indexed-list.vue-' + idx">
 				<!-- #endif -->
 				<!-- #ifndef APP-NVUE -->
 				<scroll-view :scroll-into-view="scrollViewId" class="uni-indexed-list__scroll" scroll-y>
-					<view v-for="(list, idx) in lists" :key="idx" :id="'uni-indexed-list-' + idx">
+					<view v-for="(list, idx) in lists" :key="idx" :id="'uni-indexed-list.vue-' + idx">
 						<!-- #endif -->
 						<indexed-list-item :list="list" :loaded="loaded" :idx="idx" :showSelect="showSelect"
 							@itemClick="onClick"></indexed-list-item>
@@ -60,11 +60,11 @@
 		let item = this.lists[index]
 		if (item) {
 			// #ifndef APP-NVUE
-			this.scrollViewId = 'uni-indexed-list-' + index
+			this.scrollViewId = 'uni-indexed-list.vue-' + index
 			this.touchmoveIndex = index
 			// #endif
 			// #ifdef APP-NVUE
-			dom.scrollToElement(this.$refs['uni-indexed-list-' + index][0], {
+			dom.scrollToElement(this.$refs['uni-indexed-list.vue-' + index][0], {
 				animated: false
 			})
 			this.touchmoveIndex = index
@@ -83,7 +83,7 @@
 	 * 	@value false 选择模式
 	 * @property {Object} options 索引列表需要的数据对象
 	 * @event {Function} click 点击列表事件 ，返回当前选择项的事件对象
-	 * @example <uni-indexed-list options="" showSelect="false" @click=""></uni-indexed-list>
+	 * @example <uni-indexed-list.vue options="" showSelect="false" @click=""></uni-indexed-list.vue>
 	 */
 	export default {
 		name: 'UniIndexedList',
@@ -164,7 +164,7 @@
 				// #ifndef APP-NVUE
 				uni.createSelectorQuery()
 					.in(this)
-					.select('#list')
+					.select('#list.vue')
 					.boundingClientRect()
 					.exec(ret => {
 						this.winOffsetY = ret[0].top
@@ -186,10 +186,10 @@
 				let index = Math.floor((pageY - this.winOffsetY) / this.itemHeight)
 				let item = this.lists[index]
 				if (item) {
-					this.scrollViewId = 'uni-indexed-list-' + index
+					this.scrollViewId = 'uni-indexed-list.vue-' + index
 					this.touchmoveIndex = index
 					// #ifdef APP-NVUE
-					dom.scrollToElement(this.$refs['uni-indexed-list-' + index][0], {
+					dom.scrollToElement(this.$refs['uni-indexed-list.vue-' + index][0], {
 						animated: false
 					})
 					// #endif
@@ -204,7 +204,7 @@
 				}
 				let item = this.lists[index]
 				if (item) {
-					this.scrollViewId = 'uni-indexed-list-' + index
+					this.scrollViewId = 'uni-indexed-list.vue-' + index
 					this.touchmoveIndex = index
 				}
 				// #endif

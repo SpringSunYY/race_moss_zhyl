@@ -93,6 +93,13 @@
       "style": {
         "navigationBarTitleText": "浏览文本"
       }
+    },
+    {
+      "path": "pages/zhyl/deviceUploadingData/list",
+      "style": {
+        "navigationBarTitleText": "健康数据"
+//        "enablePullDownRefresh": true
+      }
     }
   ],
   "tabBar": {

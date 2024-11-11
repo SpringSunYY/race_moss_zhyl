@@ -52,7 +52,7 @@
             <view>绑定身份</view>
           </view>
         </view>
-<!--        <view class="list-cell list-cell-arrow" @click="handleToEditInfo">-->
+<!--        <view class="list.vue-cell list.vue-cell-arrow" @click="handleToEditInfo">-->
 <!--          <view class="menu-item-box">-->
 <!--            <view class="iconfont icon-user menu-icon"></view>-->
 <!--            <view>编辑资料</view>-->

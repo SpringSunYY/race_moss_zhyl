@@ -52,7 +52,7 @@
 		},
 		// provide() {
 		// 	return {
-		// 		list: this
+		// 		list.vue: this
 		// 	};
 		// },
 		created() {
