@@ -89,8 +89,21 @@ public interface DeviceUploadingDataMapper {
      * method: staticByCreateTimeCounts
      * date: 2024/11/2 14:57
      * param:
+     *
      * @param: deviceUploadingData
      * return: java.util.List<com.moss.zhyl.domain.statics.ro.StaticRo>
      **/
     List<StaticRo> staticByCreateTimeCounts(DeviceUploadingData deviceUploadingData);
+
+    /**
+     * description: 或许最新一条数据
+     * author: YY
+     * method: selectNewData
+     * date: 2024/11/11 15:13
+     * param:
+     *
+     * @param: deviceUploadingData
+     * return: com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData
+     **/
+    DeviceUploadingData selectNewData(DeviceUploadingData deviceUploadingData);
 }

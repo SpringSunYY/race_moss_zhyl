@@ -88,7 +88,7 @@ public class AppUserInfoController extends BaseController {
     }
 
     /**
-     * 重置密码
+     * 修改密码
      */
     @PreAuthorize("@ss.hasUserAnyRole('elderly,elderly_family')")
     @PutMapping("/updatePwd")

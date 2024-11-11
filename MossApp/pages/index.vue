@@ -18,7 +18,7 @@
     <uni-card class="custom-card my-card" margin="0" style="margin-top: 20rpx">
       <!-- 卡片头部 -->
       <view class="card-header">
-        <view class="title">HI, 王某某</view>
+        <view class="title">HI, {{ userInfo.name }}</view>
         <view class="extra">查看详细数据 ></view>
       </view>
 
@@ -29,10 +29,13 @@
             <text class="label">血压</text>
             <u-row justify="flex-start">
               <u-col span="3" style="margin-left: 0px">
-                <text class="normal" style="font-weight: bold;">正常</text>
+                <text class="status normal"
+                      v-if="healthData.sdp<=120&&healthData.sbp>=90&&healthData.dbp<=80&&healthData.dbp>=60">正常
+                </text>
+                <text class="status abnormal" v-else>异常</text>
               </u-col>
               <u-col span="9">
-                <text class="details">收缩压: 105 舒张压: 75</text>
+                <text class="details">高压: {{ healthData.sdp }} 低压: {{ healthData.dbp }}</text>
               </u-col>
             </u-row>
           </view>
@@ -40,15 +43,17 @@
             <u-col span="6">
               <view class="data-item">
                 <text class="label">血糖</text>
-                <text class="status normal">正常</text>
-                <text class="details">4.5mmol/L</text>
+                <text class="status normal" v-if="healthData.oxygen<=100&&healthData.oxygen>=95">正常</text>
+                <text class="status abnormal" v-else>异常</text>
+                <text class="details">{{ healthData.oxygen }}mmol/L</text>
               </view>
             </u-col>
             <u-col span="6">
               <view class="data-item">
                 <text class="label">心率</text>
-                <text class="status abnormal">异常</text>
-                <text class="details">120 bpm</text>
+                <text class="status normal" v-if="healthData.heartRate<=100&&healthData.heartRate>=60">正常</text>
+                <text class="status abnormal" v-else>异常</text>
+                <text class="details">{{ healthData.heartRate }} bpm</text>
               </view>
             </u-col>
           </u-row>
@@ -127,7 +132,9 @@
       <!--      </u-cell>-->
       <uni-section title="咨询" titleFontSize="24px" type="line">
         <template v-slot:right>
-          <navigator url="/pages/tabBar/extUI/extUI" open-type="switchTab" hover-class="other-navigator-hover"> 查看更多</navigator>
+          <navigator url="/pages/tabBar/extUI/extUI" open-type="switchTab" hover-class="other-navigator-hover">
+            查看更多
+          </navigator>
         </template>
         <uni-card padding="0" margin="0" spacing="0">
           <template v-slot:cover>
@@ -164,6 +171,8 @@
 </template>
 
 <script>
+import {newHealthData} from '@/api/zhyl/deviceUploadingData'
+
 export default {
   options: {styleIsolation: 'shared'},
   data() {
@@ -175,12 +184,30 @@ export default {
         color: '#4cd964',
         size: '22',
         type: 'gear-filled'
+      },
+      userInfo: this.$store.state.user,
+      healthData: {
+        heartRate: 0,
+        dbp: 0,
+        sbp: 0,
+        oxygen: 0,
+        bloodSugar: 0,
       }
     }
   },
   onLoad: function () {
+    // console.log(this.$store.state.user)
+  },
+  created() {
+    this.getHealthData()
   },
   methods: {
+    getHealthData() {
+      newHealthData().then(res => {
+        this.healthData = res.data.argumentData
+        // console.log(this.healthData)
+      })
+    },
     searchInfo(value) {
       console.log("搜索:" + value)
     },
