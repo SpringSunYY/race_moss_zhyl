@@ -1,23 +1,25 @@
-package com.moss.zhyl.controller.app;
+package com.moss.web.controller.zhyl;
 
 import cn.hutool.core.util.StrUtil;
 import com.moss.common.annotation.Log;
+import com.moss.common.config.RuoYiConfig;
 import com.moss.common.core.controller.BaseController;
 import com.moss.common.core.domain.AjaxResult;
 import com.moss.common.core.domain.entity.UserInfo;
-import com.moss.common.core.domain.model.LoginUser;
+import com.moss.common.core.domain.model.LoginUserInfo;
 import com.moss.common.core.redis.RedisCache;
 import com.moss.common.enums.BusinessType;
 import com.moss.common.utils.CalculateUtils;
 import com.moss.common.utils.SecurityUtils;
+import com.moss.common.utils.file.FileUploadUtils;
+import com.moss.common.utils.file.MimeTypeUtils;
+import com.moss.framework.web.service.UserInfoTokenService;
 import com.moss.zhyl.mapper.UserInfoMapper;
 import com.moss.zhyl.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.concurrent.TimeUnit;
 
@@ -37,6 +39,9 @@ public class AppUserInfoController extends BaseController {
 
     @Autowired
     private UserInfoMapper userInfoMapper;
+
+    @Autowired
+    private UserInfoTokenService userInfoTokenService;
 
     @Autowired
     private RedisCache redisCache;
@@ -89,7 +94,7 @@ public class AppUserInfoController extends BaseController {
     @PutMapping("/updatePwd")
     public AjaxResult updatePwd(String oldPassword, String newPassword) {
         UserInfo userInfo = userInfoMapper.selectUserInfoByUserInfoId(SecurityUtils.getLoginUserInfo().getUserInfoId());
-        System.err.println(userInfo);
+//        System.err.println(userInfo);
         String password = userInfo.getPassword();
         System.out.println("password = " + password);
         if (!SecurityUtils.matchesPassword(oldPassword, password)) {
@@ -101,6 +106,29 @@ public class AppUserInfoController extends BaseController {
         newPassword = SecurityUtils.encryptPassword(newPassword);
         userInfo.setPassword(newPassword);
         return success(userInfoMapper.updateUserInfo(userInfo));
+    }
+
+    /**
+     * 头像上传
+     */
+//    @Log(title = "用户头像", businessType = BusinessType.UPDATE)
+    @PostMapping("/avatar")
+    public AjaxResult avatar(@RequestParam("avatarfile") MultipartFile file) throws Exception {
+        if (!file.isEmpty()) {
+            LoginUserInfo loginUserInfo = getLoginUserInfo();
+            String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file, MimeTypeUtils.IMAGE_EXTENSION);
+            UserInfo userInfo = userInfoMapper.selectUserInfoByUserInfoId(loginUserInfo.getUserInfoId());
+            userInfo.setUserInfoProfile(avatar);
+            if (userInfoMapper.updateUserInfo(userInfo) > 0) {
+                AjaxResult ajax = AjaxResult.success();
+                ajax.put("imgUrl", avatar);
+                // 更新缓存用户头像
+                loginUserInfo.getUserInfo().setUserInfoProfile(avatar);
+                userInfoTokenService.setLoginUserInfo(loginUserInfo);
+                return ajax;
+            }
+        }
+        return error("上传图片异常，请联系管理员");
     }
 
 }

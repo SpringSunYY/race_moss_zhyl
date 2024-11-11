@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-
+import upload from '@/utils/upload'
 // 获取验证码
 export function getCode(phoneNumber) {
     return request({
@@ -35,5 +35,14 @@ export function updateUserPwd(oldPassword, newPassword) {
         url: '/app/zhyl/userInfo/updatePwd',
         method: 'put',
         params: data
+    })
+}
+
+// 用户头像上传
+export function uploadAvatar(data) {
+    return upload({
+        url: '/app/zhyl/userInfo/avatar',
+        name: data.name,
+        filePath: data.filePath
     })
 }
