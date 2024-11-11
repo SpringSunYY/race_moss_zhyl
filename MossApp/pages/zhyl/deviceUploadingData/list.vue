@@ -1,13 +1,12 @@
 <template>
   <view class="deviceUploadingData-list-content">
     <u-list
-        @scrolltolower="scrolltolower"
     >
       <u-list-item
           v-for="(item, index) in healthDataList"
           :key="index"
       >
-        <u-button @click="openData(item)">{{ item.createTime }}</u-button>
+        <u-button @click="openData(item)"> {{ item.createTime }}</u-button>
       </u-list-item>
       <u-loadmore @loadmore="loadmore" :status="status"/>
     </u-list>
@@ -103,6 +102,7 @@ export default {
       healthData(this.queryParams).then(res => {
         this.healthDataList.push(...res.rows);
         this.total = res.total
+        this.status = 'loadmore';
       })
     },
     scrolltolower() {
@@ -113,10 +113,9 @@ export default {
         this.status = 'nomore'
         return
       }
-      this.status = 'loadmore';
+      this.status = 'loading';
       this.queryParams.pageNum += 1
       this.getHealthDataList()
-      console.log('加载更多')
       // for (let i = 0; i < 30 && this.healthDataList.length <= 120; i++) {
       //   this.healthDataList.push({
       //     show: false,

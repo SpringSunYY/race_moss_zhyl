@@ -75,7 +75,7 @@
             title="查看我的健康报告"
             isLink
             :border="false"
-            url="/pages/componentsB/tag/tag"
+            url="/pages/zhyl/healthReport/list"
         ></u-cell>
       </view>
     </uni-card>

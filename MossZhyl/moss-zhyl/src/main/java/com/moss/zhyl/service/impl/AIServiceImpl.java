@@ -208,7 +208,7 @@ public class AIServiceImpl implements IAIService {
                     //4、获取生成报告结果
                     HealthReport healthReport = new HealthReport();
                     healthReport.setHealthReportId(IdUtils.snowflakeId());
-                    healthReport.setReportTitle(info.getUserInfoName() + "---" + elderlyHealthData.getData() + "---健康报告");
+                    healthReport.setReportTitle(info.getUserInfoName() + "-" + elderlyHealthData.getData() + "-健康报告");
                     healthReport.setUseModel(asyncReturnData.getModel());
                     healthReport.setReportContent(elderlyHealthData.toString());
                     healthReport.setTaskStatus(asyncReturnData.getTaskStatus());

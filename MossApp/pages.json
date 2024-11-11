@@ -100,6 +100,13 @@
         "navigationBarTitleText": "健康数据"
 //        "enablePullDownRefresh": true
       }
+    },
+    {
+      "path": "pages/zhyl/healthReport/list",
+      "style": {
+        "navigationBarTitleText": "健康报告"
+        //        "enablePullDownRefresh": true
+      }
     }
   ],
   "tabBar": {
