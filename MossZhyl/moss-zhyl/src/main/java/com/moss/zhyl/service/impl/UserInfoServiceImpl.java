@@ -217,11 +217,15 @@ public class UserInfoServiceImpl implements IUserInfoService {
 
     @Override
     public int resetPwd(UserInfo userInfo) {
+        //加密密码
+        if (StringUtils.isEmpty(userInfo.getPassword()) || userInfo.getPassword().length() < 6 || userInfo.getPassword().length() > 20) {
+            throw new ServiceException("密码校验失败");
+        } else {
+            userInfo.setPassword(SecurityUtils.encryptPassword(userInfo.getPassword()));
+        }
         //如果有更新用户密码权限,直接重置
         if (SecurityUtils.hasPermi(ZHYL_USERINFO_UPDATE_PASSWORD)) {
             //更新密码
-            String password = sysConfigService.selectConfigByKey(YL_USER_INFO_INIT_PASSWORD);
-            userInfo.setPassword(SecurityUtils.encryptPassword(password));
             return userInfoMapper.updateUserInfo(userInfo);
         }
         //如果不是是自己
@@ -230,8 +234,6 @@ public class UserInfoServiceImpl implements IUserInfoService {
         }
         //如果是自己
         //更新密码 TODO 后续根据实际情况优化
-        String password = sysConfigService.selectConfigByKey(YL_USER_INFO_INIT_PASSWORD);
-        userInfo.setPassword(SecurityUtils.encryptPassword(password));
         return userInfoMapper.updateUserInfo(userInfo);
     }
 

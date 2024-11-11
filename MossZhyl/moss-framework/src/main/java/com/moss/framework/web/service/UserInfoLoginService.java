@@ -59,7 +59,7 @@ public class UserInfoLoginService {
         if (StringUtils.isNull(userInfo)) {
             throw new ServiceException("用户不存在");
         }
-        if (SecurityUtils.matchesPassword(password, userInfo.getPassword())) {
+        if (!SecurityUtils.matchesPassword(password, userInfo.getPassword())) {
             throw new ServiceException("密码不正确");
         }
         LoginUserInfo loginUserInfo = new LoginUserInfo(userInfo.getUserInfoId(), userInfo);
