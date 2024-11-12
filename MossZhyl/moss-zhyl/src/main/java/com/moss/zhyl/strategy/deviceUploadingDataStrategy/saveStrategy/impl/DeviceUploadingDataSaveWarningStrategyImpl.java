@@ -1,8 +1,7 @@
 package com.moss.zhyl.strategy.deviceUploadingDataStrategy.saveStrategy.impl;
 
-import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
-import com.moss.zhyl.domain.DeviceUploadingData.argument.LocationArgument;
-import com.moss.zhyl.domain.DeviceUploadingData.argument.WarningArgument;
+import com.moss.zhyl.domain.deviceUploadingData.DeviceUploadingData;
+import com.moss.zhyl.domain.deviceUploadingData.argument.WarningArgument;
 import com.moss.zhyl.domain.enums.ProcessingStatusEnum;
 import com.moss.zhyl.service.IDeviceUploadingDataService;
 import com.moss.zhyl.strategy.deviceUploadingDataStrategy.saveStrategy.DeviceUploadingDataSaveStrategy;

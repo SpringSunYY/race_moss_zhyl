@@ -1,10 +1,8 @@
-package com.moss.zhyl.domain.DeviceUploadingData.argument;
+package com.moss.zhyl.domain.deviceUploadingData.argument;
 
 import java.util.Date;
 
-import com.moss.zhyl.domain.DeviceUploadingData.Argument;
-
-import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
+import com.moss.zhyl.domain.deviceUploadingData.DeviceUploadingData;
 
 /**
  * @Project: MossZhyl

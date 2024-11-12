@@ -2,13 +2,12 @@ package com.moss.zhyl.strategy.deviceUploadingDataStrategy.saveStrategy;
 
 import com.moss.common.exception.ServiceException;
 import com.moss.common.utils.StringUtils;
-import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
+import com.moss.zhyl.domain.deviceUploadingData.DeviceUploadingData;
 import com.moss.zhyl.strategy.deviceUploadingDataStrategy.saveStrategy.impl.DeviceUploadingDataSaveDefaultStrategyImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**

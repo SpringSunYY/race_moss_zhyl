@@ -9,7 +9,7 @@ import com.moss.common.utils.SecurityUtils;
 import com.moss.common.utils.StringUtils;
 import com.moss.common.utils.uuid.IdUtils;
 import com.moss.system.service.ISysUserService;
-import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
+import com.moss.zhyl.domain.deviceUploadingData.DeviceUploadingData;
 import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.zhyl.domain.enums.DelFlagEnum;
 import com.moss.zhyl.domain.enums.DeviceUploadingDataCommandEnum;

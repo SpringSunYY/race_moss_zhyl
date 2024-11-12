@@ -2,7 +2,7 @@ package com.moss.zhyl.mapper;
 
 import java.util.List;
 
-import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
+import com.moss.zhyl.domain.deviceUploadingData.DeviceUploadingData;
 import com.moss.zhyl.domain.statics.ro.StaticRo;
 
 /**

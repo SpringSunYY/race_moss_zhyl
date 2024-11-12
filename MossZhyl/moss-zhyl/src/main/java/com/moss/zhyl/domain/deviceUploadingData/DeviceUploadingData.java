@@ -1,7 +1,5 @@
-package com.moss.zhyl.domain.DeviceUploadingData;
+package com.moss.zhyl.domain.deviceUploadingData;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.moss.common.annotation.Excel;
 import com.moss.common.core.domain.BaseEntity;
 

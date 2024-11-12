@@ -1,10 +1,10 @@
-package com.moss.zhyl.domain.DeviceUploadingData;
+package com.moss.zhyl.domain.deviceUploadingData;
 
 import com.alibaba.fastjson2.JSON;
-import com.moss.zhyl.domain.DeviceUploadingData.argument.BeatHeartArgument;
-import com.moss.zhyl.domain.DeviceUploadingData.argument.HealthArgument;
-import com.moss.zhyl.domain.DeviceUploadingData.argument.LocationArgument;
-import com.moss.zhyl.domain.DeviceUploadingData.argument.WarningArgument;
+import com.moss.zhyl.domain.deviceUploadingData.argument.BeatHeartArgument;
+import com.moss.zhyl.domain.deviceUploadingData.argument.HealthArgument;
+import com.moss.zhyl.domain.deviceUploadingData.argument.LocationArgument;
+import com.moss.zhyl.domain.deviceUploadingData.argument.WarningArgument;
 import com.moss.zhyl.domain.enums.DeviceUploadingDataCommandEnum;
 
 /**

@@ -1,4 +1,4 @@
-package com.moss.zhyl.domain;
+package com.moss.zhyl.domain.healthReport;
 
 import java.util.Date;
 
@@ -57,6 +57,7 @@ public class HealthReport extends BaseEntity {
      */
     @Excel(name = "报告返回")
     private String reportReturn;
+    private ReportReturn reportReturnData;
 
     /**
      * 任务ID
@@ -95,6 +96,14 @@ public class HealthReport extends BaseEntity {
      */
     @Excel(name = "删除")
     private String delFlag;
+
+    public ReportReturn getReportReturnData() {
+        return reportReturnData;
+    }
+
+    public void setReportReturnData(ReportReturn reportReturnData) {
+        this.reportReturnData = reportReturnData;
+    }
 
     public String getUserInfoName() {
         return userInfoName;

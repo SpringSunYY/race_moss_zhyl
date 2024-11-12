@@ -1,7 +1,7 @@
 package com.moss.zhyl.service;
 
 import java.util.List;
-import com.moss.zhyl.domain.HealthReport;
+import com.moss.zhyl.domain.healthReport.HealthReport;
 
 /**
  * 健康报告Service接口

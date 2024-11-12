@@ -3,7 +3,7 @@ package com.moss.zhyl.service.impl;
 import com.moss.common.utils.CalculateUtils;
 import com.moss.common.utils.StringUtils;
 import com.moss.zhyl.domain.DeviceType;
-import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
+import com.moss.zhyl.domain.deviceUploadingData.DeviceUploadingData;
 import com.moss.zhyl.domain.ElderlyDeviceBinding;
 import com.moss.common.core.domain.entity.UserInfo;
 import com.moss.zhyl.domain.enums.DelFlagEnum;

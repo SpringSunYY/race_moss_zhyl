@@ -10,7 +10,7 @@
           <u-cell
               isLink
               :title="item.reportTitle"
-              url="/pages/componentsB/badge/badge"
+              :url="`/pages/zhyl/healthReport/info?healthReportId=${item.healthReportId}`"
               titleStyle="font-size: 14px"
 
           >

@@ -1,8 +1,8 @@
 package com.moss.zhyl.service;
 
 import java.util.List;
-import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
-import com.moss.zhyl.domain.DeviceUploadingData.ElderlyHealthData;
+import com.moss.zhyl.domain.deviceUploadingData.DeviceUploadingData;
+import com.moss.zhyl.domain.deviceUploadingData.ElderlyHealthData;
 
 /**
  * 设备上传数据Service接口

@@ -1,6 +1,6 @@
 package com.moss.zhyl.mapper;
 
-import com.moss.zhyl.domain.HealthReport;
+import com.moss.zhyl.domain.healthReport.HealthReport;
 
 import java.util.List;
 

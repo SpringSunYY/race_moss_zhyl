@@ -9,3 +9,13 @@ export function healthReportList(query) {
   })
 }
 
+// 查询健康报告详细
+export function getHealthReport(healthReportId) {
+  return request({
+    url: '/app/zhyl/healthReport/' + healthReportId,
+    method: 'get'
+  })
+}
+
+
+

@@ -1,6 +1,6 @@
 package com.moss.zhyl.strategy.deviceUploadingDataStrategy.saveStrategy;
 
-import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
+import com.moss.zhyl.domain.deviceUploadingData.DeviceUploadingData;
 
 /**
  * @Project: MossZhyl

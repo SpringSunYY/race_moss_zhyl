@@ -11,7 +11,7 @@ import com.moss.zhyl.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.moss.zhyl.mapper.HealthReportMapper;
-import com.moss.zhyl.domain.HealthReport;
+import com.moss.zhyl.domain.healthReport.HealthReport;
 import com.moss.zhyl.service.IHealthReportService;
 
 import static com.moss.common.constant.PermissionsConstants.ZHYL_HEALTH_REPORT_LOOK_DELETE;

@@ -1,8 +1,7 @@
-package com.moss.zhyl.domain.DeviceUploadingData.argument;
+package com.moss.zhyl.domain.deviceUploadingData.argument;
 
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONArray;
-import com.moss.zhyl.domain.DeviceUploadingData.Argument;
+import com.moss.zhyl.domain.deviceUploadingData.Argument;
 
 /**
  * @Project: MossZhyl

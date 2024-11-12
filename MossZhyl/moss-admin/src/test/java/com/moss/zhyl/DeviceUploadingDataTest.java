@@ -1,9 +1,9 @@
 package com.moss.zhyl;
 
 import com.moss.common.utils.CalculateUtils;
-import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
-import com.moss.zhyl.domain.DeviceUploadingData.ElderlyHealthData;
-import com.moss.zhyl.domain.DeviceUploadingData.argument.HealthArgument;
+import com.moss.zhyl.domain.deviceUploadingData.DeviceUploadingData;
+import com.moss.zhyl.domain.deviceUploadingData.ElderlyHealthData;
+import com.moss.zhyl.domain.deviceUploadingData.argument.HealthArgument;
 import com.moss.zhyl.service.IDeviceUploadingDataService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

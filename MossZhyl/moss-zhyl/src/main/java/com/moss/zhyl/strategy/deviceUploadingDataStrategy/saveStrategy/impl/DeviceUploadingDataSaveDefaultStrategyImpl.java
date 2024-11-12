@@ -1,16 +1,10 @@
 package com.moss.zhyl.strategy.deviceUploadingDataStrategy.saveStrategy.impl;
 
-import com.moss.common.utils.StringUtils;
-import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
-import com.moss.zhyl.domain.enums.DeviceUploadingDataCommandEnum;
+import com.moss.zhyl.domain.deviceUploadingData.DeviceUploadingData;
 import com.moss.zhyl.service.IDeviceUploadingDataService;
 import com.moss.zhyl.strategy.deviceUploadingDataStrategy.saveStrategy.DeviceUploadingDataSaveStrategy;
 import com.moss.zhyl.strategy.deviceUploadingDataStrategy.saveStrategy.DeviceUploadingDataSaveStrategyConfig;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.annotation.Resource;
-
-import static com.moss.zhyl.domain.enums.DeviceUploadingDataCommandEnum.DEVICE_UPLOADING_DATA_COMMAND_DEFAULT;
 
 /**
  * @Project: MossZhyl

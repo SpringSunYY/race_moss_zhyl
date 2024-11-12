@@ -16,7 +16,7 @@ import com.moss.common.annotation.Log;
 import com.moss.common.core.controller.BaseController;
 import com.moss.common.core.domain.AjaxResult;
 import com.moss.common.enums.BusinessType;
-import com.moss.zhyl.domain.HealthReport;
+import com.moss.zhyl.domain.healthReport.HealthReport;
 import com.moss.zhyl.service.IHealthReportService;
 import com.moss.common.utils.poi.ExcelUtil;
 import com.moss.common.core.page.TableDataInfo;

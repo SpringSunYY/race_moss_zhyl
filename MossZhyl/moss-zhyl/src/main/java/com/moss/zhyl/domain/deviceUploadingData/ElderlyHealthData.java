@@ -1,4 +1,4 @@
-package com.moss.zhyl.domain.DeviceUploadingData;
+package com.moss.zhyl.domain.deviceUploadingData;
 
 /**
  * @Project: MossZhyl

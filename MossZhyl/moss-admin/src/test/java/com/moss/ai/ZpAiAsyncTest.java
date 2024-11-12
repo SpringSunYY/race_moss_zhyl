@@ -1,8 +1,8 @@
 package com.moss.ai;
 
 import com.moss.common.utils.StringUtils;
-import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
-import com.moss.zhyl.domain.DeviceUploadingData.ElderlyHealthData;
+import com.moss.zhyl.domain.deviceUploadingData.DeviceUploadingData;
+import com.moss.zhyl.domain.deviceUploadingData.ElderlyHealthData;
 import com.moss.zhyl.service.IDeviceUploadingDataService;
 import com.moss.zpai.manager.ZpAIManager;
 import com.moss.zpai.model.AsyncResponse;

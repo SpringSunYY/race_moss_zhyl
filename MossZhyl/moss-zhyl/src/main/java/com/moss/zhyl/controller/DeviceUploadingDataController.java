@@ -18,7 +18,7 @@ import com.moss.common.annotation.Log;
 import com.moss.common.core.controller.BaseController;
 import com.moss.common.core.domain.AjaxResult;
 import com.moss.common.enums.BusinessType;
-import com.moss.zhyl.domain.DeviceUploadingData.DeviceUploadingData;
+import com.moss.zhyl.domain.deviceUploadingData.DeviceUploadingData;
 import com.moss.zhyl.service.IDeviceUploadingDataService;
 import com.moss.common.utils.poi.ExcelUtil;
 import com.moss.common.core.page.TableDataInfo;
