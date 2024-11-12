@@ -76,11 +76,12 @@
             isLink
             :border="false"
             url="/pages/zhyl/healthReport/list"
+            customStyle="padding: 0 0px; font-size: 16px; font-weight: bold; color: rgba(0,0,0,0.42);"
         ></u-cell>
       </view>
     </uni-card>
-    <uni-card class="custom-card my-card" style="margin-top:10rpx " margin="0">
-      <u-notice-bar icon="bell-fill" text="这里是荔枝软件开发工作，你有一份尾款需要支付"></u-notice-bar>
+    <uni-card class="custom-card my-card" v-if="warningText!==''" style="margin-top:10rpx " margin="0">
+      <u-notice-bar icon="bell-fill" :text="warningText"></u-notice-bar>
     </uni-card>
     <view class="myDevice">
       <u-cell
@@ -173,7 +174,7 @@
 </template>
 
 <script>
-import {newHealthData} from '@/api/zhyl/deviceUploadingData'
+import {newHealthData, warningData} from '@/api/zhyl/deviceUploadingData'
 
 export default {
   options: {styleIsolation: 'shared'},
@@ -194,7 +195,8 @@ export default {
         sbp: 0,
         oxygen: 0,
         bloodSugar: 0,
-      }
+      },
+      warningText: ""
     }
   },
   onLoad: function () {
@@ -202,9 +204,20 @@ export default {
   },
   created() {
     this.getHealthData()
+    this.getWarningData()
   },
   methods: {
-    toDeviceUploadingDataList(){
+    getWarningData() {
+      warningData().then(res => {
+        if (res.total <= 0) {
+          console.log(res.total)
+          return
+        }
+        this.warningText = "您有" + res.total + "条预警信息，最新一条时间为" + res.rows[0].createTime + "请联系相关服务人员解决。"
+        // console.log(this.warningText)
+      })
+    },
+    toDeviceUploadingDataList() {
       this.$tab.navigateTo('/pages/zhyl/deviceUploadingData/list')
     },
     getHealthData() {

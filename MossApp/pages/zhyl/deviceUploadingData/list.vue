@@ -203,7 +203,9 @@ export default {
   }
 
   .card-footer {
-    margin-top: 10px;
+    width: 100%;
+    padding: 0;
+    /*margin-top: 10px;*/
     /*  justify-content: space-between;
       align-items: center;*/
   }

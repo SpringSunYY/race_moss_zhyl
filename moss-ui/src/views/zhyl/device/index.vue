@@ -503,8 +503,8 @@ export default {
       queryParamsElderly: {
         pageNum: 1,
         pageSize: 10,
-        contactPhone: '',
-        userInfoId: '',
+        contactPhone: null,
+        userInfoId: null,
         userInfoRole: 'elderly',
       },
       // 长者信息表格数据

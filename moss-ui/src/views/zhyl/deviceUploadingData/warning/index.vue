@@ -645,10 +645,10 @@ export default {
     },
 
     getElderlyUserInfoList() {
-      if (this.form.userInfoId !== null && this.form.userInfoId !== '') {
+      if (this.form.userInfoId !== null) {
         this.queryParamsElderly.userInfoId = this.form.userInfoId
       }
-      if (this.queryParamsElderly.contactPhone !== '') {
+      if (this.queryParamsElderly.contactPhone !== null && this.queryParamsElderly.contactPhone !== undefined) {
         this.queryParamsElderly.userInfoId = null
       }
       listUserInfo(this.queryParamsElderly).then(response => {
@@ -732,6 +732,8 @@ export default {
       const dataId = row.dataId || this.ids
       getDeviceUploadingData(dataId).then(response => {
         this.form = response.data;
+        this.getUserServiceList()
+        this.getElderlyUserInfoList()
         this.open = true;
         this.title = "修改设备预警数据";
       });

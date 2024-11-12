@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import static com.moss.zhyl.domain.enums.DeviceUploadingDataCommandEnum.DEVICE_UPLOADING_DATA_COMMAND_HEALTH;
+import static com.moss.zhyl.domain.enums.DeviceUploadingDataCommandEnum.DEVICE_UPLOADING_DATA_COMMAND_WARNING;
+import static com.moss.zhyl.domain.enums.ProcessingStatusEnum.PROCESSING_STATUS_ENUM_0;
 
 /**
  * 设备上传数据Controller
@@ -73,6 +75,25 @@ public class AppDeviceUploadingDataController extends BaseController {
         for (DeviceUploadingData info : list) {
             Argument.returnArgumentData(info);
         }
+        return getDataTable(list);
+    }
+
+    /**
+     * 获取自己的预警数据
+     */
+    @PreAuthorize("@ss.hasUserAnyRole('elderly,elderly_family')")
+    @GetMapping("/warningData")
+    public TableDataInfo warningData(DeviceUploadingData deviceUploadingData) {
+        PageUtils.startPage();
+        deviceUploadingData.setUserInfoId(SecurityUtils.getLoginUserInfo().getUserInfoId());
+        deviceUploadingData.setType(DeviceUploadingCommandTypeEnum.UPDATE.getValue());
+        deviceUploadingData.setDelFlag(DelFlagEnum.DEL_FLAG_0.getValue());
+        deviceUploadingData.setProcessingStatus(PROCESSING_STATUS_ENUM_0.getValue());
+        deviceUploadingData.setCommand(DEVICE_UPLOADING_DATA_COMMAND_WARNING.getValue());
+        List<DeviceUploadingData> list = deviceUploadingDataMapper.selectDeviceUploadingDataList(deviceUploadingData);
+//        for (DeviceUploadingData info : list) {
+//            Argument.returnArgumentData(info);
+//        }
         return getDataTable(list);
     }
 }

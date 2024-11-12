@@ -17,3 +17,11 @@ export function healthData(query) {
         params: query
     })
 }
+
+export function warningData(query) {
+    return request({
+        url: '/app/zhyl/deviceUploadingData/warningData',
+        method: 'get',
+        params: query
+    })
+}
