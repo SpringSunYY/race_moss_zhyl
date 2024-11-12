@@ -47,7 +47,7 @@ public class Device extends BaseEntity
 
     /** 安装方式 */
     @Excel(name = "安装方式")
-    private Long installationMode;
+    private String installationMode;
 
     /** 设备价格 */
     @Excel(name = "设备价格")
@@ -152,12 +152,12 @@ public class Device extends BaseEntity
     {
         return powerSupplyMode;
     }
-    public void setInstallationMode(Long installationMode)
+    public void setInstallationMode(String installationMode)
     {
         this.installationMode = installationMode;
     }
 
-    public Long getInstallationMode()
+    public String getInstallationMode()
     {
         return installationMode;
     }

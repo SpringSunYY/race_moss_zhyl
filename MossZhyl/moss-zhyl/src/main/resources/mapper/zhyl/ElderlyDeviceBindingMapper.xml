@@ -169,7 +169,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="bindingId != null">#{bindingId},</if>
             <if test="userInfoId != null">#{userInfoId},</if>
-            <if test="brandId != null">brand_id,</if>
+            <if test="brandId != null">#{brandId},</if>
             <if test="deviceId != null">#{deviceId},</if>
             <if test="deviceType != null">#{deviceType},</if>
             <if test="deviceImei != null and deviceImei != ''">#{deviceImei},</if>

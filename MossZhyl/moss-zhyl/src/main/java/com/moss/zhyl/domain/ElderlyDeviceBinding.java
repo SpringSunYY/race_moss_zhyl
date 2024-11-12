@@ -97,6 +97,36 @@ public class ElderlyDeviceBinding extends BaseEntity {
     @Excel(name = "删除")
     private String delFlag;
 
+    private String deviceImageUrl;
+
+    private Integer tmBattery; // 温度计电量
+
+    private String installationMode;
+
+    public String getInstallationMode() {
+        return installationMode;
+    }
+
+    public void setInstallationMode(String installationMode) {
+        this.installationMode = installationMode;
+    }
+
+    public Integer getTmBattery() {
+        return tmBattery;
+    }
+
+    public void setTmBattery(Integer tmBattery) {
+        this.tmBattery = tmBattery;
+    }
+
+    public String getDeviceImageUrl() {
+        return deviceImageUrl;
+    }
+
+    public void setDeviceImageUrl(String deviceImageUrl) {
+        this.deviceImageUrl = deviceImageUrl;
+    }
+
     public String getBrandName() {
         return brandName;
     }

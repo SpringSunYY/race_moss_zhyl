@@ -454,6 +454,25 @@
                           placeholder="请选择绑定时间">
           </el-date-picker>
         </el-form-item>
+        <el-form-item label="服务人员" prop="userId">
+          <el-select
+            v-model="bindingDeviceInfo.userId"
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入用户账号"
+            :remote-method="selectUserServiceList"
+            :loading="userServiceLoading"
+          >
+            <el-option
+              v-for="item in userServiceList"
+              :key="item.userId"
+              :label="item.userName"
+              :value="item.userId"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="bindingDeviceInfo.remark" type="textarea" placeholder="请输入备注" />
         </el-form-item>
@@ -472,6 +491,7 @@ import {listDeviceBrand} from "@/api/zhyl/deviceBrand";
 import {listUserInfo} from "@/api/zhyl/userInfo";
 import {addElderlyDeviceBinding} from "@/api/zhyl/elderlyDeviceBinding";
 import {listDeviceType} from "@/api/zhyl/deviceType";
+import {allocatedUserList} from "@/api/system/role";
 
 export default {
   name: "Device",
@@ -479,6 +499,15 @@ export default {
     'yl_device_status', 'yl_device_binding_status', 'yl_binding_status'],
   data() {
     return {
+      //系统客服角色信息
+      userServiceList: [],
+      userServiceLoading: false,
+      userServiceQueryParams: {
+        userName: '',
+        roleId: 100,
+        pageNum: 1,
+        pageSize: 10
+      },
       //绑定设备信息
       bindingDeviceInfo: {},
       // 遮罩层
@@ -599,6 +628,39 @@ export default {
     this.getDeviceTypeList()
   },
   methods: {
+    /**
+     * 获取用户列表推荐
+     * @param query
+     */
+    selectUserServiceList(query) {
+      if (query !== '') {
+        this.userServiceLoading = true
+        this.userServiceQueryParams.userName = query
+        setTimeout(() => {
+          this.getUserServiceList()
+        }, 200)
+      } else {
+        this.userServiceList = []
+      }
+    },
+    /**
+     * 获取用户信息列表
+     */
+    getUserServiceList() {
+      //添加查询参数
+      if (this.form.userId != null) {
+        this.userServiceQueryParams.userId = this.form.userId
+      } else {
+        this.userServiceQueryParams.userId = null
+      }
+      if (this.userServiceQueryParams.userName != null) {
+        this.userServiceQueryParams.userId = null
+      }
+      allocatedUserList(this.userServiceQueryParams).then(res => {
+        this.userServiceList = res.rows
+        this.userServiceLoading = false
+      })
+    },
     remoteElderlyUserInfoMethod(query) {
       if (query !== '') {
         this.elderlyUserInfoLoading = true

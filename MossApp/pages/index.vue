@@ -99,15 +99,15 @@
         </text>
       </u-cell>
       <u-row>
-        <view class="myDevice-card-container" v-for="i in 2" :key="i">
+        <view class="myDevice-card-container" v-for="item in deviceList" :key="i">
           <u-col span="12" justify="space-between" align="center">
             <uni-card class="myDevice-info my-card" margin="5" padding="5px 0px">
               <u-row>
                 <u-col span="10">
-                  <u--image :showLoading="true" src="/static/logo.png" width="120rpx" height="120rpx"
+                  <u--image :showLoading="true" :src="baseUrl+item.deviceImageUrl" width="120rpx" height="120rpx"
                             @click="clickDeviceImage"></u--image>
-                  <u--text type="primary" size="24" text="智能手表"></u--text>
-                  <u--text type="info" size="12" text="佩戴 | 剩余电量 95%"></u--text>
+                  <u--text type="primary" size="24" :text="item.deviceName"></u--text>
+                  <u--text type="info" size="12" :text="item.deviceInfo"></u--text>
                 </u-col>
                 <u-col span="2">
                   <u-icon name="arrow-right" color="#2979ff" size="40"></u-icon>
@@ -175,11 +175,14 @@
 
 <script>
 import {newHealthData, warningData} from '@/api/zhyl/deviceUploadingData'
+import {listElderlyDeviceBinding} from '@/api/zhyl/elderlyDeviceBinding'
+import {baseUrl} from "@/config";
 
 export default {
   options: {styleIsolation: 'shared'},
   data() {
     return {
+      baseUrl: baseUrl,
       globalConfig: getApp().globalData.config,
       cover: 'https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/shuijiao.jpg',
       avatar: 'https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png',
@@ -196,7 +199,12 @@ export default {
         oxygen: 0,
         bloodSugar: 0,
       },
-      warningText: ""
+      warningText: "",
+      deviceList: [],
+      deviceQueryParam: {
+        pageNum: 1,
+        pageSize: 2,
+      }
     }
   },
   onLoad: function () {
@@ -205,8 +213,19 @@ export default {
   created() {
     this.getHealthData()
     this.getWarningData()
+    this.getDeviceList()
   },
   methods: {
+    getDeviceList() {
+      listElderlyDeviceBinding(this.deviceQueryParam).then(res => {
+        this.deviceList = res.rows.map(item => ({
+          deviceName: item.deviceName,
+          deviceImageUrl: item.deviceImageUrl,
+          deviceInfo: `${item.installationMode ?? ""} | ${item.tmBattery ?? ""}`
+        }));
+        // console.log(this.deviceList)
+      })
+    },
     getWarningData() {
       warningData().then(res => {
         if (res.total <= 0) {

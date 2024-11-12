@@ -35,12 +35,6 @@ import static com.moss.zhyl.domain.enums.ProcessingStatusEnum.PROCESSING_STATUS_
 @RequestMapping("/app/zhyl/deviceUploadingData")
 public class AppDeviceUploadingDataController extends BaseController {
     @Autowired
-    private IDeviceUploadingDataService deviceUploadingDataService;
-
-    @Autowired
-    private DeviceUploadingDataSaveStrategyExecutor deviceUploadingDataSaveStrategyExecutor;
-
-    @Autowired
     private DeviceUploadingDataMapper deviceUploadingDataMapper;
 
     /**
