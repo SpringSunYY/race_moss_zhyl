@@ -89,7 +89,7 @@
           isLink
           title-style="font-size:24px;font-weight:bold"
           :border="false"
-          url="/pages/componentsB/tag/tag"
+          url="/pages/zhyl/device/list"
       >
         <text
             slot="value"
@@ -99,7 +99,7 @@
         </text>
       </u-cell>
       <u-row>
-        <view class="myDevice-card-container" v-for="item in deviceList" :key="i">
+        <view class="myDevice-card-container" v-for="item in deviceList" :key="item.bindingId">
           <u-col span="12" justify="space-between" align="center">
             <uni-card class="myDevice-info my-card" margin="5" padding="5px 0px">
               <u-row>
