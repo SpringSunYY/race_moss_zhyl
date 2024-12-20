@@ -1063,6 +1063,7 @@ CREATE TABLE `yl_tag_management` (
 | `consult_id`      | bigint   |      | 否       |      | 编号          |
 | `consult_title`   | varchar  | 255  | 否       |      | 标题          |
 | `consult_type`    | char     | 1    | 否       |      | 咨询类型      |
+| consult_image     | varchar  | 256  | 否       |      | 封面          |
 | `consult_content` | text     |      | 否       |      | 内容          |
 | `sorted`          | int      |      | 否       |      | 排序（默认1） |
 | `remark`          | varchar  | 255  | 是       |      | 备注          |
@@ -1081,6 +1082,7 @@ CREATE TABLE `yl_consult` (
     `consult_id` BIGINT NOT NULL COMMENT '编号',
     `consult_title` VARCHAR(255) NOT NULL COMMENT '标题',
     `consult_type` CHAR(1) NOT NULL COMMENT '咨询类型',
+    `consult_image` VARCHAR(255) NOT NULL COMMENT '封面',
     `consult_content` TEXT NOT NULL COMMENT '内容',
     `sorted` INT NOT NULL DEFAULT 1 COMMENT '排序（默认1）',
     `remark` VARCHAR(255) DEFAULT NULL COMMENT '备注',

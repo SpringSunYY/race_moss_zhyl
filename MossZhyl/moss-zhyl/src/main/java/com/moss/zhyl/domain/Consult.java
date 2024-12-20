@@ -7,9 +7,9 @@ import com.moss.common.core.domain.BaseEntity;
 
 /**
  * 咨询对象 yl_consult
- * 
+ *
  * @author YY
- * @date 2024-10-23
+ * @date 2024-11-13
  */
 public class Consult extends BaseEntity
 {
@@ -26,6 +26,10 @@ public class Consult extends BaseEntity
     @Excel(name = "咨询类型")
     private String consultType;
 
+    /** 封面 */
+//    @Excel(name = "封面")
+    private String consultImage;
+
     /** 内容 */
     @Excel(name = "内容")
     private String consultContent;
@@ -35,59 +39,69 @@ public class Consult extends BaseEntity
     private Long sorted;
 
     /** 删除 */
+    @Excel(name = "删除")
     private String delFlag;
 
-    public void setConsultId(Long consultId) 
+    public void setConsultId(Long consultId)
     {
         this.consultId = consultId;
     }
 
-    public Long getConsultId() 
+    public Long getConsultId()
     {
         return consultId;
     }
-    public void setConsultTitle(String consultTitle) 
+    public void setConsultTitle(String consultTitle)
     {
         this.consultTitle = consultTitle;
     }
 
-    public String getConsultTitle() 
+    public String getConsultTitle()
     {
         return consultTitle;
     }
-    public void setConsultType(String consultType) 
+    public void setConsultType(String consultType)
     {
         this.consultType = consultType;
     }
 
-    public String getConsultType() 
+    public String getConsultType()
     {
         return consultType;
     }
-    public void setConsultContent(String consultContent) 
+    public void setConsultImage(String consultImage)
+    {
+        this.consultImage = consultImage;
+    }
+
+    public String getConsultImage()
+    {
+        return consultImage;
+    }
+    public void setConsultContent(String consultContent)
     {
         this.consultContent = consultContent;
     }
 
-    public String getConsultContent() 
+    public String getConsultContent()
     {
         return consultContent;
     }
-    public void setSorted(Long sorted) 
+    public void setSorted(Long sorted)
     {
         this.sorted = sorted;
     }
 
-    public Long getSorted() 
+    public Long getSorted()
     {
         return sorted;
     }
-    public void setDelFlag(String delFlag) 
+    public void setDelFlag(String delFlag)
     {
         this.delFlag = delFlag;
     }
 
-    public String getDelFlag() 
+    public String getDelFlag()
     {
         return delFlag;
     }
@@ -95,16 +109,17 @@ public class Consult extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("consultId", getConsultId())
-            .append("consultTitle", getConsultTitle())
-            .append("consultType", getConsultType())
-            .append("consultContent", getConsultContent())
-            .append("sorted", getSorted())
-            .append("remark", getRemark())
-            .append("createBy", getCreateBy())
-            .append("updateBy", getUpdateBy())
-            .append("createTime", getCreateTime())
-            .append("delFlag", getDelFlag())
-            .toString();
+                .append("consultId", getConsultId())
+                .append("consultTitle", getConsultTitle())
+                .append("consultType", getConsultType())
+                .append("consultImage", getConsultImage())
+                .append("consultContent", getConsultContent())
+                .append("sorted", getSorted())
+                .append("remark", getRemark())
+                .append("createBy", getCreateBy())
+                .append("updateBy", getUpdateBy())
+                .append("createTime", getCreateTime())
+                .append("delFlag", getDelFlag())
+                .toString();
     }
 }

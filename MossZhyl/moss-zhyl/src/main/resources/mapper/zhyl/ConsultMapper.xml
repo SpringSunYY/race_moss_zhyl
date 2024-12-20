@@ -3,11 +3,12 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moss.zhyl.mapper.ConsultMapper">
-    
+
     <resultMap type="Consult" id="ConsultResult">
         <result property="consultId"    column="consult_id"    />
         <result property="consultTitle"    column="consult_title"    />
         <result property="consultType"    column="consult_type"    />
+        <result property="consultImage"    column="consult_image"    />
         <result property="consultContent"    column="consult_content"    />
         <result property="sorted"    column="sorted"    />
         <result property="remark"    column="remark"    />
@@ -18,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectConsultVo">
-        select consult_id, consult_title, consult_type, consult_content, sorted, remark, create_by, update_by, create_time, del_flag from yl_consult
+        select consult_id, consult_title, consult_type, consult_image, consult_content, sorted, remark, create_by, update_by, create_time, del_flag from yl_consult
     </sql>
 
     <select id="selectConsultList" parameterType="Consult" resultMap="ConsultResult">
@@ -33,7 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
         order by sorted asc,create_time desc
     </select>
-    
+
     <select id="selectConsultByConsultId" parameterType="Long" resultMap="ConsultResult">
         <include refid="selectConsultVo"/>
         where consult_id = #{consultId}
@@ -45,6 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="consultId != null">consult_id,</if>
             <if test="consultTitle != null and consultTitle != ''">consult_title,</if>
             <if test="consultType != null and consultType != ''">consult_type,</if>
+            <if test="consultImage != null and consultImage != ''">consult_image,</if>
             <if test="consultContent != null and consultContent != ''">consult_content,</if>
             <if test="sorted != null">sorted,</if>
             <if test="remark != null">remark,</if>
@@ -52,11 +54,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="delFlag != null and delFlag != ''">del_flag,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="consultId != null">#{consultId},</if>
             <if test="consultTitle != null and consultTitle != ''">#{consultTitle},</if>
             <if test="consultType != null and consultType != ''">#{consultType},</if>
+            <if test="consultImage != null and consultImage != ''">#{consultImage},</if>
             <if test="consultContent != null and consultContent != ''">#{consultContent},</if>
             <if test="sorted != null">#{sorted},</if>
             <if test="remark != null">#{remark},</if>
@@ -64,7 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateConsult" parameterType="Consult">
@@ -72,6 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="consultTitle != null and consultTitle != ''">consult_title = #{consultTitle},</if>
             <if test="consultType != null and consultType != ''">consult_type = #{consultType},</if>
+            <if test="consultImage != null and consultImage != ''">consult_image = #{consultImage},</if>
             <if test="consultContent != null and consultContent != ''">consult_content = #{consultContent},</if>
             <if test="sorted != null">sorted = #{sorted},</if>
             <if test="remark != null">remark = #{remark},</if>
@@ -82,7 +86,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where consult_id = #{consultId}
     </update>
-
     <delete id="deleteConsultByConsultId" parameterType="Long">
         update yl_consult set del_flag='1' where consult_id = #{consultId}
     </delete>

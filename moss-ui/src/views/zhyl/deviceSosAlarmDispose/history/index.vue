@@ -1,30 +1,30 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-<!--      <el-form-item label="长者" prop="userInfoId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.userInfoId"-->
-<!--          placeholder="请输入长者"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="预警" prop="dataId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.dataId"-->
-<!--          placeholder="请输入预警"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="处理地址" prop="addressId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.addressId"-->
-<!--          placeholder="请输入处理地址"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="长者" prop="userInfoId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.userInfoId"-->
+      <!--          placeholder="请输入长者"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="预警" prop="dataId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.dataId"-->
+      <!--          placeholder="请输入预警"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="处理地址" prop="addressId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.addressId"-->
+      <!--          placeholder="请输入处理地址"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item label="处理人" prop="userId">
         <el-input
           v-model="queryParams.userId"
@@ -90,29 +90,29 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['zhyl:deviceSosAlarmDispose:add']"-->
-<!--        >新增-->
-<!--        </el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="success"-->
-<!--          plain-->
-<!--          icon="el-icon-edit"-->
-<!--          size="mini"-->
-<!--          :disabled="single"-->
-<!--          @click="handleUpdate"-->
-<!--          v-hasPermi="['zhyl:deviceSosAlarmDispose:edit']"-->
-<!--        >修改-->
-<!--        </el-button>-->
-<!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="primary"-->
+      <!--          plain-->
+      <!--          icon="el-icon-plus"-->
+      <!--          size="mini"-->
+      <!--          @click="handleAdd"-->
+      <!--          v-hasPermi="['zhyl:deviceSosAlarmDispose:add']"-->
+      <!--        >新增-->
+      <!--        </el-button>-->
+      <!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="success"-->
+      <!--          plain-->
+      <!--          icon="el-icon-edit"-->
+      <!--          size="mini"-->
+      <!--          :disabled="single"-->
+      <!--          @click="handleUpdate"-->
+      <!--          v-hasPermi="['zhyl:deviceSosAlarmDispose:edit']"-->
+      <!--        >修改-->
+      <!--        </el-button>-->
+      <!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -216,12 +216,12 @@
     <!-- 添加或修改设备预警处理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="1000px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-<!--        <el-form-item label="长者" prop="userInfoId">-->
-<!--          <el-input v-model="form.userInfoId" placeholder="请输入长者"/>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="预警" prop="dataId">-->
-<!--          <el-input v-model="form.dataId" placeholder="请输入预警"/>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="长者" prop="userInfoId">-->
+        <!--          <el-input v-model="form.userInfoId" placeholder="请输入长者"/>-->
+        <!--        </el-form-item>-->
+        <!--        <el-form-item label="预警" prop="dataId">-->
+        <!--          <el-input v-model="form.dataId" placeholder="请输入预警"/>-->
+        <!--        </el-form-item>-->
         <el-form-item label="处理凭证" prop="disposeVoucher">
           <image-upload v-model="form.disposeVoucher"/>
         </el-form-item>
@@ -235,9 +235,9 @@
         <el-form-item label="详细地址" prop="addressDetail">
           <el-input v-model="form.addressDetail" placeholder="请输入详细地址"/>
         </el-form-item>
-<!--        <el-form-item label="处理人" prop="userId">-->
-<!--          <el-input v-model="form.userId" placeholder="请输入处理人"/>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="处理人" prop="userId">-->
+        <!--          <el-input v-model="form.userId" placeholder="请输入处理人"/>-->
+        <!--        </el-form-item>-->
         <el-form-item label="处理时间" prop="disposeTime">
           <el-date-picker clearable
                           v-model="form.disposeTime"
@@ -279,6 +279,7 @@ import {
 import {listAddressTreeInfo} from "@/api/zhyl/addressInfo";
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+
 export default {
   name: "DeviceSosAlarmDispose",
   components: {Treeselect},
@@ -385,6 +386,7 @@ export default {
     };
   },
   created() {
+    this.queryParams.dataId = this.$route.params && this.$route.params.dataId;
     this.getList();
     this.getAddressTree()
   },

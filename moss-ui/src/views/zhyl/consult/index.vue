@@ -132,28 +132,29 @@
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="consultId"/>
-      <el-table-column label="标题" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible"
-                       prop="consultTitle"/>
+      <el-table-column label="编号" align="center" v-if="columns[0].visible" prop="consultId" />
+      <el-table-column label="标题" :show-overflow-tooltip="true" align="center" v-if="columns[1].visible" prop="consultTitle" />
       <el-table-column label="咨询类型" align="center" v-if="columns[2].visible" prop="consultType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yl_consult_type" :value="scope.row.consultType"/>
         </template>
       </el-table-column>
-      <el-table-column label="内容" :show-overflow-tooltip="true" align="center" v-if="columns[3].visible"
-                       prop="consultContent"/>
-      <el-table-column label="排序" :show-overflow-tooltip="true" align="center" v-if="columns[4].visible"
-                       prop="sorted"/>
-      <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[5].visible"
-                       prop="createBy"/>
-      <el-table-column label="修改人" :show-overflow-tooltip="true" align="center" v-if="columns[6].visible"
-                       prop="updateBy"/>
-      <el-table-column label="创建时间" align="center" v-if="columns[7].visible" prop="createTime" width="180">
+      <el-table-column label="封面" align="center" v-if="columns[3].visible" prop="consultImage" width="100">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.consultImage" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="内容" :show-overflow-tooltip="true" align="center" v-if="columns[4].visible" prop="consultContent" />
+      <el-table-column label="排序" :show-overflow-tooltip="true" align="center" v-if="columns[5].visible" prop="sorted" />
+      <el-table-column label="备注" :show-overflow-tooltip="true" align="center" v-if="columns[6].visible" prop="remark" />
+      <el-table-column label="创建人" :show-overflow-tooltip="true" align="center" v-if="columns[7].visible" prop="createBy" />
+      <el-table-column label="修改人" :show-overflow-tooltip="true" align="center" v-if="columns[8].visible" prop="updateBy" />
+      <el-table-column label="创建时间" align="center" v-if="columns[9].visible" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="删除" align="center" v-if="columns[8].visible" prop="delFlag">
+      <el-table-column label="删除" align="center" v-if="columns[10].visible" prop="delFlag">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.yl_del_flag" :value="scope.row.delFlag"/>
         </template>
@@ -204,6 +205,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="封面" prop="consultImage">
+          <image-upload v-model="form.consultImage" :limit="1"/>
+        </el-form-item>
         <el-form-item label="内容">
           <editor v-model="form.consultContent" :min-height="192"/>
         </el-form-item>
@@ -232,15 +236,17 @@ export default {
     return {
       //表格展示列
       columns: [
-        {key: 0, label: '编号', visible: false},
-        {key: 1, label: '标题', visible: true},
-        {key: 2, label: '咨询类型', visible: true},
-        {key: 3, label: '内容', visible: false},
-        {key: 4, label: '排序', visible: false},
-        {key: 5, label: '创建人', visible: true},
-        {key: 6, label: '修改人', visible: false},
-        {key: 7, label: '创建时间', visible: true},
-        {key: 8, label: '删除', visible: false},
+        { key: 0, label: '编号', visible: true },
+        { key: 1, label: '标题', visible: true },
+        { key: 2, label: '咨询类型', visible: true },
+        { key: 3, label: '封面', visible: true },
+        { key: 4, label: '内容', visible: false },
+        { key: 5, label: '排序', visible: true },
+        { key: 6, label: '备注', visible: false },
+        { key: 7, label: '创建人', visible: true },
+        { key: 8, label: '修改人', visible: false },
+        { key: 9, label: '创建时间', visible: true },
+        { key: 10, label: '删除', visible: false },
       ],
       // 遮罩层
       loading: true,
@@ -279,6 +285,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        consultImage: [
+          { required: true, message: "封面不能为空", trigger: "blur" }
+        ],
         consultTitle: [
           {required: true, message: "标题不能为空", trigger: "blur"}
         ],
@@ -332,6 +341,7 @@ export default {
         consultId: null,
         consultTitle: null,
         consultType: null,
+        consultImage: null,
         consultContent: null,
         sorted: null,
         remark: null,

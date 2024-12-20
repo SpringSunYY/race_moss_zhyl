@@ -142,7 +142,7 @@
         <uni-card padding="0" margin="0" spacing="0">
           <template v-slot:cover>
             <view class="custom-cover">
-              <image class="cover-image" mode="center" :src="cover">
+              <image class="cover-image" mode="center" :src="baseUrl+consultInfo.consultImage">
               </image>
               <view class="cover-content">
                 <text class="uni-subtitle uni-white">今日新闻热点</text>
@@ -176,6 +176,7 @@
 <script>
 import {newHealthData, warningData} from '@/api/zhyl/deviceUploadingData'
 import {listElderlyDeviceBinding} from '@/api/zhyl/elderlyDeviceBinding'
+import {listConsult} from '@/api/zhyl/consult'
 import {baseUrl} from "@/config";
 
 export default {
@@ -204,6 +205,11 @@ export default {
       deviceQueryParam: {
         pageNum: 1,
         pageSize: 2,
+      },
+      consultInfo: {},
+      consultQueryParam: {
+        pageNum: 1,
+        pageSize: 1,
       }
     }
   },
@@ -214,8 +220,14 @@ export default {
     this.getHealthData()
     this.getWarningData()
     this.getDeviceList()
+    this.getConsultInfo()
   },
   methods: {
+    getConsultInfo() {
+      listConsult(this.consultQueryParam).then(res => {
+        this.consultInfo = res.rows[0]
+      })
+    },
     getDeviceList() {
       listElderlyDeviceBinding(this.deviceQueryParam).then(res => {
         this.deviceList = res.rows.map(item => ({

@@ -665,12 +665,16 @@ export default {
         //如果是第一次查询，并且是没有使用搜索
         if (this.queryUserInfoFamilyParams.contactPhone === '') {
           this.queryUserInfoFamilyParams.userInfoIds = this.form.elderlyFamilyList.map(item => item.userInfoElderlyId)
+        }else {
+          this.queryUserInfoFamilyParams.userInfoIds = null
         }
       } else {
         this.queryUserInfoFamilyParams.userInfoRole = 'elderly'
         //如果是第一次查询，并且是没有使用搜索
         if (this.queryUserInfoFamilyParams.contactPhone === '') {
           this.queryUserInfoFamilyParams.userInfoIds = this.form.elderlyFamilyList.map(item => item.userInfo)
+        } else {
+          this.queryUserInfoFamilyParams.userInfoIds = null
         }
       }
       listUserInfo(this.queryUserInfoFamilyParams).then(response => {
