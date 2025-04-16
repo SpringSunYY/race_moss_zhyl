@@ -372,7 +372,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="通信协议" prop="communicationProtocol">
-              <el-input v-model="form.communicationProtocol" placeholder="请输入通信协议"/>
+              <el-input :maxlength="2" v-model="form.communicationProtocol" placeholder="请输入通信协议"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">

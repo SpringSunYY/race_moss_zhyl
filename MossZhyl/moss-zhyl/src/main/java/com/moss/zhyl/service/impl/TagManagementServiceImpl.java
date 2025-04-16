@@ -1,6 +1,9 @@
 package com.moss.zhyl.service.impl;
 
 import java.util.List;
+
+import com.moss.common.utils.DateUtils;
+import com.moss.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.moss.zhyl.mapper.TagManagementMapper;
@@ -52,6 +55,9 @@ public class TagManagementServiceImpl implements ITagManagementService
     @Override
     public int insertTagManagement(TagManagement tagManagement)
     {
+        tagManagement.setCreateBy(SecurityUtils.getUsername());
+        tagManagement.setUpdateBy(SecurityUtils.getUsername());
+        tagManagement.setCreateTime(DateUtils.getNowDate());
         return tagManagementMapper.insertTagManagement(tagManagement);
     }
 
@@ -64,6 +70,8 @@ public class TagManagementServiceImpl implements ITagManagementService
     @Override
     public int updateTagManagement(TagManagement tagManagement)
     {
+        tagManagement.setUpdateTime(DateUtils.getNowDate());
+        tagManagement.setUpdateBy(SecurityUtils.getUsername());
         return tagManagementMapper.updateTagManagement(tagManagement);
     }
 

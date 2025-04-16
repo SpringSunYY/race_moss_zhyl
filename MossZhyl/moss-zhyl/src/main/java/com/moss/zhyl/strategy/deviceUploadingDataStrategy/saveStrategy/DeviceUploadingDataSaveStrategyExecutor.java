@@ -30,6 +30,7 @@ public class DeviceUploadingDataSaveStrategyExecutor {
 
     /**
      * 保存上传数据
+     *
      * @param deviceUploadingData
      * @return
      */
@@ -51,7 +52,7 @@ public class DeviceUploadingDataSaveStrategyExecutor {
             }
         }
         //如果都不存在，执行默认的
-        DeviceUploadingDataSaveStrategy defaultStrategy =applicationContext.getBean(DeviceUploadingDataSaveDefaultStrategyImpl.class);
+        DeviceUploadingDataSaveStrategy defaultStrategy = applicationContext.getBean(DeviceUploadingDataSaveDefaultStrategyImpl.class);
         return defaultStrategy.saveDeviceUploadingData(deviceUploadingData);
     }
 }

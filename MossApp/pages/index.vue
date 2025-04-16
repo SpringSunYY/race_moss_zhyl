@@ -66,7 +66,7 @@
         </view>
 
         <!-- 右侧图片 -->
-        <image class="right-section" src="/static/logo.png" mode="aspectFill"/>
+        <image class="right-section" src="/static/images/图片5.png" mode="aspectFill"/>
       </view>
 
       <!-- 卡片底部 -->
@@ -106,7 +106,7 @@
                 <u-col span="10">
                   <u--image :showLoading="true" :src="baseUrl+item.deviceImageUrl" width="120rpx" height="120rpx"
                             @click="clickDeviceImage"></u--image>
-                  <u--text type="primary" size="24" :text="item.deviceName"></u--text>
+                  <u--text type="primary" size="18" :text="item.deviceName"></u--text>
                   <u--text type="info" size="12" :text="item.deviceInfo"></u--text>
                 </u-col>
                 <u-col span="2">

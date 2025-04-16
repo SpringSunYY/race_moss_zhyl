@@ -12,7 +12,7 @@
               <u--image :showLoading="true" :src="baseUrl+item.deviceImageUrl" width="240rpx" height="240rpx"></u--image>
             </u-col>
             <u-col span="5">
-              <u--text type="primary" size="24" :text="item.deviceName"></u--text>
+              <u--text type="primary" size="16" :text="item.deviceName"></u--text>
               <u--text type="info" size="12" :text="item.deviceInfo"></u--text>
               <u--text type="info" size="10" :text="'绑定时间:'+item.bindTime"></u--text>
             </u-col>
